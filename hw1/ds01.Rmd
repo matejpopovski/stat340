@@ -30,23 +30,24 @@ vector. Functions that do this are called *vectorized*.
    d. Using `>=`, compare this vector with 0 to show if each number is greater than or equal to 0. Use `sum()` on this resultant vector to count how many numbers satisfy this criterion. Alternatively, use `mean()` to get the proportion (think about why this works!).
    e. Divide the interval $(0,1)$ into 15 evenly spaced numbers (**not including** 0 and 1). (Hint: see `?ppoints`). Then, use `qnorm()` to get a vector of 15 points evenly spaced out along the quantiles of the normal distribution. __Note:__ this is how you obtain the theoreticals for a [QQ-plot](https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot), which you may have seen in your intro classes.
    
+
 ```{r}
-#TODO: code goes here.
-v = seq(1, 25) * 2
-v = v * v
+v = 1:25
+v = v * 2
+v = v^2
 v = v - mean(v)
 v = v >= 0
 v = sum(v)
 v
-
-
-
-
-
- 
-
 ```
 
+```{r}
+even_points = ppoints(15)
+even_points
+
+quantiles = qnorm(even_points)
+quantiles
+```
 ## 2) Functions
 
 Functions are a useful way of creating a tool that can be used over and over
@@ -68,9 +69,30 @@ that are very difficult to detect and fix. Avoid this if you can.
 3. Manually (i.e. without using `sd()`) compute the sample standard deviation of a vector. Make sure you don't call this function `sd`-- pick something else!
 
 ```{r}
-# TODO: code goes here.
-```
+funct = function(n, k){
+  if (k > n || k < 0) {
+    stop("k must be between 0 and n")
+  }
+  return (factorial(n)/(factorial(n-k)*factorial(k)))
+}
 
+funct(5, 2)
+#funct(2, 5)
+#funct(0, 7)
+```
+```{r}
+roll_dice = function(n = 2) {
+
+  rolls = sample(1:6, size = n, replace = TRUE)
+  
+  return(mean(rolls))
+}
+
+roll_dice()
+roll_dice(5)  
+#roll_dice(1000)
+
+```
 ## 3) Conditional executions
 
 It's important to be able to write clear and effective conditionals (if, else,
