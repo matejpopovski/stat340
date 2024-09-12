@@ -168,7 +168,6 @@ card_experiment = function(n = 1000) {
   return(means)
 }
 
-# Example usage:
 results <- card_experiment(1000)
 print(head(results))
 ```
