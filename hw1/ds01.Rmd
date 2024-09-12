@@ -199,7 +199,9 @@ Choose a type of random variable from lecture (e.g., normal, binomial, poisson, 
 
 ***
 
-TODO: write down the mean here.
+I would choose Binomial distribution for this example. 
+Parameters: Number of trials n, and probability of success p.
+Theoretical mean = n * p
 
 ***
 
