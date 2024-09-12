@@ -1,7 +1,7 @@
 ---
 title: "STAT 340 Discussion 01: R review"
 output: html_document
-author: "Matej Popovski"
+author: "Matej Popovski + the team"
 ---
 
 ## XKCD comic
