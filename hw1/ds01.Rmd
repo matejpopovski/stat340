@@ -222,6 +222,14 @@ running_mean <- function(vec) {
    
 ```{r}
 #TODO: code for generating RVs and computing their running mean goes here.
+n_trials = 10 
+p_success = 0.5 
+n_observations = 1000
+
+observations = rbinom(n_observations, size = n_trials, prob = p_success)
+
+running_means = running_mean(observations)
+
 ```
    
 Plot this running mean using the `plot()` function, and use `abline()` to add a
@@ -230,6 +238,9 @@ you can use `ggplot2` for this, instead.
 
 ```{r}
 #TODO: plotting code goes here.
+plot(running_means, type = "l", col = "blue", ylim = c(min(running_means), max(running_means)),
+     xlab = "Number of Observations", ylab = "Running Mean", main = "Running Mean of Binomial Distribution")
+abline(h = n_trials * p_success, col = "red", lty = 2)
 ```
 
 The law of large numbers (LLN) states that the sample mean of a large number of
@@ -241,6 +252,6 @@ Is your plot consistent with the Law of Large Numbers? Why or why not?
 
 ***
 
-TODO: brief answer goes here.
+Yes, the plot is consistent with the Law of Large Numbers. As the number of observations increases, the running mean of the sample should converge to the theoretical mean. The horizontal red line represents the theoretical mean, and as more observations are included, the running mean should approach and stabilize around this value. This demonstrates that with a large enough sample size, the sample mean approximates the population mean.
 
 ***
