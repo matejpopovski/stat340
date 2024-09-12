@@ -93,6 +93,20 @@ roll_dice(5)
 #roll_dice(1000)
 
 ```
+```{r}
+manual_sd = function(x) {
+  n = length(x)
+  x_mean = mean(x)
+  squared_diffs = (x - x_mean)^2
+  variance = sum(squared_diffs) / (n - 1)
+  
+  return(sqrt(variance))
+}
+
+manual_sd(c(1, 2, 3, 4, 5))
+
+```
+
 ## 3) Conditional executions
 
 It's important to be able to write clear and effective conditionals (if, else,
