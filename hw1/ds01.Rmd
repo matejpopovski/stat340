@@ -1,7 +1,7 @@
 ---
 title: "STAT 340 Discussion 01: R review"
 output: html_document
-author: "Write your names here"
+author: "Matej Popovski"
 ---
 
 ## XKCD comic
@@ -32,6 +32,15 @@ vector. Functions that do this are called *vectorized*.
    
 ```{r}
 #TODO: code goes here.
+v = seq(1, 25) * 2
+v = v * v
+v = v - mean(v)
+v = v >= 0
+v = sum(v)
+v
+
+
+
 ```
 
 ## 2) Functions
@@ -75,6 +84,16 @@ modulo 2 is zero.
 
 ```{r}
 #TODO: code goes here.
+is_even = function(n) {
+  if (n%%2 == 0) {
+    return (TRUE)
+  } else {
+    return (FALSE)
+  }
+}
+
+is_even(5)
+is_even(6)
 ```
 
 ## 4) For-loops
@@ -105,6 +124,10 @@ For each of the following, identify one or more random variables that can be use
 ***
 
 TODO: write your answers here.
+1 - poisson
+2 - geometric
+3 - binomial
+4 - uniform
 
 ***
    
