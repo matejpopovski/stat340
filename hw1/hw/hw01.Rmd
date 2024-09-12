@@ -1,0 +1,77 @@
+---
+title: "Homework 1"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Problem \#1: Working with Data Frame <small>2pts each part</small>
+
+In this problem we'll review accessing data in a data frame and some basic statistical functions you should be familiar with.
+
+  a. In the `iris` data set, how many columns are there and how many rows?
+  b. Write a line of `R` code to output the 4th row of the data frame.
+  c. Write a line of `R` code to create a data frame called `iris.setosa` which contains all rows of the setosa species. 
+  d. What is the mean petal width of all irises in the data set? What is the mean petal width of the versicolor irises?
+  e. Create a scatter plot of sepal length vs petal length. Color the dots by species and add a legend to your plot.
+```{r}
+iris
+```
+
+```{r}
+#1a
+dim(iris) #150 rows 5 cols
+
+#1b
+nth_row = iris[4, ]
+nth_row
+
+#1c
+library(dplyr)
+
+iris.setosa = iris %>%
+  filter(Species == "setosa")
+
+iris.setosa
+
+#1d
+p_width = iris$Petal.Width
+mean(p_width)
+
+
+```
+
+
+
+## Problem \#2: Loops and Function <small>3pts each part</small>
+
+  a. Write a for loop that prints out the first 10 values of the Fibonacci sequence. The sequence begins with two 1s, and each subsequent number is the sum of the two numbers before. You should create an numeric vector called `fibonacci`. The first two elements of the vector should be hard coded. The rest of the elements of the vector should be populated using your for loop.
+  b. Write a function called `custombonacci` which takes three parameter
+     - a, the first value in the sequence
+     - b, the second value in the sequence
+     - n, the length of the sequence
+     After you call the function it should return a vector of length n. Elements 3 through n should be calculated by adding the two previous elements of the vector.
+  c. Call the `custombonacci` with a=1, b=-2 and n=12
+
+
+
+## Problem \#3: It Depends... <small>3pts each part</small>
+
+  a. Write a function called `divisible` which takes two inputs:
+     - `x`, an integer
+     - `d`, a divisor
+     If `x` is not an integer, the function should print a message saying so. Otherwise it should output a statement of either "x is divisible by d" or "x is not divisible by d".
+  b. Replace `x` and `d` in the output statement with the values themselves. For example, if you call `divisible(27,3)` you should get a message "27 is divisible by 3". If you call `divisible(6,4)` You should get a message "6 is not divisible by 4".
+  c. Create a function called `cdf` which takes in a value `x` and outputs a value according to the following function:
+     $$
+     \text{cdf}(x) = \begin{cases}
+     0 & \text{if } x < 0 \\
+     x^2 & \text{if }0 \leq x \leq 1\\
+     1 & \text{if }x>1
+     \end{cases}
+     $$
+     Your function can use a combination of the `ifelse`, `min` and `max` functions to achieve the desired behavior. 
+
