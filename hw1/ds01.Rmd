@@ -150,6 +150,28 @@ Write a function that repeats the following experiment `n` times (`n` should be 
    - return the vector of means observed in the `n` repetitions of this experiment.
    That is, you should be returning a vector of length `n`.
 
+```{r}
+card_experiment = function(n = 1000) {
+  
+  means = numeric(n)
+  deck = rep(1:13, 4)
+  
+  for (i in 1:n) {
+    
+    drawn_cards = sample(deck, size = 5, replace = FALSE)
+    
+    drawn_cards = drawn_cards[!(drawn_cards %in% c(min(drawn_cards), max(drawn_cards)))]
+    
+    means[i] = mean(drawn_cards)
+  }
+  
+  return(means)
+}
+
+# Example usage:
+results <- card_experiment(1000)
+print(head(results))
+```
 
 ## 5) Random variables and LLN
 
