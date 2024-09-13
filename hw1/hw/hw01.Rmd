@@ -18,17 +18,22 @@ In this problem we'll review accessing data in a data frame and some basic stati
   d. What is the mean petal width of all irises in the data set? What is the mean petal width of the versicolor irises?
   e. Create a scatter plot of sepal length vs petal length. Color the dots by species and add a legend to your plot.
 ```{r}
-iris
+head(iris)
 ```
 
 ```{r}
 #1a
-dim(iris) #150 rows 5 cols
+dim(iris) # 150 rows 5 cols
 
+```
+```{r}
 #1b
 nth_row = iris[4, ]
 nth_row
 
+```
+
+```{r}
 #1c
 library(dplyr)
 
@@ -37,14 +42,34 @@ iris.setosa = iris %>%
 
 iris.setosa
 
+```
+
+```{r}
 #1d
 p_width = iris$Petal.Width
 mean(p_width)
 
+versicolor = iris %>%
+  filter(Species == "versicolor")
+v_width = versicolor$Petal.Width
+mean(v_width)
 
 ```
 
+```{r}
+#1e
+library(ggplot2)
 
+ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Sepal Length vs Petal Length",
+       x = "Sepal Length",
+       y = "Petal Length") +
+  theme_minimal() +
+  scale_color_manual(values = c("setosa" = "red", "versicolor" = "green", "virginica" = "blue"))
+
+
+```
 
 ## Problem \#2: Loops and Function <small>3pts each part</small>
 
@@ -56,6 +81,40 @@ mean(p_width)
      After you call the function it should return a vector of length n. Elements 3 through n should be calculated by adding the two previous elements of the vector.
   c. Call the `custombonacci` with a=1, b=-2 and n=12
 
+```{r}
+#2a
+fibonacci = numeric(10)
+fibonacci[1] = 1
+fibonacci[2] = 1
+
+for (i in 3:10) {
+  fibonacci[i] = fibonacci[i - 1] + fibonacci[i - 2]
+}
+
+print(fibonacci)
+
+```
+```{r}
+#2b
+custombonacci = function(a, b, n) {
+
+  sequence = numeric(n)
+  
+  sequence[1] = a
+  sequence[2] = b
+  
+  for (i in 3:n) {
+    sequence[i] = sequence[i - 1] + sequence[i - 2]
+  }
+  
+  return(sequence)
+}
+```
+
+```{r}
+#2c
+custombonacci(1, -2, 12)
+```
 
 
 ## Problem \#3: It Depends... <small>3pts each part</small>
@@ -74,4 +133,66 @@ mean(p_width)
      \end{cases}
      $$
      Your function can use a combination of the `ifelse`, `min` and `max` functions to achieve the desired behavior. 
+
+```{r}
+#3a
+
+divisible1 = function(x, d) {
+  
+  if (!is.integer(x) && x != as.integer(x)) {
+    print("x is not an integer")
+  } else {
+      if (x %% d == 0) {
+        print(paste("x is divisible by d"))
+    } else {
+        print(paste("x is not divisible by d"))
+    }
+  }
+}
+
+divisible1(100, 5)
+divisible1(99, 5)
+```
+
+```{r}
+#3b
+divisible2 = function(x, d) {
+  # Check if x is an integer
+  if (!is.integer(x) && x != as.integer(x)) {
+    print("x is not an integer")
+  } else {
+    # Check if x is divisible by d
+    if (x %% d == 0) {
+      print(paste(x, "is divisible by", d))
+    } else {
+      print(paste(x, "is not divisible by", d))
+    }
+  }
+}
+
+divisible2(100, 5)
+divisible2(99, 5)
+```
+
+```{r}
+#3c
+cdf = function(x) {
+
+  if (x < 0) {
+    result = 0
+  }
+  else if (x <= 1) {
+    result = x^2
+  }
+  else {
+    result = 1
+  }
+  
+  return(result)
+}
+
+cdf(-3)
+cdf(0.77)
+cdf(10)
+```
 
