@@ -1,0 +1,75 @@
+---
+title: "Homework 2"
+output: 
+  html_document:
+    self_contained: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+
+## Problem 1 <small>(2pts each, 8pts total)</small>
+
+Here are a few probability exercises to get you warmed up.
+
+a. Consider $X\sim \text{Normal}(5, 2^2)$. Find $P(4 < X < 7)$
+
+b. Suppose you have an uneven 6-sided die where the even numbers are equally likely to occur and the odd numbers are also equally likely. The expected value of the die is $3.3333$ (i.e. $\frac{10}{3})$. What is the probability of getting a 6?
+   (Hint: Let $p$ represent the probability of getting an even number, and represent the probability of the other numbers algebraically. Then derive an expression for the expected value, let it equal $\frac{10}{3}$, and solve. You can go back and check your work by plugging the result back into your original expressions and verify it works with R.)
+
+c. Give **two examples** of pairs of events that are mutually exclusive and explain why for each.
+
+d. Give **two examples** of pairs of events that are independent and explain why for each.
+
+
+## Problem 2 <small>(2pts each, 14pts total)</small>
+
+For each of the following scenarios, decide what random variable may be appropriate to use as a model, and explain your reasoning as well as any assumptions you make.
+
+a. The number of patients in an experimental drug trial that respond to treatment. 
+b. The number of red cars you observe driving through an intersection between 10am and 11am. 
+c. What the second hand reads on the clock when you wake up from a long nap (approximately). 
+d. How many people you need to swipe right on Tinder before you get a match. 
+e. The length of time between mosquito bites a camper experiences while on a hike. 
+f. Whether the Eagles win the Superbowl this year. 
+g. The GPA of a randomly selected UW-Madison graduate.
+
+
+## Problem 3 <small>(2pts each, 4pts total)</small>
+
+a. Consider the CDF given below for random variable $Y$ 
+```{r}
+plot(x=0:6, y=c(0,.3,.5, .6, .75,.8,1), type="s", ylab="F(y)", xlab="y", main="cdf of Y")
+abline(h=seq(.1,.9,.1), lty=2, col="gray")
+```
+Express the pmf of $Y$ in the following R code (in other words, fill in the missing probabilities)
+
+```{r}
+y<- 1:6
+py <- c(0,0,0,0,0,0) ## edit this line
+barplot(height=py, names=y, main="pmf of Y")
+```
+
+
+
+b. Calculate $E[Y]$ for the variable $Y$ in part a.
+
+
+## Problem 4 <small>(2pts each, 4pts total)</small>
+
+Below you will find the plot of a probability density function for a random variable $X$.
+
+```{r, echo=FALSE}
+plot(x=c(0,1,2,3), y=c(0,.5,.5,0), type="l", ylab="density", xlab="x", main="pdf of X")
+```
+
+Using just geometry answer a and b:
+
+a. What is $Pr[X < 1]$?
+
+b. What is $Pr[1.5 < X < 2.5]$
+
+
