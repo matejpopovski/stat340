@@ -196,3 +196,32 @@ cdf(0.77)
 cdf(10)
 ```
 
+
+
+
+```{r}
+
+pbinom(5, 10, 0.5)
+
+qbinom(0.6, 10, 0.5)
+
+dbinom(5, 10, 0.5)
+
+pbinom(10, 10, 0.5)
+
+rbinom(10, 10, 0.5)
+
+sample(1:20, size = 10, replace = TRUE)
+
+dnorm(0, 0, 1)
+pnorm(0, 0, 1)
+
+dunif(0.5, 0, 1)
+
+punif(2.5, 2, 4)
+
+
+```
+
+
+
