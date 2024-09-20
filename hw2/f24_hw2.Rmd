@@ -16,26 +16,65 @@ library(tidyverse)
 Here are a few probability exercises to get you warmed up.
 
 a. Consider $X\sim \text{Normal}(5, 2^2)$. Find $P(4 < X < 7)$
+```{r}
+
+pnorm(7, 5, 2) - pnorm(4, 5, 2)
+
+```
 
 b. Suppose you have an uneven 6-sided die where the even numbers are equally likely to occur and the odd numbers are also equally likely. The expected value of the die is $3.3333$ (i.e. $\frac{10}{3})$. What is the probability of getting a 6?
    (Hint: Let $p$ represent the probability of getting an even number, and represent the probability of the other numbers algebraically. Then derive an expression for the expected value, let it equal $\frac{10}{3}$, and solve. You can go back and check your work by plugging the result back into your original expressions and verify it works with R.)
+```{r}
+E = 10/3
+
+# E = sum( p *   )
+
+
+```
 
 c. Give **two examples** of pairs of events that are mutually exclusive and explain why for each.
 
+> One example of mutually exclusive events is: rolling the number 5 with a fair 6 sided die, and the number you roll being even. Explanation: 5 is not an even number.
+
+> Another example is: get a heads after flipping a coin, and getting tails after flipping a coin. Explanation: when flipping a coin, there is only one outcome between heads or tails.
+
 d. Give **two examples** of pairs of events that are independent and explain why for each.
 
+> Rolling the number 5 with a fair 6 sided die, and drawing the card 5 from a normal deck of cards.
+
+> Get a heads when flipping a coin, and probability of raining that day.
 
 ## Problem 2 <small>(2pts each, 14pts total)</small>
 
 For each of the following scenarios, decide what random variable may be appropriate to use as a model, and explain your reasoning as well as any assumptions you make.
 
 a. The number of patients in an experimental drug trial that respond to treatment. 
+
+> Binomial Distribution
+
 b. The number of red cars you observe driving through an intersection between 10am and 11am. 
+
+> Poisson Distribution
+
 c. What the second hand reads on the clock when you wake up from a long nap (approximately). 
+
+> Uniform Distribution
+
 d. How many people you need to swipe right on Tinder before you get a match. 
+
+> Geometric Distribution
+
 e. The length of time between mosquito bites a camper experiences while on a hike. 
+
+> Exponential Distribution
+
 f. Whether the Eagles win the Superbowl this year. 
+
+> Binomial (Bernoulli) Distribution
+
 g. The GPA of a randomly selected UW-Madison graduate.
+
+> Normal Distribution
 
 
 ## Problem 3 <small>(2pts each, 4pts total)</small>
@@ -48,8 +87,8 @@ abline(h=seq(.1,.9,.1), lty=2, col="gray")
 Express the pmf of $Y$ in the following R code (in other words, fill in the missing probabilities)
 
 ```{r}
-y<- 1:6
-py <- c(0,0,0,0,0,0) ## edit this line
+y<- 1:6 ## 1 do 6 ima samo 6 elementi, a sose nula ima 7 elementi
+py <- c(0,0.3,0.8,1.40,2.15,2.95) ## edit this line
 barplot(height=py, names=y, main="pmf of Y")
 ```
 
@@ -57,6 +96,7 @@ barplot(height=py, names=y, main="pmf of Y")
 
 b. Calculate $E[Y]$ for the variable $Y$ in part a.
 
+> tuka mi treba probability za da presmetam?
 
 ## Problem 4 <small>(2pts each, 4pts total)</small>
 
@@ -69,7 +109,10 @@ plot(x=c(0,1,2,3), y=c(0,.5,.5,0), type="l", ylab="density", xlab="x", main="pdf
 Using just geometry answer a and b:
 
 a. What is $Pr[X < 1]$?
+> 1 * 0.5 / 2 = 0.25
 
 b. What is $Pr[1.5 < X < 2.5]$
+> (2-1.5) * 0.5 + (2.5-2) * 0.25 = 0.25 + 0.125 = 0.375
+
 
 
