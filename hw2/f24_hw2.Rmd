@@ -24,25 +24,31 @@ pnorm(7, 5, 2) - pnorm(4, 5, 2)
 
 b. Suppose you have an uneven 6-sided die where the even numbers are equally likely to occur and the odd numbers are also equally likely. The expected value of the die is $3.3333$ (i.e. $\frac{10}{3})$. What is the probability of getting a 6?
    (Hint: Let $p$ represent the probability of getting an even number, and represent the probability of the other numbers algebraically. Then derive an expression for the expected value, let it equal $\frac{10}{3}$, and solve. You can go back and check your work by plugging the result back into your original expressions and verify it works with R.)
-```{r}
-E = 10/3
 
-# E = sum( p *   )
+> Lets assume p is the probability of rolling an even number (2, 4, or 6) and q is the probability of rolling an odd number (1, 3, or 5).
 
+> Becuase both even and odd numbers have equally likely outcomes - each even is p/3 and each odd is q/3.
 
-```
+> The total probability is p + q = 1
+
+> Expected value: E = ((1q + 3q + 5q) + (2p + 4p + 6p)) / 3 = (9q + 12p) / 3
+
+> Using both of the above equations we get: 4 - q = 3.3333  ->  q = 0.6667 and p = 0.3333
+
+> Lastly, P(6) = p / 3 = 0.3333/3 ~= 0.1111
+
 
 c. Give **two examples** of pairs of events that are mutually exclusive and explain why for each.
 
-> One example of mutually exclusive events is: rolling the number 5 with a fair 6 sided die, and the number you roll being even. Explanation: 5 is not an even number.
+> One example of mutually exclusive events is: rolling the number 5 with a fair 6 sided die, and the number you roll being even. Explanation: 5 is not an even number, so both events can never happen at the same time.
 
-> Another example is: get a heads after flipping a coin, and getting tails after flipping a coin. Explanation: when flipping a coin, there is only one outcome between heads or tails.
+> Another example is: get a heads after flipping a coin, and getting tails after flipping a coin. Explanation: when flipping a coin, there is only one outcome between heads or tails, so both events can never happen at the same time.
 
 d. Give **two examples** of pairs of events that are independent and explain why for each.
 
-> Rolling the number 5 with a fair 6 sided die, and drawing the card 5 from a normal deck of cards.
+> Rolling the number 5 with a fair 6 sided die, and drawing the card 5 from a normal deck of cards. These two events do not depend one to another, meaning no matter what numebr we roll with the dice, that would not affect the probability of drawing the card 5 from the deck of cards.
 
-> Get a heads when flipping a coin, and probability of raining that day.
+> Get a heads when flipping a coin, and probability of raining that day. Again, no matter what we get after flipping the coin, that cannot change the probability of raining that day.
 
 ## Problem 2 <small>(2pts each, 14pts total)</small>
 
@@ -50,31 +56,32 @@ For each of the following scenarios, decide what random variable may be appropri
 
 a. The number of patients in an experimental drug trial that respond to treatment. 
 
-> Binomial Distribution
+> Binomial Distribution, because the scenario involves a fixed number of patients, and each patient can either respond to the treatment or not (success or failure). The Binomial distribution is appropriate because it models the number of successes in a fixed number of independent Bernoulli trials, with the same probability of success.
 
 b. The number of red cars you observe driving through an intersection between 10am and 11am. 
 
-> Poisson Distribution
+> Poisson Distribution. The Poisson distribution models the number of events happening within a fixed interval of time or space. Since the number of red cars is a count of events in a fixed time period (10am-11am), and these events are likely independent and occur at a constant average rate, the Poisson distribution is suitable.
 
 c. What the second hand reads on the clock when you wake up from a long nap (approximately). 
 
-> Uniform Distribution
+> Uniform Distribution. The second hand can point to any value between 0 and 59 with equal probability. Since each outcome is equally likely, the appropriate model is the Uniform distribution, which describes situations where all outcomes are equally probable.
 
 d. How many people you need to swipe right on Tinder before you get a match. 
 
-> Geometric Distribution
+> Geometric Distribution. This scenario describes how many trials (swipes) are needed until the first success (match). The Geometric distribution is the best fit because it models the number of trials until the first success in a series of independent Bernoulli trials.
 
 e. The length of time between mosquito bites a camper experiences while on a hike. 
 
-> Exponential Distribution
+> Exponential Distribution. The Exponential distribution is used to model the time between independent events that happen at a constant rate, such as mosquito bites. The length of time between bites is continuous and memoryless, making the Exponential distribution appropriate.
+
 
 f. Whether the Eagles win the Superbowl this year. 
 
-> Binomial (Bernoulli) Distribution
+> Binomial (Bernoulli) Distribution. This is a binary outcome (either the Eagles win or they don't), making it a Bernoulli trial. Since this is a single trial (just this year), the Bernoulli distribution (a special case of the Binomial distribution with one trial) is appropriate.
 
 g. The GPA of a randomly selected UW-Madison graduate.
 
-> Normal Distribution
+> Normal Distribution. GPAs are continuous and tend to cluster around a mean, with some variation. The Normal distribution is often used to model continuous data that is symmetric and has a bell-shaped curve, which is typically how GPAs are distributed in a large population.
 
 
 ## Problem 3 <small>(2pts each, 4pts total)</small>
@@ -88,7 +95,7 @@ Express the pmf of $Y$ in the following R code (in other words, fill in the miss
 
 ```{r}
 y<- 1:6 ## 1 do 6 ima samo 6 elementi, a sose nula ima 7 elementi
-py <- c(0,0.3,0.8,1.40,2.15,2.95) ## edit this line
+py <- c(0.3, 0.2, 0.1, 0.15, 0.05, 0.2) ## edit this line
 barplot(height=py, names=y, main="pmf of Y")
 ```
 
@@ -96,7 +103,16 @@ barplot(height=py, names=y, main="pmf of Y")
 
 b. Calculate $E[Y]$ for the variable $Y$ in part a.
 
-> tuka mi treba probability za da presmetam?
+```{r}
+y <- 1:6
+
+py <- c(0.3, 0.2, 0.1, 0.15, 0.05, 0.2)
+
+E_Y <- sum(y * py)
+
+print(E_Y)
+```
+
 
 ## Problem 4 <small>(2pts each, 4pts total)</small>
 
@@ -109,10 +125,12 @@ plot(x=c(0,1,2,3), y=c(0,.5,.5,0), type="l", ylab="density", xlab="x", main="pdf
 Using just geometry answer a and b:
 
 a. What is $Pr[X < 1]$?
+
 > 1 * 0.5 / 2 = 0.25
 
 b. What is $Pr[1.5 < X < 2.5]$
-> (2-1.5) * 0.5 + (2.5-2) * 0.25 = 0.25 + 0.125 = 0.375
+
+> (2-1.5) * 0.5 + (2.5-2) * 0.25 +  (2.5-2) * 0.25 / 2 = 0.25 + 0.125 + 0.625 = 0.4375
 
 
 

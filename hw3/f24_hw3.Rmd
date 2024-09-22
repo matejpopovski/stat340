@@ -1,0 +1,223 @@
+---
+title: "Homework 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## 1. Independence of Events <small>(8 points, 2 points each)</small>
+
+A fair four-sided die (numbered 1,2,3 and 4) is rolled three times. Consider the following three events:
+
+A: "The sum is 6 or less"
+
+B: "The second roll is more than the first"
+
+C: "The sum is odd"
+
+D: "Exactly two of the rolls are the same"
+
+a. Are A and B independent?
+
+> No they are not independent.
+
+b. Are C and D independent?
+
+> No they are not independent.
+
+c. Are A and C independent?
+
+> No they are not independent.
+
+d. Are B and D independent?
+
+> No they are not independent.
+
+
+## 2. Stock Portfolio <small>(8 points, 2 points each)</small>
+
+Consider two stocks. Stock A has a mean annual return of 0.05 and a standard deviation of 0.01. Stock B has a mean annual return of 0.10 and a standard deviation of 0.04. Past data suggests that the prices have a correlation of -0.65.
+You have \$1000 to invest in a portfolio composed of these two stocks. 
+
+a. Suppose you invest \$500 in stock A and \$500 in stock B. What will be the expected return and the standard deviation of your portfolio (in dollars)? 
+*Hint:* $SD(aX+bY) = \sqrt{Var(aX+bY)}= \sqrt{a^2Var(X)+2abCov(X,Y)+b^2Var(Y)}$ and $Cov(X,Y)=\sigma_X \sigma_Y \rho_{XY}$
+
+> E( aX + bY ) = aE(X) + bE(Y) 
+
+```{r}
+a = 500; b = 500
+E = a * 0.05 + b * 0.1
+E
+cor = -0.65
+sd1 = 0.01
+sd2 = 0.04
+
+cov = cor * sd1 * sd2
+cov
+
+sd = sqrt(a^2*sd1^2 + 2*a*b*cov + b^2*sd2^2)
+sd
+
+```
+
+
+b. Give an expression for the standard deviation for a portfolio investing $\$x$ in stock A and $\$1000-x$ in stock B. 
+
+```{r}
+sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)
+
+```
+
+c. Find the value $x$ that minimizes this standard deviation. 
+
+> We find the first derivative of the expression above = 0 
+
+```{r}
+(1 / sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2) ) * (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a)) = 0
+
+```
+
+```{r}
+# after canceling the sqrt
+
+# (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a) = 0
+ 
+# (2*a*sd1^2 + 2000*cov - 2*cov*a - 2000*sd2^2 + 2*sd2^2 * a) = 0
+  
+# a * (2*sd1^2 - 2*cov + 2*sd2^2) = - 2000*cov + 2000*sd2^2
+
+a = (- 2000*cov + 2000*sd2^2) / (2*sd1^2 - 2*cov + 2*sd2^2)
+
+a
+    
+
+```
+
+d. What is the expected return and standard deviation (in dollars) for the portfolio split you chose in part c?
+
+```{r}
+b = (1000-a)
+
+E = a * 0.05 + b * 0.1
+E
+
+sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)
+sd
+
+```
+```{r}
+b = 948
+a = 1000 - b
+
+E = a * 0.05 + b * 0.1
+E
+
+```
+
+## 3. Mousetrap: A Rube Goldberg Machine  <small>(5 points, 1 points each)</small>
+
+Consider the board game Mousetrap. When you trigger the trap, the ball needs to 
+
+1. roll down a **ramp**,
+2. be carried up by a **hammer**,
+3. roll  down another **ramp**,
+4. go down a bathtub **drain**,
+5. land on a **lever** which
+6. sends a diver into a **basin** which then
+7. causes the **trap** to descend.
+
+Suppose you can model the success of each component as independent Bernoulli random variables $X_1$ through $X_7$, where the probability of $X_i$ succeeding is $.94$ for each component. 
+
+a. What is the probability that the trap works correctly from beginning to end?
+
+```{r}
+succeed = 0.94^7
+succeed
+```
+
+
+b. If you attempt the trap 15 times during a game, how many times do you expect it to work correctly from beginning to end?
+
+```{r}
+15 * succeed
+```
+
+
+c. Suppose you let the marble go: Let $Y$ be the number of components of the trap that work in a row. If one component fails, then you stop counting. Calculate the probability mass function of $Y$. *Hints: $Y$ can have values $0, 1, 2, 3, 4, 5, 6$ or $7$. This is like a Geometric r.v. except it does not have infinite support. How can you use this fact to determine the pmf? Be careful: what is a 'success' in this context?*
+> p = 0.94 q = 1-p = 0.06
+
+> 1. P(Y=0) = q
+
+> 2. P(Y=k) = p^k * q
+
+> 1. P(Y=7) = p^7
+
+```{r}
+index_col <- 0:7 
+formula <- c("(1-p)", "(1-p)*p", "(1-p)*p^2", "(1-p)*p^3", "(1-p)*p^4", "(1-p)*p^5", "(1-p)*p^6", "p^7")  
+p = 0.94; q=0.06
+prob <- c(q, p*q, p^2*q, p^3*q, p^4*q, p^5*q, p^6*q, p^7)
+sum(prob) # check
+df <- data.frame(Index = index_col, Formula = formula, Probability = prob)
+
+print(df)
+
+```
+
+
+d. Calculate the expected value of $Y$ and its variance. 
+
+```{r}
+sum(index_col*prob)
+```
+
+
+e. What is $P(Y = 6 | Y \geq 3)$?
+
+```{r}
+#prob[3:7]
+p^6*q
+sum(prob[3:7])
+
+P = p^6*q / sum(prob[3:7])
+
+P
+  
+```
+
+
+## 4. Bayes Rule with forecasting <small>(9 points, 3 points each)</small>
+
+Madison, Wisconsin gets about 115 days of precipitation per year (we'll just call it rain for the remainder of this problem, even though it is often snow). On days when it ends up raining the forecast on Channel 3000 is correct (i.e. the morning forecast calls for rain) 93% of the time. On days where there is no rain the morning forecast correctly says there will be no rain 87% of the time. 
+
+a. Calculate the overall probability that a forecast on a randomly selected day is correct.
+
+> P(F=T) = P(F=T | R=T)P(R=T) + P(F=T | R=F)P(R=F)
+
+```{r}
+forcast_correctness = 0.93*115/365 + 0.87*250/365
+forcast_correctness
+```
+
+
+b. If the weather from day to day is independent and the forecast accuracy from day to day is independent, then how many correctly forecasted days do you expect in a 365 day year? 
+
+```{r}
+
+365 * forcast_correctness
+
+```
+
+
+c. If the forecast calls for rain, what is the likelihood that it actually rains? In other words, find $P(\text{Rain} | \text{Forecast Rain})$.
+
+> P(R=T | F=T) = P(F=T | R=T)P(R=T) / P(F=T)
+
+```{r}
+bias = 0.93 * 115/365 / forcast_correctness
+bias
+```
+

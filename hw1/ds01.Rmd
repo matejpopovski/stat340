@@ -256,3 +256,35 @@ Is your plot consistent with the Law of Large Numbers? Why or why not?
 Yes, the plot is consistent with the Law of Large Numbers. As the number of observations increases, the running mean of the sample should converge to the theoretical mean. The horizontal red line represents the theoretical mean, and as more observations are included, the running mean should approach and stabilize around this value. This demonstrates that with a large enough sample size, the sample mean approximates the population mean.
 
 ***
+
+
+
+```{r}
+k <- seq(0,30);
+lambda <- 10.5; ## On average, we should get back the value 10.5,
+df <- data.frame('Probk'=dpois(k, lambda) );
+#(pp <- ggplot(df, aes(x=k, y=Probk) ) + geom_col());
+df
+```
+```{r}
+k <- seq(0,30); lambda <- 10.5;
+N <- 1e6;
+p <- lambda/N; # On average, we should get back the value lambda
+poisprob <- dpois(k, lambda); # Vector of Poisson probabilities
+binomprob <- dbinom( k, size=N, prob=p );
+poisprob
+binomprob
+plot(poisprob)
+plot(binomprob)
+
+```
+
+```{r}
+dist <- c( rep('Poisson', length(k)), rep('Binom', length(k)) );
+
+df <- data.frame('dist'=dist, 'k'=rep(k,2),
+'Probk'=c(poisprob,binomprob) )
+
+df
+```
+
