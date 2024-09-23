@@ -409,9 +409,9 @@ the same time.</p>
 </blockquote>
 <blockquote>
 <p>Another example is: get a heads after flipping a coin, and getting
-tails after flipping a coin. Explanation: when flipping a coin, there is
-only one outcome between heads or tails, so both events can never happen
-at the same time.</p>
+tails after flipping the same coin (in the same flip). Explanation: when
+flipping a coin, there is only one outcome (in one flip) between heads
+or tails, so both events can never happen at the same time.</p>
 </blockquote>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>Give <strong>two examples</strong> of pairs of events that are
@@ -425,7 +425,7 @@ not affect the probability of drawing the card 5 from the deck of
 cards.</p>
 </blockquote>
 <blockquote>
-<p>Get a heads when flipping a coin, and probability of raining that
+<p>Get a heads when flipping a coin, and (probability of) raining that
 day. Again, no matter what we get after flipping the coin, that cannot
 change the probability of raining that day.</p>
 </blockquote>
@@ -446,6 +446,10 @@ of patients, and each patient can either respond to the treatment or not
 it models the number of successes in a fixed number of independent
 Bernoulli trials, with the same probability of success.</p>
 </blockquote>
+<blockquote>
+<p>Assumptions: Each patient’s response is independent of others, and
+the probability of responding, p, is the same for all patients.</p>
+</blockquote>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>The number of red cars you observe driving through an intersection
 between 10am and 11am.</li>
@@ -457,6 +461,11 @@ number of red cars is a count of events in a fixed time period
 (10am-11am), and these events are likely independent and occur at a
 constant average rate, the Poisson distribution is suitable.</p>
 </blockquote>
+<blockquote>
+<p>Assumptions: Red cars pass through the intersection randomly and
+independently of each other, and the average rate of red cars passing
+through the intersection remains constant over time.</p>
+</blockquote>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>What the second hand reads on the clock when you wake up from a long
 nap (approximately).</li>
@@ -467,6 +476,11 @@ nap (approximately).</li>
 the appropriate model is the Uniform distribution, which describes
 situations where all outcomes are equally probable.</p>
 </blockquote>
+<blockquote>
+<p>Assumptions: There is no reason to expect you wake up at any
+particular second more than any other, so all seconds are equally
+likely.</p>
+</blockquote>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>How many people you need to swipe right on Tinder before you get a
 match.</li>
@@ -476,6 +490,10 @@ match.</li>
 (swipes) are needed until the first success (match). The Geometric
 distribution is the best fit because it models the number of trials
 until the first success in a series of independent Bernoulli trials.</p>
+</blockquote>
+<blockquote>
+<p>Assumptions: Each swipe is independent, and the probability p of
+getting a match is constant for each swipe.</p>
 </blockquote>
 <ol start="5" style="list-style-type: lower-alpha">
 <li>The length of time between mosquito bites a camper experiences while
@@ -488,6 +506,10 @@ rate, such as mosquito bites. The length of time between bites is
 continuous and memoryless, making the Exponential distribution
 appropriate.</p>
 </blockquote>
+<blockquote>
+<p>Assumptions: Mosquito bites occur randomly and independently over
+time, with a constant rate.</p>
+</blockquote>
 <ol start="6" style="list-style-type: lower-alpha">
 <li>Whether the Eagles win the Superbowl this year.</li>
 </ol>
@@ -498,6 +520,10 @@ is a single trial (just this year), the Bernoulli distribution (a
 special case of the Binomial distribution with one trial) is
 appropriate.</p>
 </blockquote>
+<blockquote>
+<p>Assumptions: The probability p of the Eagles winning is fixed and
+known.</p>
+</blockquote>
 <ol start="7" style="list-style-type: lower-alpha">
 <li>The GPA of a randomly selected UW-Madison graduate.</li>
 </ol>
@@ -506,6 +532,11 @@ appropriate.</p>
 mean, with some variation. The Normal distribution is often used to
 model continuous data that is symmetric and has a bell-shaped curve,
 which is typically how GPAs are distributed in a large population.</p>
+</blockquote>
+<blockquote>
+<p>Assumptions: GPAs are normally distributed, meaning most GPAs are
+near the mean with fewer values far from the mean (assuming large sample
+sizes and Central Limit Theorem considerations).</p>
 </blockquote>
 </div>
 <div id="problem-3-2pts-each-4pts-total" class="section level2">

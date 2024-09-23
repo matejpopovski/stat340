@@ -42,13 +42,13 @@ c. Give **two examples** of pairs of events that are mutually exclusive and expl
 
 > One example of mutually exclusive events is: rolling the number 5 with a fair 6 sided die, and the number you roll being even. Explanation: 5 is not an even number, so both events can never happen at the same time.
 
-> Another example is: get a heads after flipping a coin, and getting tails after flipping a coin. Explanation: when flipping a coin, there is only one outcome between heads or tails, so both events can never happen at the same time.
+> Another example is: get a heads after flipping a coin, and getting tails after flipping the same coin (in the same flip). Explanation: when flipping a coin, there is only one outcome (in one flip) between heads or tails, so both events can never happen at the same time.
 
 d. Give **two examples** of pairs of events that are independent and explain why for each.
 
 > Rolling the number 5 with a fair 6 sided die, and drawing the card 5 from a normal deck of cards. These two events do not depend one to another, meaning no matter what numebr we roll with the dice, that would not affect the probability of drawing the card 5 from the deck of cards.
 
-> Get a heads when flipping a coin, and probability of raining that day. Again, no matter what we get after flipping the coin, that cannot change the probability of raining that day.
+> Get a heads when flipping a coin, and (probability of) raining that day. Again, no matter what we get after flipping the coin, that cannot change the probability of raining that day.
 
 ## Problem 2 <small>(2pts each, 14pts total)</small>
 
@@ -58,31 +58,44 @@ a. The number of patients in an experimental drug trial that respond to treatmen
 
 > Binomial Distribution, because the scenario involves a fixed number of patients, and each patient can either respond to the treatment or not (success or failure). The Binomial distribution is appropriate because it models the number of successes in a fixed number of independent Bernoulli trials, with the same probability of success.
 
+> Assumptions: Each patient’s response is independent of others, and the probability of responding, p, is the same for all patients.
+
+
 b. The number of red cars you observe driving through an intersection between 10am and 11am. 
 
 > Poisson Distribution. The Poisson distribution models the number of events happening within a fixed interval of time or space. Since the number of red cars is a count of events in a fixed time period (10am-11am), and these events are likely independent and occur at a constant average rate, the Poisson distribution is suitable.
+
+> Assumptions: Red cars pass through the intersection randomly and independently of each other, and the average rate of red cars passing through the intersection remains constant over time.
 
 c. What the second hand reads on the clock when you wake up from a long nap (approximately). 
 
 > Uniform Distribution. The second hand can point to any value between 0 and 59 with equal probability. Since each outcome is equally likely, the appropriate model is the Uniform distribution, which describes situations where all outcomes are equally probable.
 
+> Assumptions: There is no reason to expect you wake up at any particular second more than any other, so all seconds are equally likely.
+
 d. How many people you need to swipe right on Tinder before you get a match. 
 
 > Geometric Distribution. This scenario describes how many trials (swipes) are needed until the first success (match). The Geometric distribution is the best fit because it models the number of trials until the first success in a series of independent Bernoulli trials.
+
+> Assumptions: Each swipe is independent, and the probability p of getting a match is constant for each swipe.
 
 e. The length of time between mosquito bites a camper experiences while on a hike. 
 
 > Exponential Distribution. The Exponential distribution is used to model the time between independent events that happen at a constant rate, such as mosquito bites. The length of time between bites is continuous and memoryless, making the Exponential distribution appropriate.
 
+> Assumptions: Mosquito bites occur randomly and independently over time, with a constant rate.
 
 f. Whether the Eagles win the Superbowl this year. 
 
 > Binomial (Bernoulli) Distribution. This is a binary outcome (either the Eagles win or they don't), making it a Bernoulli trial. Since this is a single trial (just this year), the Bernoulli distribution (a special case of the Binomial distribution with one trial) is appropriate.
 
+> Assumptions: The probability p of the Eagles winning is fixed and known.
+
 g. The GPA of a randomly selected UW-Madison graduate.
 
 > Normal Distribution. GPAs are continuous and tend to cluster around a mean, with some variation. The Normal distribution is often used to model continuous data that is symmetric and has a bell-shaped curve, which is typically how GPAs are distributed in a large population.
 
+> Assumptions: GPAs are normally distributed, meaning most GPAs are near the mean with fewer values far from the mean (assuming large sample sizes and Central Limit Theorem considerations).
 
 ## Problem 3 <small>(2pts each, 4pts total)</small>
 
