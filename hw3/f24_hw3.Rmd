@@ -195,7 +195,7 @@ Madison, Wisconsin gets about 115 days of precipitation per year (we'll just cal
 
 a. Calculate the overall probability that a forecast on a randomly selected day is correct.
 
-> P(F=T) = P(F=T | R=T)P(R=T) + P(F=T | R=F)P(R=F)
+> P(F=T) = P(F=T | R=T)P(R=T) + P(F=T | R=F)P(R=F) 
 
 ```{r}
 forcast_correctness = 0.93*115/365 + 0.87*250/365
