@@ -217,7 +217,7 @@ c. If the forecast calls for rain, what is the likelihood that it actually rains
 > P(R=T | F=T) = P(F=T | R=T)P(R=T) / P(F=T)
 
 ```{r}
-bias = 0.93 * 115/365 / forcast_correctness
+bias = 0.93 * 115/365 / forcast_correctness 
 bias
 ```
 
