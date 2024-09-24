@@ -50,16 +50,17 @@ a. Suppose you invest \$500 in stock A and \$500 in stock B. What will be the ex
 ```{r}
 a = 500; b = 500
 E = a * 0.05 + b * 0.1
-E
+print(paste("Expected value (return) is:", E))
+
 cor = -0.65
 sd1 = 0.01
 sd2 = 0.04
 
 cov = cor * sd1 * sd2
-cov
+#cov
 
 sd = sqrt(a^2*sd1^2 + 2*a*b*cov + b^2*sd2^2)
-sd
+print(paste("The standard deviation of the portfolio is:", sd))
 
 ```
 
@@ -67,6 +68,7 @@ sd
 b. Give an expression for the standard deviation for a portfolio investing $\$x$ in stock A and $\$1000-x$ in stock B. 
 
 ```{r}
+# b = 1000 - a
 sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)
 
 ```
@@ -76,20 +78,20 @@ c. Find the value $x$ that minimizes this standard deviation.
 > We find the first derivative of the expression above = 0 
 
 ```{r}
-(1 / sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2) ) * (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a)) = 0
+# (1 / sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2) ) * (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a)) = 0
 
 ```
 
 ```{r}
 # after canceling the sqrt
 
-# (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a) = 0
+# (2*a*sd1^2 + 2000*cov - 4*cov*a - 2*sd2^2*(1000-a) = 0
  
-# (2*a*sd1^2 + 2000*cov - 2*cov*a - 2000*sd2^2 + 2*sd2^2 * a) = 0
+# (2*a*sd1^2 + 2000*cov - 4*cov*a - 2000*sd2^2 + 2*sd2^2 * a) = 0
   
-# a * (2*sd1^2 - 2*cov + 2*sd2^2) = - 2000*cov + 2000*sd2^2
+# a * (2*sd1^2 - 4*cov + 2*sd2^2) = - 2000*cov + 2000*sd2^2
 
-a = (- 2000*cov + 2000*sd2^2) / (2*sd1^2 - 2*cov + 2*sd2^2)
+a = (- 2000*cov + 2000*sd2^2) / (2*sd1^2 - 4*cov + 2*sd2^2)
 
 a
     
@@ -108,14 +110,7 @@ sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)
 sd
 
 ```
-```{r}
-b = 948
-a = 1000 - b
 
-E = a * 0.05 + b * 0.1
-E
-
-```
 
 ## 3. Mousetrap: A Rube Goldberg Machine  <small>(5 points, 1 points each)</small>
 
@@ -179,8 +174,8 @@ e. What is $P(Y = 6 | Y \geq 3)$?
 
 ```{r}
 #prob[3:7]
-p^6*q
-sum(prob[3:7])
+#p^6*q
+#sum(prob[3:7])
 
 P = p^6*q / sum(prob[3:7])
 
