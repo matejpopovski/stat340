@@ -209,10 +209,11 @@ b. If the weather from day to day is independent and the forecast accuracy from 
 
 c. If the forecast calls for rain, what is the likelihood that it actually rains? In other words, find $P(\text{Rain} | \text{Forecast Rain})$.
 
-> P(R=T | F=T) = P(F=T | R=T)P(R=T) / P(F=T) 
+> P(R=T | F=T) = P(F=T | R=T) / (P(F=T | R=T) + P(F=T | R=F)P(R=F))
 
 ```{r}
-bias = 0.93 * 115/365 / forcast_correctness 
-bias
+
+
+
 ```
 
