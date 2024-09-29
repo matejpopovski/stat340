@@ -207,6 +207,7 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
 
 > The empirical results with 100,000 simulations robustly agree with the Law of Large Numbers. The sample mean reliably converges to the theoretical mean of 13, and the use of a log-scale effectively showcases the rate and extent of this convergence across a wide range of observations.
 
+
 e. Repeat the above steps with a **different** random variable. You can copy your entire code chunk so far and just make the necessary modifications. Comment on this output too and whether or not it also agrees with your expectations. Make sure you CLEARLY define what the random variable you're using and clearly state what the expected value is (you may look this up on the internet if it's a new random variable we covered this week that we did not give the expectation formula for in class).
 
 
