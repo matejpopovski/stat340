@@ -214,7 +214,7 @@ e. Repeat the above steps with a **different** random variable. You can copy you
 # Set the new random variable parameters
 len = 100000
 p = 0.1  # Probability of success for Geometric distribution
-expected_value = 1 / p  # Expected value for Geometric(p)
+expected_value = (1-p) / p  # Expected value for Geometric(p)
 
 # Generate geometric random variables
 index_col <- 1:len
@@ -234,6 +234,7 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
   theme_minimal()
 
 ```
+
 
 
 ## Problem 3: How Many Billies Can Fit? <small>(1.5pts each, 7.5pts total)</small>
