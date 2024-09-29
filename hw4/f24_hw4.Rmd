@@ -277,12 +277,26 @@ total = 241
 NMC <- 10000
 
 total_width <- replicate(NMC, sum(rnorm(3, mean = mean_billy, sd = sd_billy)))
-sum(total_width)/NMC
 
+estimated_mean = mean(total_width)
+estimated_sd = sd(total_width)
+
+estimated_mean
+estimated_sd
 ```
 
 
 b. If you buy 3 Billys, what is the probability that they will fit on your wall? Assume Billys are independent.
+
+```{r}
+
+bigger <- mean(total_width <= total)
+
+bigger
+
+```
+
+
 c. How wide of a space would you need to be 99% sure that 3 Billys would fit? *Hint: Use the `quantile` function in R*
 d. There are two other bookcases made by knockoff brand "Iqueeya": Goat and Gruff. Goat bookcase widths are normally distributed with a mean of 79cm and a standard deviation of .25cm, while Gruff bookcase widths are normally distributed with a mean of 81cm and a standard deviation of .6cm. What is the probability that a Billy, a Goat and a Gruff will fit on your wall? (Assume independence)
 e. Suppose you want the amount of gap between the bookcases and the side walls to be **as small as possible**. You assess how good of a fit you have by scoring: Buying 3 bookcases gives you a score of 0 if they don't fit, but otherwise a score of $$\frac{\text{total width}}{241}\times 100.$$ What combination of Billys, Goats and Gruffs gives you the highest *expected score*?
