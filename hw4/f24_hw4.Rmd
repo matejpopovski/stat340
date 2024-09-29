@@ -1,0 +1,283 @@
+---
+title: "Homework 4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+
+## Problem 1. Random Geometry <small>(2pts each, 8pts total)</small>
+Use Monte Carlo simulation to estimate the following geometric properties of shapes and solids. Use the following facts:
+
+* The distance between $(x_1,y_1)$ and $(x_2,y_2)$ is $\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$
+* The coordinates of a point on a unit circle at angle $\theta$ is $(\cos\theta,\sin\theta)$
+* The area of a triangle with vertices $(x_i, y_i), i=1,2,3$ is $\frac12 \left|x_1(y_2 − y_3) + x_2(y_3 − y_1) + x_3(y_1 − y_2)\right|$
+
+a. What is the the average distance between two points in a box with side lengths 5, 10 and 20?
+```{r}
+distance = function(x1, x2, y1, y2, z1, z2) {
+  
+  return(sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2))
+}
+
+```
+
+
+```{r}
+lx = 5
+ly = 10
+lz = 20
+
+NMC <- 10000;
+results <- rep( 0, NMC );
+
+for( i in 1:NMC) {
+  
+  x1 = runif(1, 0, lx)
+  y1 = runif(1, 0, ly)
+  z1 = runif(1, 0, lz)
+  
+  x2 = runif(1, 0, lx)
+  y2 = runif(1, 0, ly)
+  z2 = runif(1, 0, lz)
+  
+  results[i] <- distance(x1, x2, y1, y2, z1, z2);
+}
+
+sum( results )/NMC
+
+```
+
+b. Three points uniformly at random are selected on a circle with radius 1. What is the average area of the triangle formed?
+
+```{r}
+triangle_area = function(x1, y1, x2, y2, x3, y3) {
+  
+  return(1/2 * abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)))
+}
+```
+
+
+```{r}
+NMC <- 10000;
+results <- rep( 0, NMC );
+
+for( i in 1:NMC) {
+  
+  theta1 = runif(1, 0, 2*pi)
+  theta2 = runif(1, 0, 2*pi)
+  theta3 = runif(1, 0, 2*pi)
+  
+  x1 = cos(theta1)
+  y1 = sin(theta1)
+  x2 = cos(theta2)
+  y2 = sin(theta2)
+  x3 = cos(theta3)
+  y3 = sin(theta3)
+  
+  results[i] <- triangle_area(x1, y1, x2, y2, x3, y3);
+}
+
+sum( results )/NMC
+```
+
+
+c. Three points uniformly at random are selected on a circle with radius 1. What is the average perimeter of the triangle formed?
+
+```{r}
+perimeter = function(x1, y1, x2, y2, x3, y3) {
+  
+  return(sqrt((x2-x1)^2 + (y2-y1)^2) + sqrt((x3-x2)^2 + (y3-y2)^2) + sqrt((x1-x3)^2 + (y1-y3)^2))
+}
+
+```
+
+```{r}
+NMC <- 10000;
+results <- rep( 0, NMC );
+
+for( i in 1:NMC) {
+  
+  theta1 = runif(1, 0, 2*pi)
+  theta2 = runif(1, 0, 2*pi)
+  theta3 = runif(1, 0, 2*pi)
+  
+  x1 = cos(theta1)
+  y1 = sin(theta1)
+  x2 = cos(theta2)
+  y2 = sin(theta2)
+  x3 = cos(theta3)
+  y3 = sin(theta3)
+  
+  results[i] <- perimeter(x1, y1, x2, y2, x3, y3);
+}
+
+sum( results )/NMC
+```
+
+d. Let $(X,Y)$ be a random point, where both $X$ and $Y$ are independent, standard normal random variables. What is the average distance between $(X_1,Y_1)$ and $(X_2,Y_2)$?
+
+```{r}
+random_standard_norm = function(x1, y1, x2, y2) {
+  
+  return(sqrt((x2-x1)^2 + (y2-y1)^2))
+}
+```
+
+```{r}
+NMC <- 10000;
+results <- rep( 0, NMC );
+
+for( i in 1:NMC) {
+  
+  x1 = rnorm(1)
+  y1 = rnorm(1)
+  
+  x2 = rnorm(1)
+  y2 = rnorm(1)
+  
+  results[i] <- random_standard_norm(x1, y1, x2, y2);
+}
+
+sum( results )/NMC
+```
+
+## Problem 2: Law of Large Numbers <small>(1.5pts each, 7.5pts total)</small>
+
+For this next problem, we're going to empirically demonstrate the law of large numbers by simulating $N$ observations of a random variable, and show the convergence of the sample mean to the theoretical mean. Consider a Poisson variable $X$ with $\lambda=13$. It should hopefully be clear from the definition of the Poisson that $E(X)=\lambda=13$.
+
+a. Start by creating a data frame with 2 columns: a column named `n` that goes from 1, 2, ..., up to 1000; and a second column named `x` which is just 1000 repeated observations of a Poisson random variable with `lambda=13`.
+
+b. Next, create a third column named `xbar` that computes the "mean-thus-far" up to each row. E.g. if the first 3 values of `x` are 3, 1, 8, then the first 3 values of `xbar` should be 3, 2, 4, since 3=3, (3+1)/2=2, and (3+1+8)/3=4.
+   (Hint: use the `cumsum()` function to take the cumulative sum of the `x` column, then divide by the number of observations so far)
+
+```{r}
+len = 1000
+index_col <- 1:len
+poasson <- rpois(len, 13)
+cumulative = cumsum(poasson) / index_col
+
+df <- data.frame(Index = index_col, Poasson = poasson, Cumulative = cumulative)
+print(df)
+```
+
+
+c. Make a line plot showing xbar vs n. Add a red line at the theoretical mean. Comment on what you observe in the plot. Is this what you were expecting? (Don't forget to add proper labels/titles).
+
+```{r}
+# Create the line plot
+ggplot(df, aes(x = index_col, y = cumulative)) +
+  geom_line(color = "blue") +                     # Plot xbar vs n in blue
+  geom_hline(yintercept = 13, color = "red", linetype = "dashed") +  # Add a red dashed line at the theoretical mean (13)
+  labs(title = "Convergence of Sample Mean to Theoretical Mean (Law of Large Numbers)",
+       x = "Number of Observations",
+       y = "Mean-thus-far (cumulative)") +
+  theme_minimal()
+```
+
+> What I expected: Initially, the sample mean may deviate significantly from the theoretical mean, but as the number of observations increases, the sample mean will converge to the theoretical mean of 13. This is a demonstration of the Law of Large Numbers, which states that the sample average approaches the expected value as the sample size increases.
+Observation: As you observe more and more Poisson samples, the sample mean stabilizes around 13, showing the consistency of the empirical mean with the theoretical mean, as expected.
+
+
+d. Now, increase the number of simulations to 100,000 and remake the plot, this time with a log-scale x-axis to better show the rate of convergence across the entire axis. Comment again on the output. Explain if this does or does not empirically agree with the law of large numbers.
+
+```{r}
+len = 100000
+index_col <- 1:len
+poasson <- rpois(len, 13)
+cumulative = cumsum(poasson) / index_col
+
+df <- data.frame(Index = index_col, Poasson = poasson, Cumulative = cumulative)
+#print(df)
+```
+
+```{r}
+# Create the line plot
+ggplot(df, aes(x = log(index_col), y = cumulative)) +
+  geom_line(color = "blue") +                     # Plot xbar vs n in blue
+  geom_hline(yintercept = 13, color = "red", linetype = "dashed") +  # Add a red dashed line at the theoretical mean (13)
+  labs(title = "Convergence of Sample Mean to Theoretical Mean (Law of Large Numbers)",
+       x = "Log of Number of Observations",
+       y = "Mean-thus-far (cumulative)") +
+  theme_minimal()
+```
+
+> The empirical results with 100,000 simulations robustly agree with the Law of Large Numbers. The sample mean reliably converges to the theoretical mean of 13, and the use of a log-scale effectively showcases the rate and extent of this convergence across a wide range of observations.
+
+e. Repeat the above steps with a **different** random variable. You can copy your entire code chunk so far and just make the necessary modifications. Comment on this output too and whether or not it also agrees with your expectations. Make sure you CLEARLY define what the random variable you're using and clearly state what the expected value is (you may look this up on the internet if it's a new random variable we covered this week that we did not give the expectation formula for in class).
+
+
+## Problem 3: How Many Billies Can Fit? <small>(1.5pts each, 7.5pts total)</small>
+
+You have an empty wall That is exactly 241 cm wide (with walls on either side). You see that Billy the Bookcase (https://www.ikea.com/us/en/p/billy-bookcase-white-00263850/) is 80cm wide, so you should be able to fit 3 in this space.
+
+Suppose, however that The width of Billy is actually 80cm **on average**. In fact, the width is a normal random variable with a mean of 80 and a standard deviation of .5cm. (Please note - this is fictional! Ikea would never let quality control slip this bad). Use Monte Carlo simulation to answer the following questions:
+
+a. Estimate the expected value and standard deviation for the total width of the 3 Billys.
+b. If you buy 3 Billys, what is the probability that they will fit on your wall? Assume Billys are independent.
+c. How wide of a space would you need to be 99% sure that 3 Billys would fit? *Hint: Use the `quantile` function in R*
+d. There are two other bookcases made by knockoff brand "Iqueeya": Goat and Gruff. Goat bookcase widths are normally distributed with a mean of 79cm and a standard deviation of .25cm, while Gruff bookcase widths are normally distributed with a mean of 81cm and a standard deviation of .6cm. What is the probability that a Billy, a Goat and a Gruff will fit on your wall? (Assume independence)
+e. Suppose you want the amount of gap between the bookcases and the side walls to be **as small as possible**. You assess how good of a fit you have by scoring: Buying 3 bookcases gives you a score of 0 if they don't fit, but otherwise a score of $$\frac{\text{total width}}{241}\times 100.$$ What combination of Billys, Goats and Gruffs gives you the highest *expected score*?
+
+```{r, echo=FALSE}
+# The scoring function is provided for you. 
+# You can feed it a single width or a vector of widths
+score <- function(width){
+  scores <- rep(0, length(width))
+  scores[width<=241] <- width[width<=241]/241*100 
+  return(mean(scores))
+}
+```
+
+
+
+
+## Problem 4: Simulating a random variable <small>(7pts)</small>
+
+Define a random variable $X$ with density
+$$
+f_X(t) = \begin{cases}
+      \frac12\sin t &\mbox{ if } 0 \le t \le \pi \\
+      0 &\mbox{ otherwise. }
+      \end{cases}
+$$
+
+The probability density function (pdf) is visualized below.
+```{r, fig.width=5.7, fig.height=4, echo=FALSE}
+# here we define a *vectorized* function to evaluate the density of X
+pdf_x = function(x) {
+  # ifelse is like a function version of an if statement.
+  # We use it here to ensure that pdf_x can operate directly on vectors.
+  return(ifelse(0<=x & x<=pi , .5*sin(x) , 0 ))
+}
+
+# showing the PDF in a plot
+ggplot() + geom_function(fun=pdf_x, n=10001) + 
+  coord_fixed(ratio=2) + theme_minimal() + 
+  xlim(c(-.5,pi+.5)) + ylim(-.2,.7) + labs(x="x", y="f(x)")
+```
+
+This means that the cumulative distribution function is $$F_X(t)=\int_0^tf_X(u)du=\frac12-\frac{1}{2}\cos(t)$$
+for $0 \le t \le \pi$, (and $F_X(t)=0$ for $t<0$ and $F_X(t) = 1$ for $t \ge \pi$).
+
+a. (3 points) Find $F^{-1}(x)$, the inverse CDF. *Hint: In `R` the `arc-cosine` function is `acos()`.*
+b. (4 points) Write a function `rx(n)` (like `rbinom`) to sample from this random variable, where `n` is the size of the sample to be drawn. Then, use your function to draw sample of size 1000 and plot a histogram of the output to verify the results make sense. 
+
+```{r}
+# complete the function
+rx = function(n) {
+  # TODO: code goes here
+}
+
+# The histogram should look like the PDF we plotted above.
+# Un-comment the following lines of code and check it looks correct
+
+#hist(rx(1000), probability=TRUE)
+#lines(x=seq(0,pi,.01), y=pdf_x(seq(0,pi,.01)), col='red')
+```
+
+
+

@@ -50,13 +50,107 @@ e. __Super bonus:__ Repeat the above for another 2D or 3D object of your choice 
 Suppose you flip a fair coin $N$ times. How many heads in a row should you expect to see? For example, suppose that I flip a coin 20 times, and I get 5 heads in a row at some point in the sequence. Is this a "surprising" outcome?
 
    a. Write code to simulate randomly flipping a fair coin ($p=0.5$) a total of $N=10$ times (hint: use either the `rbernoulli` function from the `purrr` package or `rbinom` with `n=10` and `size=1`) and record how many heads (defined as a value of $1$; tails is $0$) in a row you observe. Determining the length of the longest run has been implemented in the function `longest_head_run` below.
+
+```{r}
+longest_head_run <- function(trials) {
+  rle_encoded <- rle(trials)
+  head_sequence_indicators <- rle_encoded$values == 1
+  
+  if (!any(head_sequence_indicators)) {
+    return(0L)
+  }
+  
+  lengths_head_sequences <- rle_encoded$lengths[head_sequence_indicators]
+  
+  max(lengths_head_sequences)
+}
+rbinom(10, 1, 0.5)
+longest_head_run(rbinom(10, 1, 0.5))
+
+```
+   
    b. Repeat the above experiment $M$ times. Set $M$ to be at least $1000$, but don't make it extremely large, because we are going to repeat the previous step for other values of the number of flips $N$. What is the mean length of the largest run of heads in $N=10$ flips?
       - __Note:__ $N$ here is the *size of each experiment*. That is, each experiment consists of $N$ flips. On the other hand, $M$ is *how many experiments* are performed (i.e., the number of times we repeat the experiment). It is common when using Monte Carlo methods to have two types of parameters: one type for the properties of each experiment (e.g., $N$, in this case), and one type that determines how many experiments are done (here, $M$). Increasing $N$ (number of flips in each experiment) will change the experiment by increasing the mean-run-length, whereas increasing $M$ (the number of experiments) will increase the precision of the estimate of the mean run length for a particular number of flips $N$.
+      
+```{r}
+
+NMC <- 1000; # 1000 seems like "a lot".
+results <- rep( 0, NMC ); # We're going to record outcomes here.
+for( i in 1:NMC) {
+  # Generate a draw from the normal, and then...
+  #X <- rnorm( 1, mean=1, sd=sqrt(3) );
+  # ...record whether or not our event of interest happened.
+  results[i] <- longest_head_run(rbinom(10, 1, 0.5));
+}
+# Now, compute what fraction of our trials were "successes" (i.e., E happened)
+sum( results )/NMC
+
+```
+
    c. Now, repeat the above (you may use the same $M$) for *at least 3* other values of $N$ (again, feel free to do more if you wish!). Display your results in a table.
       - __Note:__ this step should be easy if you've written your code with good style. I recommend writing a function that does all the above for any given $N$ and $M$ and, optionally, $p$. For example, something like  `find_mean_run <- function(N, M, p = 0.5) {......}`. Then, for different values of $N$ and $M$ you can simply change the arguments given to the function, e.g. `find_mean_run(10, 1000)` or `find_mean_run(20, 1000)`, etc., then put them in a data frame.
       - __Note:__ the above function syntax sets `N` and `M` as arguments to the function without default values, but sets `0.5` as the default value of the argument `p`. For a different example, [see this](https://www.javatpoint.com/r-function-default-arguments).
+      
+```{r}
+
+NMC <- 1000; # 1000 seems like "a lot".
+results <- rep( 0, NMC ); # We're going to record outcomes here.
+for( i in 1:NMC) {
+  # Generate a draw from the normal, and then...
+  #X <- rnorm( 1, mean=1, sd=sqrt(3) );
+  # ...record whether or not our event of interest happened.
+  results[i] <- longest_head_run(rbinom(20, 1, 0.5));
+}
+# Now, compute what fraction of our trials were "successes" (i.e., E happened)
+sum( results )/NMC
+
+NMC <- 1000; # 1000 seems like "a lot".
+results <- rep( 0, NMC ); # We're going to record outcomes here.
+for( i in 1:NMC) {
+  # Generate a draw from the normal, and then...
+  #X <- rnorm( 1, mean=1, sd=sqrt(3) );
+  # ...record whether or not our event of interest happened.
+  results[i] <- longest_head_run(rbinom(50, 1, 0.5));
+}
+# Now, compute what fraction of our trials were "successes" (i.e., E happened)
+sum( results )/NMC
+
+NMC <- 1000; # 1000 seems like "a lot".
+results <- rep( 0, NMC ); # We're going to record outcomes here.
+for( i in 1:NMC) {
+  # Generate a draw from the normal, and then...
+  #X <- rnorm( 1, mean=1, sd=sqrt(3) );
+  # ...record whether or not our event of interest happened.
+  results[i] <- longest_head_run(rbinom(1000, 1, 0.5));
+}
+# Now, compute what fraction of our trials were "successes" (i.e., E happened)
+sum( results )/NMC
+
+```
+
    d. Validate your results against other people's results (for example, [this post](https://math.stackexchange.com/a/1409539)). Are your results consistent with others?
    e. __Bonus:__ run a few more values of $N$ and plot the results, showing the mean run length as a function of the number of flips $N$. (bonus²: what happens if you increase $M$?)
+   
+```{r}
+vector1 =  rep( 0, 1000 );
+for(j in 1:1000){
+  NMC <- 1000; # 1000 seems like "a lot".
+  results <- rep( 0, NMC ); # We're going to record outcomes here.
+  for( i in 1:NMC) {
+    # Generate a draw from the normal, and then...
+    #X <- rnorm( 1, mean=1, sd=sqrt(3) );
+    # ...record whether or not our event of interest happened.
+    results[i] <- longest_head_run(rbinom(20, 1, 0.5));
+  }
+  # Now, compute what fraction of our trials were "successes" (i.e., E happened)
+  vector1[j] = sum( results )/NMC
+  
+}
+vector1
+hist(vector1)
+```
+
+
    f. __Super bonus:__ Like [the post referenced above](https://math.stackexchange.com/questions/1409372/what-is-the-expected-length-of-the-largest-run-of-heads-if-we-make-1-000-flips/1409539#1409539), can you fit a smooth curve through the points?
 
 ```{r}
@@ -80,9 +174,7 @@ longest_head_run(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) # returns 0
 longest_head_run(c(1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0)) # returns 3
 ```
 
-```{r}
-# TODO: code goes here.
-```
+
 
 ---
 
@@ -103,4 +195,58 @@ g. __Bonus:__ What do you notice about how the distribution changes as $N$ incre
 
 ```{r}
 # TODO: code goes here.
+set.seed(123)
+M <- 1000
+mu <- 5
+sigma <- 2
+N <- 2
+t_values <- numeric(M)
+
+for (i in 1:M) {
+  sample <- rnorm(N, mean=mu, sd=sigma)
+  X_bar <- mean(sample)
+  s <- sd(sample)
+  t_values[i] <- (X_bar - mu) / (s / sqrt(N))
+}
+
+# Plotting the density of simulated t-values
+library(ggplot2)
+ggplot(data.frame(t_values), aes(x=t_values)) +
+  geom_density(fill="blue", alpha=0.3) +
+  labs(title="Simulated t-distribution for N=2",
+       x="t-value", y="Density")
 ```
+```{r}
+# Overlaying the theoretical t-distribution for 1 degree of freedom
+ggplot(data.frame(t_values), aes(x=t_values)) +
+  geom_density(fill="blue", alpha=0.3) +
+  stat_function(fun=dt, args=list(df=1), color="red", size=1) +
+  labs(title="Simulated vs Theoretical t-distribution (N=2, df=1)",
+       x="t-value", y="Density")
+
+```
+
+```{r}
+# Simulating for N=3
+N <- 30
+t_values_N3 <- numeric(M)
+
+for (i in 1:M) {
+  sample <- rnorm(N, mean=mu, sd=sigma)
+  X_bar <- mean(sample)
+  s <- sd(sample)
+  t_values_N3[i] <- (X_bar - mu) / (s / sqrt(N))
+}
+
+# Plotting the simulated vs theoretical t-distribution for N=3
+ggplot(data.frame(t_values_N3), aes(x=t_values_N3)) +
+  geom_density(fill="green", alpha=0.3) +
+  stat_function(fun=dt, args=list(df=N-1), color="red", size=1) +
+  labs(title="Simulated vs Theoretical t-distribution (N=3, df=2)",
+       x="t-value", y="Density")
+
+```
+
+
+
+

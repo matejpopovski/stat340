@@ -407,31 +407,56 @@ dollars)? <em>Hint:</em> <span class="math inline">\(SD(aX+bY) =
 </blockquote>
 <pre class="r"><code>a = 500; b = 500
 E = a * 0.05 + b * 0.1
-E</code></pre>
-<pre><code>## [1] 75</code></pre>
+print(paste(&quot;Expected value (return) is:&quot;, E))</code></pre>
+<pre><code>## [1] &quot;Expected value (return) is: 75&quot;</code></pre>
 <pre class="r"><code>cor = -0.65
 sd1 = 0.01
 sd2 = 0.04
 
 cov = cor * sd1 * sd2
-cov</code></pre>
-<pre><code>## [1] -0.00026</code></pre>
-<pre class="r"><code>sd = sqrt(a^2*sd1^2 + 2*a*b*cov + b^2*sd2^2)
-sd</code></pre>
-<pre><code>## [1] 17.17556</code></pre>
+#cov
+
+sd = sqrt(a^2*sd1^2 + 2*a*b*cov + b^2*sd2^2)
+print(paste(&quot;The standard deviation of the portfolio is:&quot;, sd))</code></pre>
+<pre><code>## [1] &quot;The standard deviation of the portfolio is: 17.1755640373177&quot;</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Give an expression for the standard deviation for a portfolio
 investing <span class="math inline">\(\$x\)</span> in stock A and <span class="math inline">\(\$1000-x\)</span> in stock B.</li>
 </ol>
-<blockquote>
-<p>sd = sqrt(a^2<em>sd1^2 + 2</em>a<em>b</em>cov + b^2*sd2^2)</p>
-</blockquote>
+<pre class="r"><code># b = 1000 - a
+sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
-<li><p>Find the value <span class="math inline">\(x\)</span> that
-minimizes this standard deviation.</p></li>
-<li><p>What is the expected return and standard deviation (in dollars)
-for the portfolio split you chose in part c?</p></li>
+<li>Find the value <span class="math inline">\(x\)</span> that minimizes
+this standard deviation.</li>
 </ol>
+<blockquote>
+<p>We find the first derivative of the expression above = 0</p>
+</blockquote>
+<pre class="r"><code># (1 / sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2) ) * (2*a*sd1^2 + 2000*cov - 2*cov*a - 2*sd2^2*(1000-a)) = 0</code></pre>
+<pre class="r"><code># after canceling the sqrt
+
+# (2*a*sd1^2 + 2000*cov - 4*cov*a - 2*sd2^2*(1000-a) = 0
+ 
+# (2*a*sd1^2 + 2000*cov - 4*cov*a - 2000*sd2^2 + 2*sd2^2 * a) = 0
+  
+# a * (2*sd1^2 - 4*cov + 2*sd2^2) = - 2000*cov + 2000*sd2^2
+
+a = (- 2000*cov + 2000*sd2^2) / (2*sd1^2 - 4*cov + 2*sd2^2)
+
+a</code></pre>
+<pre><code>## [1] 837.8378</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>What is the expected return and standard deviation (in dollars) for
+the portfolio split you chose in part c?</li>
+</ol>
+<pre class="r"><code>b = (1000-a)
+
+E = a * 0.05 + b * 0.1
+E</code></pre>
+<pre><code>## [1] 58.10811</code></pre>
+<pre class="r"><code>sd = sqrt(a^2*sd1^2 + 2*a*(1000-a)*cov + (1000-a)^2*sd2^2)
+sd</code></pre>
+<pre><code>## [1] 6.451482</code></pre>
 </div>
 <div id="mousetrap-a-rube-goldberg-machine-5-points-1-points-each" class="section level2">
 <h2>3. Mousetrap: A Rube Goldberg Machine <small>(5 points, 1 points
@@ -452,20 +477,88 @@ Bernoulli random variables <span class="math inline">\(X_1\)</span>
 through <span class="math inline">\(X_7\)</span>, where the probability
 of <span class="math inline">\(X_i\)</span> succeeding is <span class="math inline">\(.94\)</span> for each component.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>What is the probability that the trap works correctly from
-beginning to end?</p></li>
-<li><p>If you attempt the trap 15 times during a game, how many times do
-you expect it to work correctly from beginning to end?</p></li>
-<li><p>Suppose you let the marble go: Let <span class="math inline">\(Y\)</span> be the number of components of the trap
+<li>What is the probability that the trap works correctly from beginning
+to end?</li>
+</ol>
+<pre class="r"><code>succeed = 0.94^7
+succeed</code></pre>
+<pre><code>## [1] 0.6484776</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>If you attempt the trap 15 times during a game, how many times do
+you expect it to work correctly from beginning to end?</li>
+</ol>
+<pre class="r"><code>15 * succeed</code></pre>
+<pre><code>## [1] 9.727164</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Suppose you let the marble go: Let <span class="math inline">\(Y\)</span> be the number of components of the trap
 that work in a row. If one component fails, then you stop counting.
 Calculate the probability mass function of <span class="math inline">\(Y\)</span>. <em>Hints: <span class="math inline">\(Y\)</span> can have values <span class="math inline">\(0, 1, 2, 3, 4, 5, 6\)</span> or <span class="math inline">\(7\)</span>. This is like a Geometric r.v. except
 it does not have infinite support. How can you use this fact to
-determine the pmf? Be careful: what is a ‘success’ in this
-context?</em></p></li>
-<li><p>Calculate the expected value of <span class="math inline">\(Y\)</span> and its variance.</p></li>
-<li><p>What is <span class="math inline">\(P(Y = 6 | Y \geq
-3)\)</span>?</p></li>
+determine the pmf? Be careful: what is a ‘success’ in this context?</em>
+&gt; p = 0.94 q = 1-p = 0.06</li>
 </ol>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>P(Y=0) = q</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>P(Y=k) = p^k * q</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>P(Y=7) = p^7</li>
+</ol>
+</blockquote>
+<pre class="r"><code>index_col &lt;- 0:7 
+formula &lt;- c(&quot;(1-p)&quot;, &quot;(1-p)*p&quot;, &quot;(1-p)*p^2&quot;, &quot;(1-p)*p^3&quot;, &quot;(1-p)*p^4&quot;, &quot;(1-p)*p^5&quot;, &quot;(1-p)*p^6&quot;, &quot;p^7&quot;)  
+p = 0.94; q=0.06
+prob &lt;- c(q, p*q, p^2*q, p^3*q, p^4*q, p^5*q, p^6*q, p^7)
+sum(prob) # check</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>df &lt;- data.frame(Index = index_col, Formula = formula, Probability = prob)
+
+print(df)</code></pre>
+<pre><code>##   Index   Formula Probability
+## 1     0     (1-p)  0.06000000
+## 2     1   (1-p)*p  0.05640000
+## 3     2 (1-p)*p^2  0.05301600
+## 4     3 (1-p)*p^3  0.04983504
+## 5     4 (1-p)*p^4  0.04684494
+## 6     5 (1-p)*p^5  0.04403424
+## 7     6 (1-p)*p^6  0.04139219
+## 8     7       p^7  0.64847759</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Calculate the expected value of <span class="math inline">\(Y\)</span> and its variance.</li>
+</ol>
+<pre class="r"><code>E = sum(index_col*prob)
+E</code></pre>
+<pre><code>## [1] 5.507184</code></pre>
+<pre class="r"><code>var = sum((index_col-E)^2*prob)
+var</code></pre>
+<pre><code>## [1] 5.503796</code></pre>
+<pre class="r"><code>test = sum(index_col^2 * prob) - E^2
+test</code></pre>
+<pre><code>## [1] 5.503796</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>What is <span class="math inline">\(P(Y = 6 | Y \geq
+3)\)</span>?</li>
+</ol>
+<blockquote>
+<p>P(Y=6 | Y &gt;= 3) = P(Y=6, Y&gt;=3) / P(Y &gt;= 3) = P(Y=6) / P(Y
+&gt;= 3)</p>
+</blockquote>
+<pre class="r"><code>#index_col[4:8] # elements &gt;= 3
+#prob[4:8] # elements &gt;= 3
+#p^6*q #6th element
+#sum(prob[4:8])
+
+P = p^6*q / sum(prob[4:8])
+
+P</code></pre>
+<pre><code>## [1] 0.04983504</code></pre>
 </div>
 <div id="bayes-rule-with-forecasting-9-points-3-points-each" class="section level2">
 <h2>4. Bayes Rule with forecasting <small>(9 points, 3 points
@@ -499,11 +592,12 @@ actually rains? In other words, find <span class="math inline">\(P(\text{Rain} |
 Rain})\)</span>.</li>
 </ol>
 <blockquote>
-<p>P(R=T | F=T) = P(F=T | R=T)P(R=T) / P(F=T)</p>
+<p>P(R=T | F=T) = P(F=T | R=T)P(R=T) / (P(F=T | R=T)P(R=T) + P(F=T |
+R=F)P(R=F))</p>
 </blockquote>
-<pre class="r"><code>bias = 0.93 * 115/365 / forcast_correctness
-bias</code></pre>
-<pre><code>## [1] 0.3296348</code></pre>
+<pre class="r"><code>actually_rains = (0.93 * (115/365)) / (0.93 * (115/365) + (1-0.87)*250/365)
+actually_rains</code></pre>
+<pre><code>## [1] 0.7669416</code></pre>
 </div>
 
 
