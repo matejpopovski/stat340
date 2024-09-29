@@ -270,6 +270,15 @@ Suppose, however that The width of Billy is actually 80cm **on average**. In fac
 
 a. Estimate the expected value and standard deviation for the total width of the 3 Billys.
 
+```{r}
+mean_billy = 80
+sd_billy = 0.5
+total = 241
+NMC <- 10000
+
+total_width <- replicate(NMC, sum(rnorm(3, mean = mean_billy, sd = sd_billy)))
+sum(total_width)/NMC
+```
 
 
 b. If you buy 3 Billys, what is the probability that they will fit on your wall? Assume Billys are independent.
