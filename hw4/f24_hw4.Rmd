@@ -278,6 +278,7 @@ NMC <- 10000
 
 total_width <- replicate(NMC, sum(rnorm(3, mean = mean_billy, sd = sd_billy)))
 sum(total_width)/NMC
+
 ```
 
 
