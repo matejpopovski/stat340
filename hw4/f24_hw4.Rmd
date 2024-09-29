@@ -235,6 +235,31 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
 
 ```
 
+```{r}
+# Set parameters for Binomial random variable
+len = 100000
+n_trials = 20
+p_success = 0.65
+expected_value = n_trials * p_success  # E(X) = 13
+
+# Generate 100,000 Binomial observations
+index_col <- 1:len
+binomial <- rbinom(len, n_trials, p_success)
+cumulative = cumsum(binomial) / index_col
+
+# Create the data frame
+df <- data.frame(Index = index_col, Binomial = binomial, Cumulative = cumulative)
+
+# Create the line plot
+ggplot(df, aes(x = log(index_col), y = cumulative)) +
+  geom_line(color = "blue") +                     # Plot xbar vs n in blue
+  geom_hline(yintercept = expected_value, color = "red", linetype = "dashed") +  # Add a red dashed line at the expected mean (13)
+  labs(title = "Convergence of Sample Mean to Theoretical Mean (Binomial Distribution)",
+       x = "Log of Number of Observations",
+       y = "Mean-thus-far (cumulative)") +
+  theme_minimal()
+
+```
 
 
 ## Problem 3: How Many Billies Can Fit? <small>(1.5pts each, 7.5pts total)</small>
