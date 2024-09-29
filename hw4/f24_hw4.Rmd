@@ -338,6 +338,67 @@ score <- function(width){
 }
 ```
 
+```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Number of simulations
+n_sim <- 100000
+
+# Wall width
+wall_width <- 241
+
+# Mean and standard deviation for each bookcase
+mean_billy <- 80
+sd_billy <- 0.5
+mean_goat <- 79
+sd_goat <- 0.25
+mean_gruff <- 81
+sd_gruff <- 0.6
+
+# Scoring function
+score <- function(width){
+  scores <- rep(0, length(width))
+  scores[width <= 241] <- width[width <= 241] / 241 * 100
+  return(mean(scores))
+}
+
+# Simulate the total width for different combinations of bookcases
+simulate_total_width <- function(billys, goats, gruffs, n_sim) {
+  total_width <- replicate(n_sim, 
+                           sum(c(rnorm(billys, mean_billy, sd_billy),
+                                 rnorm(goats, mean_goat, sd_goat),
+                                 rnorm(gruffs, mean_gruff, sd_gruff))))
+  return(total_width)
+}
+
+# Test different combinations of Billys, Goats, and Gruffs
+combinations <- list(
+  "3 Billys" = c(3, 0, 0),
+  "2 Billys + 1 Goat" = c(2, 1, 0),
+  "2 Billys + 1 Gruff" = c(2, 0, 1),
+  "1 Billy + 2 Goats" = c(1, 2, 0),
+  "1 Billy + 2 Gruffs" = c(1, 0, 2),
+  "1 Billy + 1 Goat + 1 Gruff" = c(1, 1, 1),
+  "3 Goats" = c(0, 3, 0),
+  "3 Gruffs" = c(0, 0, 3),
+  "2 Goats + 1 Gruff" = c(0, 2, 1)
+)
+
+# Evaluate the expected score for each combination
+expected_scores <- sapply(combinations, function(comb) {
+  total_width <- simulate_total_width(comb[1], comb[2], comb[3], n_sim)
+  score(total_width)
+})
+
+# Output the expected scores for each combination
+expected_scores
+
+# Find the combination with the highest expected score
+best_combination <- names(which.max(expected_scores))
+cat("The combination with the highest expected score is:", best_combination, "\n")
+cat("Expected score:", max(expected_scores), "\n")
+```
 
 
 
