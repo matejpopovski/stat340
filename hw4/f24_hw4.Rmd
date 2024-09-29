@@ -174,7 +174,7 @@ ggplot(df, aes(x = index_col, y = cumulative)) +
   geom_hline(yintercept = 13, color = "red", linetype = "dashed") +  # Add a red dashed line at the theoretical mean (13)
   labs(title = "Convergence of Sample Mean to Theoretical Mean (Law of Large Numbers)",
        x = "Number of Observations",
-       y = "Mean-thus-far (cumulative)") +
+       y = "Mean-thus-far") +
   theme_minimal()
 ```
 
@@ -201,7 +201,7 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
   geom_hline(yintercept = 13, color = "red", linetype = "dashed") +  # Add a red dashed line at the theoretical mean (13)
   labs(title = "Convergence of Sample Mean to Theoretical Mean (Law of Large Numbers)",
        x = "Log of Number of Observations",
-       y = "Mean-thus-far (cumulative)") +
+       y = "Mean-thus-far") +
   theme_minimal()
 ```
 
@@ -230,7 +230,7 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
   geom_hline(yintercept = expected_value, color = "red", linetype = "dashed") +  # Add red line at the theoretical mean (10)
   labs(title = "Convergence of Geometric Distribution Mean to Theoretical Mean (Law of Large Numbers)",
        x = "Log of Number of Observations",
-       y = "Mean-thus-far (cumulative)") +
+       y = "Mean-thus-far") +
   theme_minimal()
 
 ```
@@ -256,7 +256,7 @@ ggplot(df, aes(x = log(index_col), y = cumulative)) +
   geom_hline(yintercept = expected_value, color = "red", linetype = "dashed") +  # Add a red dashed line at the expected mean (13)
   labs(title = "Convergence of Sample Mean to Theoretical Mean (Binomial Distribution)",
        x = "Log of Number of Observations",
-       y = "Mean-thus-far (cumulative)") +
+       y = "Mean-thus-far") +
   theme_minimal()
 
 ```
@@ -269,6 +269,9 @@ You have an empty wall That is exactly 241 cm wide (with walls on either side). 
 Suppose, however that The width of Billy is actually 80cm **on average**. In fact, the width is a normal random variable with a mean of 80 and a standard deviation of .5cm. (Please note - this is fictional! Ikea would never let quality control slip this bad). Use Monte Carlo simulation to answer the following questions:
 
 a. Estimate the expected value and standard deviation for the total width of the 3 Billys.
+
+
+
 b. If you buy 3 Billys, what is the probability that they will fit on your wall? Assume Billys are independent.
 c. How wide of a space would you need to be 99% sure that 3 Billys would fit? *Hint: Use the `quantile` function in R*
 d. There are two other bookcases made by knockoff brand "Iqueeya": Goat and Gruff. Goat bookcase widths are normally distributed with a mean of 79cm and a standard deviation of .25cm, while Gruff bookcase widths are normally distributed with a mean of 81cm and a standard deviation of .6cm. What is the probability that a Billy, a Goat and a Gruff will fit on your wall? (Assume independence)
