@@ -304,11 +304,28 @@ sum(bigger2) / NMC
 c. How wide of a space would you need to be 99% sure that 3 Billys would fit? *Hint: Use the `quantile` function in R*
 
 ```{r}
+qnorm(0.99, 3*mean_billy, sqrt(3)*sd_billy)
 
 ```
 
 
 d. There are two other bookcases made by knockoff brand "Iqueeya": Goat and Gruff. Goat bookcase widths are normally distributed with a mean of 79cm and a standard deviation of .25cm, while Gruff bookcase widths are normally distributed with a mean of 81cm and a standard deviation of .6cm. What is the probability that a Billy, a Goat and a Gruff will fit on your wall? (Assume independence)
+
+```{r}
+mean_goat = 79
+mean_gruff = 81
+sd_goat = 0.25
+sd_gruff = 0.6
+
+total_mean = mean_billy + mean_goat + mean_gruff
+
+total_sd = sqrt(sd_billy + sd_goat + sd_gruff)
+
+pnorm(total, total_mean, total_sd)
+
+```
+
+
 e. Suppose you want the amount of gap between the bookcases and the side walls to be **as small as possible**. You assess how good of a fit you have by scoring: Buying 3 bookcases gives you a score of 0 if they don't fit, but otherwise a score of $$\frac{\text{total width}}{241}\times 100.$$ What combination of Billys, Goats and Gruffs gives you the highest *expected score*?
 
 ```{r, echo=FALSE}
