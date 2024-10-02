@@ -161,7 +161,7 @@ poasson <- rpois(len, 13)
 cumulative = cumsum(poasson) / index_col
 
 df <- data.frame(Index = index_col, Poasson = poasson, Cumulative = cumulative)
-print(df)
+head(df)
 ```
 
 
@@ -190,7 +190,7 @@ index_col <- 1:len
 poasson <- rpois(len, 13)
 cumulative = cumsum(poasson) / index_col
 
-df <- data.frame(Index = index_col, Poasson = poasson, Cumulative = cumulative)
+df <- data.frame(n = index_col, Poasson = poasson, Cumulative = cumulative)
 #print(df)
 ```
 
@@ -222,7 +222,7 @@ geometric <- rgeom(len, p)
 cumulative = cumsum(geometric) / index_col
 
 # Create a data frame
-df <- data.frame(Index = index_col, Geometric = geometric, Cumulative = cumulative)
+df <- data.frame(n = index_col, Geometric = geometric, Cumulative = cumulative)
 
 # Plot the line plot with log-scale x-axis
 ggplot(df, aes(x = log(index_col), y = cumulative)) +
@@ -248,7 +248,7 @@ binomial <- rbinom(len, n_trials, p_success)
 cumulative = cumsum(binomial) / index_col
 
 # Create the data frame
-df <- data.frame(Index = index_col, Binomial = binomial, Cumulative = cumulative)
+df <- data.frame(n = index_col, Binomial = binomial, Cumulative = cumulative)
 
 # Create the line plot
 ggplot(df, aes(x = log(index_col), y = cumulative)) +
@@ -431,14 +431,33 @@ This means that the cumulative distribution function is $$F_X(t)=\int_0^tf_X(u)d
 for $0 \le t \le \pi$, (and $F_X(t)=0$ for $t<0$ and $F_X(t) = 1$ for $t \ge \pi$).
 
 a. (3 points) Find $F^{-1}(x)$, the inverse CDF. *Hint: In `R` the `arc-cosine` function is `acos()`.*
+
+> F^−1(x)=arccos(1−2x),for 0≤x≤1.
+
+```{r}
+F_inv <- function(x) {
+  acos(1 - 2 * x)
+}
+```
+
 b. (4 points) Write a function `rx(n)` (like `rbinom`) to sample from this random variable, where `n` is the size of the sample to be drawn. Then, use your function to draw sample of size 1000 and plot a histogram of the output to verify the results make sense. 
 
 ```{r}
 # complete the function
-rx = function(n) {
-  # TODO: code goes here
-}
+rx <- function(n) { 
+u <- runif(n) 
+samples <- acos(1 - 2 * u)
+return(samples) 
+} 
 
+# Draw a sample of size 1000 
+sample_size <- 1000 
+samples <- rx(sample_size) 
+# Plot a histogram of the samples 
+hist(samples, breaks = 30, probability = TRUE, main = "Histogram of samples from f_X(t)", 
+xlab = "t",  col = "lightblue", border = "black") 
+# Overlay the theoretical density f_X(t) = 0.5 * sin(t) for comparison 
+curve(0.5 * sin(x), from = 0, to = pi, add = TRUE, col = "red", lwd = 2)
 # The histogram should look like the PDF we plotted above.
 # Un-comment the following lines of code and check it looks correct
 
