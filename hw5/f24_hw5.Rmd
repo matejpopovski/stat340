@@ -24,24 +24,58 @@ a. (4 points) Create a function called `playPingPong` which simulates a single g
 ```{r}
 playPingPong <- function(scoreTrigger = 21, winMargin=2, probPlayerA=0.5){
   #initialize a score vector to be 0,0
-
+  scoreA <- 0
+  scoreB <- 0
   #repeat while the winning condition has not been reached
   #i.e. repeat while max score < 21 or point difference < 2
-
+  while ((max(scoreA, scoreB) < scoreTrigger) || (abs(scoreA - scoreB) < winMargin)) {
+    # Assign a point to Player A or Player B based on probPlayerA
+    if (runif(1) < probPlayerA) {
+      scoreA <- scoreA + 1
+    } else {
+      scoreB <- scoreB + 1
+    }
+  }
     #Assign a point to player 1 or 2 randomly
 
   #return the point difference
+  return(abs(scoreA - scoreB))
 }
 ```
 
 b. (2 points) Perform the Monte Carlo test; simulate 1000 (or more) games with equally skilled players. Look at the distribution of point differences, and compare the observed point difference to this distribution. What is the *p*-value of the observed point difference.
 
 ```{r}
-#TODO: Enter Code Here
+# Set seed for reproducibility
+set.seed(123)
+
+# Number of simulations
+num_simulations <- 10000
+
+# Observed point difference from the actual game
+observed_diff <- 21 - 15  # 6 points
+
+# Simulate multiple games and record point differences
+simulated_diffs <- replicate(num_simulations, playPingPong())
+
+# Plot the distribution of simulated point differences
+hist(simulated_diffs, breaks = 30, main = "Distribution of Point Differences",
+     xlab = "Point Difference", col = "lightblue", border = "black")
+
+# Calculate the p-value
+# Since Bacchus won by 6 points, we consider point differences >=6
+# under the alternative that Bacchus is better (one-sided test)
+p_value <- mean(simulated_diffs >= observed_diff)
+
+# Display the p-value
+cat("P-value:", p_value, "\n")
+
 ```
 
 
 c. (2 points) How do you conclude? Is this one game sufficient evidence that Bacchus is the superior Ping Pong Player?
+
+>Based on the Monte Carlo simulation, the p-value of 0.4035 indicates that there is insufficient evidence to conclude that Bacchus is a superior Ping Pong player. Since this value is much greater than the common significance level of 0.05, we fail to reject the null hypothesis, meaning that the observed point difference of 6 could easily occur by chance if both players are equally skilled. Therefore, this one game is not sufficient to prove that Bacchus is better than Athena, and more games would be needed for a more reliable assessment.
 
 
 ## Problem 2: Quality or Quantity? <small>(6pts total)</small> 
@@ -53,6 +87,12 @@ What do you think? Is the ranking evidence of the quality of his work, or a cons
 Take the null hypothesis to be that any of the 150 considered buildings could be included in the top 10 with equal likelihood. How likely under this model would we see 4 (or more) of Ranchello's buildings in the top 10? What do you conclude? 
 
 Proceed by treating this as a formal hypothesis test. Define the null and alternative hypotheses, define your test statistic, produce a distribution of simulated test statistics from the null model and finish by calculating a p-value and providing your own interpretation.
+
+> Null Hypothesis (H₀): Marcio's buildings are no more likely than any other building to be selected in the top 10 designs. This means any of the 150 buildings has an equal chance of being in the top 10.
+
+> Alternative Hypothesis (H₁): Marcio's buildings are more likely to be selected in the top 10 designs, implying that the success rate of his buildings is higher than the others (suggesting that his designs are of higher quality).
+
+
 
 
 
@@ -66,6 +106,38 @@ after  = c(3,2,4,3,7,5,5,2,2,4,5,2,2,6,1,5,6,3,2,3,7,3,4,5,4,2,2,6,7,8)
 ```
 
 a) (4 points) Use a permutation test to assess the claim that installation of the new part *changed* the prevalence of defects. That is, test the null hypothesis that the distribution of defects is the same before and after installation of the new part. Produce a p-value and interpret the results of your test in context.
+
+> Null Hypothesis (H₀): The distribution of defects before and after the installation of the new part is the same.
+
+> Alternative Hypothesis (H₁): The distribution of defects has changed after the installation.
+
+
+```{r}
+# Observed difference in means
+observed_diff <- mean(after) - mean(before)
+
+# Permutation test
+set.seed(123)  # For reproducibility
+n_permutations <- 10000
+combined <- c(before, after)
+n_before <- length(before)
+
+# Initialize a vector to store permuted differences
+permuted_diffs <- numeric(n_permutations)
+
+for (i in 1:n_permutations) {
+  permuted <- sample(combined)  # Shuffle the combined data
+  permuted_diffs[i] <- mean(permuted[1:n_before]) - mean(permuted[(n_before + 1):length(combined)])
+}
+
+# Calculate the p-value (two-sided test)
+p_value <- mean(abs(permuted_diffs) >= abs(observed_diff))
+
+# Results
+cat("Observed Difference in Means:", observed_diff, "\n")
+cat("P-value:", p_value, "\n")
+```
+
 
 b) (4 points) Explain, briefly, what you did above and why. Imagine that you are trying to explain to someone who isn't well versed in statistics what exactly you are doing in a permutation test. Explain your conclusion based on your test above. Three to five sentences should be plenty, but you are free to write as much or as little as you think is necessary to clearly explain your findings.
 

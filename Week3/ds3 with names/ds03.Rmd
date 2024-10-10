@@ -169,3 +169,86 @@ print("Validating our results, we see that our results are generally consistent 
 
 ```
 
+```{r}
+
+```
+
+```{r}
+
+
+generate_data <- function( ncontrol, ntreatment, ncases ) {
+# Simulate data.
+participants <- c( rep(1,ncontrol), rep(0,ntreatment));
+# Now, choose ncases participants at random.
+infected <- sample( participants, size=ncases, replace=FALSE )
+# We'll just return the number of control subjects who got infected.
+# returning sum(infected) works because the controls are
+# encoded as 1s in the vector `participants`.
+return( sum(infected) );
+}
+
+generate_data(15000, 15000, 95)
+
+
+```
+
+
+```{r}
+control <- c(-0.10, -0.55, 1.24, -0.97, -0.76, 0.21,-0.27, -1.02,
+0.58, 1.67, -1.07, 0.17, 1.45, 0.34, 1.15, 0.18, -0.97,
+0.43, -1.39, -2.76 );
+treatment <- c( 0.54, 0.36, 0.59, -0.57, 0.53, -0.78, -0.44, -0.98,
+1.31, 0.50, 0.57, 0.49, -0.96, 2.41, 0.85, 1.93, 0.95,
+1.45, 1.61, -1.16 );
+
+Xbar_ctl <- mean(control); Xbar_trt <- mean(treatment);
+c( Xbar_ctl, Xbar_trt )
+## [1] -0.122 0.460
+# The difference between these two means is
+Xbar_trt - Xbar_ctl
+## [1] 0.582
+
+permute_and_compute <- function( ctrl_data, trmt_data ) {
+# Pool the data
+pooled_data <- c( ctrl_data, trmt_data );
+# Randomly shuffle the data and assign to groups.
+n_ctrl <- length( ctrl_data ); n_trmt <- length( trmt_data );
+n_total <- n_ctrl + n_trmt;
+# Shuffle the combined data
+shuffled_data <- sample( pooled_data, size=n_total, replace=FALSE );
+# Now, the first n_ctrl of these data points are our new control group
+# and the remaining elements are assigned to our treatment group.
+shuffled_ctrl <- shuffled_data[1:n_ctrl];
+shuffled_trmt <- shuffled_data[(n_ctrl+1):n_total];
+# Compute the difference in means of our two samples.
+return( mean(shuffled_trmt)-mean(shuffled_ctrl) );
+}
+
+set.seed(1);NMC <- 1e5;
+test_statistics <- rep( 0, NMC ); # Vector for our "fake" test stats
+# Now, shuffle the data, recompute the test statistic, and record.
+for(i in 1:NMC ) {
+test_statistics[i] <- permute_and_compute( control, treatment );
+}
+# Now, let's make a histogram of those permuted test statistics.
+# And place teh observed test statistic in the plot
+hist( test_statistics )
+abline( v=mean(treatment)-mean(control), lw=3, col='red' )
+
+# Actually observed test statistic
+Tobsd <- mean(treatment) - mean(control);
+# Monte Carlo estimate: how often in our simulation did the "fake"
+# data have a difference in means greater than or equal to Tobsd?
+sum(test_statistics >= Tobsd)/NMC;
+## [1] 0.04443
+
+
+```
+
+
+
+
+
+
+
+
