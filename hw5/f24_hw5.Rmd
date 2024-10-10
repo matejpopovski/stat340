@@ -136,6 +136,7 @@ p_value <- mean(abs(permuted_diffs) >= abs(observed_diff))
 # Results
 cat("Observed Difference in Means:", observed_diff, "\n")
 cat("P-value:", p_value, "\n")
+
 ```
 
 
