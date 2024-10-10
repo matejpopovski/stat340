@@ -142,6 +142,8 @@ cat("P-value:", p_value, "\n")
 
 b) (4 points) Explain, briefly, what you did above and why. Imagine that you are trying to explain to someone who isn't well versed in statistics what exactly you are doing in a permutation test. Explain your conclusion based on your test above. Three to five sentences should be plenty, but you are free to write as much or as little as you think is necessary to clearly explain your findings.
 
+> In a permutation test, we assess whether the observed difference in defects before and after installing a new part is due to random chance. By randomly shuffling the data and recalculating differences, we create a distribution that reflects no real effect. The large p-value obtained suggests that the observed change in defect rates is likely due to random variation rather than a significant effect from the new part. Thus, we do not have sufficient evidence to conclude that the installation significantly altered the number of defects on the assembly line.
+
 
 ## Problem 4: Memes <small>(8pts)</small>
 
@@ -160,5 +162,10 @@ The following question comes from Karl Rohe, who developed the very first versio
 Hints:
 
 - For 4a, there should be a (hopefully) fairly intuitive choice of random variable that makes sense here. Look at your list of random variables and ask yourself which of these makes the most sense.
+
+> A suitable distribution for modeling the number of memes in the comments is the binomial distribution. This choice is appropriate because we are dealing with a fixed number of independent trials—specifically, the 416 comments made during class—where each comment can either be classified as a meme (success) or not (failure). We can represent the number of memes, denoted as X, as a binomial random variable: X∼Binomial(n=416,p=0.10) , where n = 416 is the total number of comments and p=0.10 is the hypothesized true proportion of memes according to the null hypothesis. This framework allows us to assess the likelihood of observing the given number of memes under the assumption that the true proportion is indeed 10%.
+
+
+
 - For 4b, you can use the built-in function in R to simulate observations according to your null. Remember that you **always simulate *assuming* the null hypothesis**. Make sure your choice of the necessary parameter(s) reflects this assumption.
 
