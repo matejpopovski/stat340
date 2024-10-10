@@ -166,6 +166,29 @@ Hints:
 > A suitable distribution for modeling the number of memes in the comments is the binomial distribution. This choice is appropriate because we are dealing with a fixed number of independent trials—specifically, the 416 comments made during class—where each comment can either be classified as a meme (success) or not (failure). We can represent the number of memes, denoted as X, as a binomial random variable: X∼Binomial(n=416,p=0.10) , where n = 416 is the total number of comments and p=0.10 is the hypothesized true proportion of memes according to the null hypothesis. This framework allows us to assess the likelihood of observing the given number of memes under the assumption that the true proportion is indeed 10%.
 
 
-
 - For 4b, you can use the built-in function in R to simulate observations according to your null. Remember that you **always simulate *assuming* the null hypothesis**. Make sure your choice of the necessary parameter(s) reflects this assumption.
+
+```{r}
+# Parameters
+n <- 416           # Total number of comments
+p_null <- 0.10    # Null hypothesis proportion
+
+# Observed number of memes
+observed_memes <- 47
+
+# Simulate the number of memes under the null hypothesis
+set.seed(123)  # For reproducibility
+n_simulations <- 10000
+simulated_memes <- rbinom(n_simulations, n, p_null)
+
+# Calculate the p-value (one-tailed test)
+p_value <- mean(simulated_memes >= observed_memes)
+
+# Results
+cat("P-value:", p_value, "\n")
+
+```
+
+> In conclusion, the binomial distribution provides a robust framework for modeling the number of memes in the comments, given the fixed number of independent trials and the binary outcome for each comment. By using the parameters n=416 and p=0.10, we can assess the likelihood of observing the current number of memes. This approach allows us to rigorously test the null hypothesis regarding the true proportion of memes, offering valuable insights into whether the proportion exceeds the 10% threshold suggested by the deans.
+
 
