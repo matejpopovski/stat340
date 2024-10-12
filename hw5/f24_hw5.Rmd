@@ -77,7 +77,8 @@ cat("P-value:", p_value, "\n")
 
 c. (2 points) How do you conclude? Is this one game sufficient evidence that Bacchus is the superior Ping Pong Player?
 
-> Based on the Monte Carlo simulation, the p-value of 0.4035 indicates that there is insufficient evidence to conclude that Bacchus is a superior Ping Pong player. Since this value is much greater than the common significance level of 0.05, we fail to reject the null hypothesis, meaning that the observed point difference of 6 could easily occur by chance if both players are equally skilled. Therefore, this one game is not sufficient to prove that Bacchus is better than Athena, and more games would be needed for a more reliable assessment.
+> Based on the Monte Carlo simulation, the p-value of 0.4035 suggests that there is no significant evidence to conclude that Bacchus is a better Ping Pong player. Since this p-value is much larger than the common significance level of 0.05, we fail to reject the null hypothesis. This means the observed point difference of 6 can be reasonably explained by chance if both players have equal skill. Therefore, this single game does not provide sufficient evidence to demonstrate Bacchus's superiority over Athena.
+
 
 
 ## Problem 2: Quality or Quantity? <small>(6pts total)</small> 
