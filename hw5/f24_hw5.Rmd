@@ -240,4 +240,3 @@ cat("P-value:", p_value, "\n")
 > In conclusion, the binomial distribution provides a robust framework for modeling the number of memes in the comments, given the fixed number of independent trials and the binary outcome for each comment. By using the parameters n=416 and p=0.10, we can assess the likelihood of observing the current number of memes. This approach allows us to rigorously test the null hypothesis regarding the true proportion of memes, offering valuable insights into whether the proportion exceeds the 10% threshold suggested by the deans.
 
 > We conclude that there is no enough evidence to reject H0. So among comments 10% are memes.
-
