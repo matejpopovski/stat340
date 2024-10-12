@@ -70,7 +70,7 @@ hist(simulated_diffs, breaks = 30, main = "Distribution of Point Differences",
 p_value <- mean(simulated_diffs >= observed_diff)
 
 # Display the p-value
-cat("P-value:", p_value, "\n")
+cat("P-value:", p_value, "\n") 
 
 ```
 
