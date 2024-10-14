@@ -1,0 +1,13 @@
+MC
+1. d
+2. b
+3. CBAC
+4. a
+5. b
+6. a
+
+SA
+1. bernoulli(.7) or binomial(1,.7), .7, .7*.3, binomial(100,.7)
+2. 20, any example involving a count over a fixed interval, 0, normal or binomial
+3. 0, 1, .25, sqrt(0.5)
+4. BCDFAE
