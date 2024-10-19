@@ -231,10 +231,7 @@ M <- 1000  # Number of simulations
 # Simulate the maximum values of uniform distribution over [0,1]
 sim_max <- replicate(M, max(runif(n, 0, 1)))
 #sim_max
-mean(sim_max)
-# Plot the histogram
-hist(sim_max, breaks = 30, main = "Simulated Distribution of Max Values (Under H0)",
-     xlab = "Max Value", col = "lightblue")
+mean(sim_max) # mean of the maxes of the simulated sequences
 
 # Observed max from the sample
 obs_max<- max(X)
@@ -243,9 +240,14 @@ obs_max
 # Calculate the p-value simulated max greater than observed
 p_value <- mean(sim_max >= obs_max)
 p_value
-# Calculate the p-value simulated max smaler than observed
-p_value <- mean(sim_max <= obs_max)
-p_value
+
+# Plot the histogram
+hist(sim_max, breaks = 30, main = "Simulated Distribution of Max Values (Under H0)",
+     xlab = "Max Value", col = "lightblue")
+
+# Add a red line at the observed max value
+abline(v = obs_max, col = "red", lwd = 2)
+
 ```
 
 
@@ -317,5 +319,6 @@ print(paste("Observed test statistic: ", observed_stat))
 print(paste("P-value: ", p_value))
 ```
 We conclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that number of guesses by days is lowering.
+
 
 
