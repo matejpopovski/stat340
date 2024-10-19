@@ -266,7 +266,7 @@ b. Determine a test statistic that identifies a trend in the number of tries. Th
 
 c. Decide whether the test will be a one or two-tailed test
 
-Two-tailed test is used because we are looking for either improvement or deterioration  - lower or greater number of guesses.
+> Two-tailed test is used because we are looking for either improvement or deterioration  - lower or greater number of guesses.
 
 d. Simulate a distribution of test statistics under the null hypothesis
 e. Calculate the test statistic on the observed data, calculate the $p$-value and state your conclusions.
