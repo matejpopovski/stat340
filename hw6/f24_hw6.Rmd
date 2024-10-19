@@ -204,6 +204,11 @@ head(X)
 ```
 
 a. Write out in formal notation the null and alternative hypotheses. 
+
+> H0: m = 1    (uniform distribution over [0,1])
+
+> H1: m != 1   (actual m is not 1)
+
 b. Come up with a test statistic and measure your sampled data. Is this a one-sided test or two-sided test?
 c. Simulate a distribution for the test statistic under the null hypothesis of size at least 1000. Display a histogram of your test statistic distribution.
 d. Calculate the $p$-value for this data and make a conclusion.
