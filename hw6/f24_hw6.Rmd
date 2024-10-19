@@ -171,8 +171,27 @@ b. Using $N$ from part a, what is the power of the test?
 
 c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
 
+> The current decision rule is to reject the null hypothesis (the coin is fair) if there are 0 tails in 4 flips. This gives a significance level of P(0 tails) equals 0.5 raised to the power of 4, which equals 0.0625.
+
+> To achieve exactly a 5% significance level, we can modify the rule to reject the null hypothesis if there are 0 or 1 tails. This gives us the probability of 0 tails, which remains 0.0625, and the probability of 1 tail can be calculated as follows: P(1 tail) equals 4 choose 1 times 0.5 raised to the power of 1 times 0.5 raised to the power of 3, which results in 4 times 0.5 times 0.125, equaling 0.25.
+
+> The total significance level becomes alpha equals 0.0625 plus 0.25, which equals 0.3125, indicating it is too high.
+
+> For the final adjustment to lower the significance level to exactly 5%, we may need to adjust the conditions further or limit the number of heads allowed to achieve the exact probability of rejecting the null hypothesis.
+
+> Regarding the power of the test with the modified rule (rejecting for 0 or 1 tails), if the trick coin is chosen, you will always see 0 tails, so the power remains equal to 1.
+
 
 d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
+
+> For N=1: Probability = 0.50     1-1/2     E(1)=0.50*100-10=40
+
+> For N=2: Probability = 0.75     1-1/2^2     E(2)=0.75*100-20=55
+ 
+> For N=3: Probability = 0.875     1-1/2^3     E(3)=0.875*100-30=57.50
+
+> For N=4: Probability = 0.9375     1-1/2^4     E(4)=0.9375*100-40=53.75
+
 
 
 ## Problem \#3: Testing the maximum of a uniform distribution <small>(8 pts; 2 pts each)</small>
