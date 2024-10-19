@@ -138,7 +138,7 @@ e. Calculate the test statistic on the observed data, calculate the $p$-value an
  "Observed test statistic:  -0.230958875668475"
 [1] "P-value:  0.023976023976024"
 
-Weconclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that numer of guesses by days is lower
+We conclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that number of guesses by days is lowering.
 
 
 II. version of solution
@@ -196,7 +196,7 @@ library(tseries)
 
 # Read the data from the CSV file
 blurtle <- read.csv("blurtle.csv")
-
+head(blurtle)
 # Calculate changes from the previous day (1 for improvement, 0 for no improvement or worsening)
 improvement <- ifelse(diff(blurtle$tries) < 0, 1, 0)
 improvement
@@ -213,3 +213,72 @@ print(runs_test_result)
 [50] 5 4 3 4 4 4 4 4 5 5 4 6 4 4 4 5 4 4 3 4 3 4 3 4 4 4 6 3 4 3 2 4 5 4 4 3 4 5 4 4 4 4 4 5 3 3 3 4 4
 
 p= 0.006313  ->  sequence is not random, and we count   45  not improvement and  43 improvement  z=2.73  is right side
+
+
+
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+
+# Load the blurtle.csv file
+blurtle <- read.csv("blurtle.csv")
+
+# Compute the observed Spearman correlation
+observed_stat <- cor(blurtle$day, blurtle$tries, method = "spearman")
+print(paste("Observed Spearman correlation: ", observed_stat))
+
+# Permutation test function
+perm_test <- function(data, n_perm = 1000) {
+  perm_stats <- numeric(n_perm)
+  
+  for (i in 1:n_perm) {
+    # Permute the 'tries' column (shuffle it randomly)
+    perm_data <- data
+    perm_data$tries <- sample(perm_data$tries)
+    
+    # Compute the Spearman correlation for the permuted data
+    perm_stats[i] <- cor(perm_data$day, perm_data$tries, method = "spearman")
+  }
+  
+  return(perm_stats)
+}
+
+# Set a seed for reproducibility
+set.seed(123)
+
+# Run permutation test (1000 permutations)
+perm_stats <- perm_test(blurtle, n_perm = 1000)
+
+# Plot the distribution of permuted test statistics
+hist(perm_stats, main = "Permutation Test Statistics", 
+     xlab = "Spearman Correlation", breaks = 30, col = "lightblue")
+abline(v = observed_stat, col = "red", lwd = 2)
+
+# Calculate p-value
+p_value <- (sum(abs(perm_stats) >= abs(observed_stat)) + 1) / (length(perm_stats) + 1)
+print(paste("P-value: ", p_value))
+
+# Interpretation
+if (p_value < 0.05) {
+  print("There is enough evidence to reject the null hypothesis. The number of tries shows a significant trend over time.")
+} else {
+  print("There is not enough evidence to reject the null hypothesis. The number of tries does not show a significant trend over time.")
+}
+
+```
+```{r}
+# Load necessary libraries
+library(ggplot2)
+
+# Scatter plot of 'day' vs 'tries'
+ggplot(blurtle, aes(x = day, y = tries)) +
+  geom_point(color = "blue", size = 2) +            # Scatter points
+  labs(title = "Blurtle: Number of Tries Over Time", 
+       x = "Day", 
+       y = "Number of Tries") +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +  # Add a linear trend line
+  theme_minimal()
+
+```
+
