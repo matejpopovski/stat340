@@ -169,6 +169,8 @@ b. Using $N$ from part a, what is the power of the test?
 > Thus, the power of the test when N equals 5 is approximately 0.96875, meaning there is a 96.875% chance of correctly rejecting the null hypothesis if the chosen coin is the fair coin.
 
 c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
+
+
 d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
 
 
