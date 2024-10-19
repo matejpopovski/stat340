@@ -262,6 +262,7 @@ a. State the null and alternative hypotheses
 
 b. Determine a test statistic that identifies a trend in the number of tries. There are many good ones you could use - be creative.
 
+> Spearman rank correlation coefficient between day and number of tries can be used. This statistic will capture the monotonic trend, indicating if there’s a general improvement or deterioration over time.
 
 c. Decide whether the test will be a one or two-tailed test
 
