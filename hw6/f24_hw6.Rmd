@@ -200,6 +200,7 @@ We sample $X_1, X_x,\ldots,X_n \overset{\text{iid}}\sim\text{Uniform}(0,m)$ wher
 
 ```{r}
 X <- read.csv("uniform_sample.csv")$x
+head(X)
 ```
 
 a. Write out in formal notation the null and alternative hypotheses. 
