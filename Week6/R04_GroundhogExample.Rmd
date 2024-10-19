@@ -1,0 +1,240 @@
+---
+title: "R04_GroundHog"
+author: "Brian Powers"
+date: "2024-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Example: Groundhog's Day
+
+How well has Punxsutawney Phil done in predicting the weather?
+
+Thousands gather at Gobbler’s Knob in Punxsutawney, Pennsylvania, on the second day of February to await the spring forecast from a groundhog known as Punxsutawney Phil. According to legend, if Phil sees his shadow the United States is in store for six more weeks of winter weather. But, if Phil doesn’t see his shadow, the country should expect warmer temperatures and the arrival of an early spring.
+
+Source: https://www.kaggle.com/datasets/groundhogclub/groundhog-day?resource=download
+
+```{r}
+groundhog<-read.csv("archive.csv")
+
+#Get rid of rows with no record or partial shadow. Let's be serious!
+
+groundhog <- subset(groundhog, groundhog$Punxsutawney.Phil %in% c("Full Shadow","No Shadow") & !is.na(groundhog$February.Average.Temperature))
+```
+
+Let's do a permutation test
+
+$H_0:$ Phil's not a true forecasting groundhog
+$H_1:$ Phil has some forecasting power.
+
+We will compare mean temperature in February as a measure of early spring. We will take those years of "early spring" prediction and those of "regular spring" and compare the average average Feb temperature in those two groups.
+
+```{r}
+#Isolate feb avg temperature for full shadow years
+#isolate feb avg temperature for no shadow years
+feb.avg.shadow <- groundhog$February.Average.Temperature[groundhog$Punxsutawney.Phil=="Full Shadow"]
+feb.avg.noshadow <- groundhog$February.Average.Temperature[groundhog$Punxsutawney.Phil=="No Shadow"]
+#check
+feb.avg.shadow
+feb.avg.noshadow
+```
+
+
+```{r}
+
+#We will use mean feb no shadow - mean feb shadow; if this >0 that is evidence that the predictions work.
+
+mean(feb.avg.noshadow)-mean(feb.avg.shadow)
+
+permute_and_compute <- function(sampleA, sampleB){
+  #remember - sampleA is no shadow
+  #sample B is shadow
+  pooledData <- c(sampleA, sampleB)
+  shuffledData <- sample(pooledData)
+  sim.sampleA <- shuffledData[1:length(sampleA)]
+  sim.sampleB <- shuffledData[(length(sampleA)+1):length(shuffledData)]
+  #we may modify this if we want to use a different test statistic
+  return(mean(sim.sampleA)-mean(sim.sampleB)) 
+}
+t_obs <- mean(feb.avg.noshadow)-mean(feb.avg.shadow)
+
+test.stats <- 0 #lazy empty vector - R will add more to it without complaining
+NMC <- 10000
+for(i in 1:NMC){
+  test.stats[i] <- permute_and_compute(feb.avg.noshadow, feb.avg.shadow)
+}
+hist(test.stats)
+abline(v=t_obs, col="red")
+
+mean(test.stats >= t_obs)
+
+```
+
+Maybe he's better at predicting March temperatures?
+```{r}
+mar.avg.shadow <- groundhog$March.Average.Temperature[groundhog$Punxsutawney.Phil=="Full Shadow"]
+mar.avg.noshadow <- groundhog$March.Average.Temperature[groundhog$Punxsutawney.Phil=="No Shadow"]
+
+t_obs <- mean(mar.avg.noshadow)-mean(mar.avg.shadow)
+
+test.stats <- 0 #lazy empty vector - R will add more to it without complaining
+NMC <- 10000
+for(i in 1:NMC){
+  test.stats[i] <- permute_and_compute(mar.avg.noshadow, mar.avg.shadow)
+}
+hist(test.stats)
+abline(v=t_obs, col="red")
+
+mean(test.stats >= t_obs)
+```
+
+What if we averge Feb and March temperatures together.
+```{r}
+groundhog$FebMarAvg <- (groundhog$February.Average.Temperature+groundhog$March.Average.Temperature)/2
+avg.shadow <- groundhog$FebMarAvg[groundhog$Punxsutawney.Phil=="Full Shadow"]
+avg.noshadow <- groundhog$FebMarAvg[groundhog$Punxsutawney.Phil=="No Shadow"]
+
+t_obs <- mean(avg.noshadow)-mean(avg.shadow)
+
+test.stats <- 0 #lazy empty vector - R will add more to it without complaining
+NMC <- 10000
+for(i in 1:NMC){
+  test.stats[i] <- permute_and_compute(avg.noshadow, avg.shadow)
+}
+hist(test.stats, breaks=50)
+abline(v=t_obs, col="red")
+
+mean(test.stats >= t_obs)
+
+```
+I don't know about you, but this is staring to seem a little bit weird. 
+
+
+
+
+
+What do we consider an early spring? 
+If both February temperatures and march temperature are greater than average, then we say we have an early spring.
+```{r}
+feb.avg <- mean(groundhog$February.Average.Temperature)
+mar.avg <- mean(groundhog$March.Average.Temperature)
+
+groundhog$EarlySpring <- groundhog$February.Average.Temperature>feb.avg & groundhog$March.Average.Temperature>mar.avg
+
+addmargins(table(groundhog$Punxsutawney.Phil, groundhog$EarlySpring))
+```
+
+when earlySpring = TRUE, and prediction was "no shadow" that would be correct
+when earlySpring = FALSE and prediction is "full shadow" that would be correct
+
+```{r}
+accuracy <- function(guesses, weather){
+  predictEarlySpring <- guesses=="No Shadow"
+  nCorrect <- sum(weather==predictEarlySpring)
+  return(nCorrect/length(weather))
+}
+
+accuracy(groundhog$Punxsutawney.Phil, groundhog$EarlySpring)
+```
+
+Let's call our simulated Groundhog "Bernoulli Phil"
+
+```{r}
+prop.table(table(groundhog$Punxsutawney.Phil))
+#A randomly guessing groundhog would see his shadow this proportion of the time
+
+p.shadow <- prop.table(table(groundhog$Punxsutawney.Phil))[1]
+```
+
+
+```{r}
+(accuracy.obs <- accuracy(groundhog$Punxsutawney.Phil, groundhog$EarlySpring))
+
+#simulate guesses by Bernoulli Phil
+randomGuesses <- function(n=115, p=0.8695652){
+  return(sample(c("Full Shadow","No Shadow"), size=n, replace=TRUE, prob=c(p,1-p)))
+}
+
+NMC <- 10000
+results <- rep(0,NMC)
+n <- nrow(groundhog)
+
+for(i in 1:NMC){
+  results[i] <- accuracy(randomGuesses(n, p.shadow), groundhog$EarlySpring)
+}
+
+hist(results)
+abline(v=accuracy.obs)
+
+mean(results >= accuracy.obs)
+
+```
+
+
+
+The scatterplot colored by shadow status makes this pattern suspiciously clear
+
+```{r}
+plot(groundhog$February.Average.Temperature, groundhog$March.Average.Temperature, col=(as.numeric(groundhog$Punxsutawney.Phil=="Full Shadow") +1), xlab="Avg. Feb Temp", ylab="Avg. Mar Temp", main="National Feb/Mar Temp vs Shadow")
+abline(v=mean(groundhog$February.Average.Temperature))
+abline(h=mean(groundhog$March.Average.Temperature))
+legend(x=25, y=50, legend=c("No Shadow","Full Shadow"), pch=1, col=1:2)
+```
+
+O ye unbelievers! Witness the prognosticating powers of Phil the groundhog!
+
+
+
+```{r}
+library(smooth)
+MA <-sma(groundhog$FebMarAvg, order=15)
+#predict(MA)
+plot(groundhog$FebMarAvg, col=as.numeric((as.factor(groundhog$Punxsutawney.Phil)))+1, pch=16)
+lines(x=predict(MA)$mean)
+
+groundhog$tempDev <- groundhog$FebMarAvg - as.numeric(predict(MA)$mean)
+plot(groundhog$tempDev, col=as.numeric((as.factor(groundhog$Punxsutawney.Phil)))+1, pch=16)
+
+```
+
+
+```{r}
+avg.shadow <- groundhog$tempDev[groundhog$Punxsutawney.Phil=="Full Shadow"]
+avg.noshadow <- groundhog$tempDev[groundhog$Punxsutawney.Phil=="No Shadow"]
+
+t_obs <- mean(avg.noshadow)-mean(avg.shadow)
+
+test.stats <- 0 #lazy empty vector - R will add more to it without complaining
+NMC <- 10000
+for(i in 1:NMC){
+  test.stats[i] <- permute_and_compute(avg.noshadow, avg.shadow)
+}
+hist(test.stats, breaks=50)
+abline(v=t_obs, col="red")
+
+mean(test.stats >= t_obs)
+
+```
+Here is where we test if the change from Feb to MArch is noticeably different in "no shadow" years than "full shadow" years.
+
+```{r}
+groundhog$tempChange <- groundhog$March.Average.Temperature-groundhog$February.Average.Temperature
+avg.shadow <- groundhog$tempChange[groundhog$Punxsutawney.Phil=="Full Shadow"]
+avg.noshadow <- groundhog$tempChange[groundhog$Punxsutawney.Phil=="No Shadow"]
+
+t_obs <- mean(avg.noshadow)-mean(avg.shadow)
+
+test.stats <- 0 #lazy empty vector - R will add more to it without complaining
+NMC <- 10000
+for(i in 1:NMC){
+  test.stats[i] <- permute_and_compute(avg.noshadow, avg.shadow)
+}
+hist(test.stats, breaks=50)
+abline(v=t_obs, col="red")
+
+mean(test.stats >= t_obs)
+
+```

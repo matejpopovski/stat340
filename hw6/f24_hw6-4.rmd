@@ -1,0 +1,215 @@
+---
+title: "Homework 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## Problem \#1: Testing coin flips <small>(6 pts)</small>
+
+In the six sequences below, only one of them is actually **randomly generated from independent flips of a fair coin**. Use a combination of everything you know (common sense, Monte Carlo, hypothesis testing, etc.) to identify which is actually random and explain your reasoning.
+
+(For full points, conduct a formal test and report a $p$-value for each sequence. You may use a combination of multiple tests to arrive at your answer. If you cannot compute a p-value for each sequence, you can still earn a significant amount of partial credit by carefully explaining your reasoning and response as best as you can.)
+
+My advice is **be creative** with the test statistics you come up with to eliminate each sequence! Think of some way of summarizing a sequence of flips that might be useful for comparing against a simulated sequence of random flips. After you come up with an idea for a statistic, remember to run it on many MC generated completely random flips to produce a distribution under the null, which you can then compare with your data to get a p-value. Also, be careful of now you define "more extreme" than the data.
+
+(2 bonus points available if you can find a single test that is powerful enough to reject all the fake sequences together in one step. Yes, at least one such possible test exists.)
+
+```{r}
+flips1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT"
+
+flips2 = "HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT"
+
+flips3 = "HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH"
+
+flips4 = "HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH"
+
+flips5 = "HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTT"
+
+flips6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
+
+# you can use the function below to split the above sequences in vectors of flips
+split = function(str) strsplit(str, split="")[[1]]
+split(flips1)
+```
+
+
+
+## Problem \#2: Finding the Trick Coin <small>(6 pts; 2pts each)</small>
+
+I have two coins in my pocket - a trick coin with two heads and a fair coin with one head and one tail(s?). We'll play a game. I will grab one coin at random, and flip it $N$ times. After that you will have to decide if it is the fair coin or the trick coin. The null hypothesis is that it is the fair coin. 
+
+**Decision Rule 1**: If after $N$ flips there are no tails, then you decide it is the trick coin. If there is at least 1 tail then you know it is the fair coin. 
+
+a. Using "Decision Rule 1", what is the lowest number of flips $N$ would you need in order to have a significance level less than 5% for this test?
+b. Using $N$ from part a, what is the power of the test?
+c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
+d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
+
+
+## Problem \#3: Testing the maximum of a uniform distribution <small>(8 pts; 2 pts each)</small>
+
+We sample $X_1, X_x,\ldots,X_n \overset{\text{iid}}\sim\text{Uniform}(0,m)$ where $m$ is an unknown maximum. Sleazy Jim tells you that $m=1$ but you're not so sure. The 50 values sampled are in the following data file:
+
+```{r}
+X <- read.csv("uniform_sample.csv")$x
+```
+
+a. Write out in formal notation the null and alternative hypotheses. 
+b. Come up with a test statistic and measure your sampled data. Is this a one-sided test or two-sided test?
+c. Simulate a distribution for the test statistic under the null hypothesis of size at least 1000. Display a histogram of your test statistic distribution.
+d. Calculate the $p$-value for this data and make a conclusion.
+
+## Problem \#4: Blurtle <small>(10 pts; 2 pt each)</small>
+
+Have you been playing the hot new game Blurtle? It's a (fictional) word game you can play daily - you have to guess a 5 letter word and you only have 6 attempts. I've been playing for the past 100 days and I've been tracking my number of guesses. I'm trying to figure out whether I have been getting better or not.
+
+The file `blurtle.csv` contains 100 rows of data, giving the number of tries to guess the word. If it took 7 guesses that actually means I failed (you don't actually get a 7th guess). 
+
+```{r}
+
+# Load necessary libraries
+library(dplyr)
+
+# Read the data from the CSV file
+blurtle <- read.csv("blurtle.csv")
+blurtle
+blurtle$tries
+mean(blurtle$tries)
+var(blurtle$tries)
+
+# Compute observed test statistic
+observed_stat <- cor(blurtle$day, blurtle$tries, method = "spearman")
+
+# Permutation test function
+perm_test <- function(data, n_perm = 1000) {
+  perm_stats <- numeric(n_perm)
+  
+  for (i in 1:n_perm) {
+    perm_data <- data
+    perm_data$tries <- sample(perm_data$tries)
+    perm_stats[i] <- cor(perm_data$day, perm_data$tries, method = "spearman")
+  }
+  
+  return(perm_stats)
+}
+
+set.seed(123)
+perm_stats <- perm_test(blurtle)
+
+# Calculate p-value
+p_value <- (sum(abs(perm_stats) >= abs(observed_stat)) + 1) / (length(perm_stats) + 1)
+
+# Plot distribution of permutation test statistics
+hist(perm_stats, main = "Permutation Test Statistics", xlab = "Spearman Correlation", breaks = 30)
+abline(v = observed_stat, col = "red", lwd = 2)
+
+# Print results
+print(paste("Observed test statistic: ", observed_stat))
+print(paste("P-value: ", p_value))
+
+
+
+```
+
+Your task is to perform a permutation test on the data to determine if there is statistical evidence of a true improvement trend.
+
+a. State the null and alternative hypotheses
+H0: There is no change in the trend in the number of tries.
+H1: There is change in the trend in the number of tries
+
+b. Determine a test statistic that identifies a trend in the number of tries. There are many good ones you could use - be creative.
+
+Spearman rank correlation coefficient between day and number of tries can be used. This statistic will capture the monotonic trend, indicating if there’s a general improvement or deterioration over time.
+
+c. Decide whether the test will be a one or two-tailed test
+
+Two-tailed test is used because we are looking for either improvement or setback  - lower or greater number of guesses
+
+d. Simulate a distribution of test statistics under the null hypothesis
+
+usage of perturbation test is implementd
+
+e. Calculate the test statistic on the observed data, calculate the $p$-value and state your conclusions.
+
+ "Observed test statistic:  -0.230958875668475"
+[1] "P-value:  0.023976023976024"
+
+Weconclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that numer of guesses by days is lower
+
+
+II. version of solution
+Linear Regression Slope: Fit a simple linear regression model with day as the predictor and tries as the response variable. The slope of the regression line will indicate the trend. A significantly negative slope would indicate improvement.
+
+```{r}
+
+# Load necessary library
+library(dplyr)
+
+# Read the data from the CSV file
+blurtle <- read.csv("blurtle.csv")
+
+# Compute the linear regression slope
+model <- lm(tries ~ day, data = blurtle)
+slope <- coef(model)[2]
+
+# Permutation test function for the slope
+perm_test_slope <- function(data, n_perm = 1000) {
+  perm_slopes <- numeric(n_perm)
+  
+  for (i in 1:n_perm) {
+    perm_data <- data
+    perm_data$tries <- sample(perm_data$tries)
+    perm_model <- lm(tries ~ day, data = perm_data)
+    perm_slopes[i] <- coef(perm_model)[2]
+  }
+  
+  return(perm_slopes)
+}
+
+set.seed(123)
+perm_slopes <- perm_test_slope(blurtle)
+
+# Calculate p-value
+p_value_slope <- (sum(abs(perm_slopes) >= abs(slope)) + 1) / (length(perm_slopes) + 1)
+
+# Plot distribution of permutation test slopes
+hist(perm_slopes, main = "Permutation Test Slopes", xlab = "Slope", breaks = 30)
+abline(v = slope, col = "red", lwd = 2)
+
+# Print results
+print(paste("Observed slope: ", slope))
+print(paste("P-value: ", p_value_slope))
+
+
+```
+the same conclusion. Negative slope meaning that with days number of guesses is lover, confirmed by p value.
+
+in this solution we use runs.test. The result will indicate whether there is statistical evidence of a trend (either improving or worsening).
+
+```{r}
+# Load necessary library
+library(tseries)
+
+# Read the data from the CSV file
+blurtle <- read.csv("blurtle.csv")
+
+# Calculate changes from the previous day (1 for improvement, 0 for no improvement or worsening)
+improvement <- ifelse(diff(blurtle$tries) < 0, 1, 0)
+improvement
+
+# Perform the runs test
+runs_test_result <- runs.test(as.factor(improvement))
+
+# Print results
+print(runs_test_result)
+```
+
+# of guesses per day.  45 means 0 improvement, 55 0 improvement, 53  1 improvement 43 0 improvement....
+[1] 4 5 5 3 4 3 3 5 5 4 4 4 5 4 6 5 5 7 4 3 6 4 5 4 4 4 4 4 6 4 5 5 5 4 3 5 3 4 5 4 3 5 3 5 5 3 4 5 5
+[50] 5 4 3 4 4 4 4 4 5 5 4 6 4 4 4 5 4 4 3 4 3 4 3 4 4 4 6 3 4 3 2 4 5 4 4 3 4 5 4 4 4 4 4 5 3 3 3 4 4
+
+p= 0.006313  ->  sequence is not random, and we count   45  not improvement and  43 improvement  z=2.73  is right side

@@ -1,0 +1,381 @@
+
+---
+title: "STAT340  Estimation Examples"
+author: "Brian Powers"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+
+### Example: Estimating the maximum of a sample
+
+Say we sample from a random variable $X \sim \text{Uniform}(0, M)$ and get the following data
+```{r}
+X <- read.csv("uniform_sample.csv")$x
+```
+One point estimate we may naturally use is the sample maximum
+```{r}
+max(X)
+```
+
+Suppose we were to use this as our point estimate of $M$ (seems natural). Can we quantify our confidence in the estimate?
+```{r}
+sim_S <- 0
+n <- length(X) 
+for(i in 1:1000){
+  simData <- runif(n, 0, max(X))
+  sim_S[i] <- max(simData)
+}
+hist(sim_S)
+```
+Say we want to give a 95% confidence interval for the population maximum $M$. Monte Carlo would have us take the 2.5th and 97.5th percentiles.
+```{r}
+quantile(sim_S, c(.025, .975))
+max(X)
+```
+Is this reasonable? Are we 95% sure that the population max is within that interval?
+Of course not! The sample max isn't even within the interval. Clearly the sample maxium is not a good point estimate to use for the population maximum. 
+
+It turns out that $\frac{n+1}{n}\max(X_1,\ldots, X_n)$ is an unbiased estimator for the population maximum in this case.
+```{r}
+(M <- (n+1)*max(X)/n)
+```
+Let's see what the resulting interval looks like:
+```{r}
+sim_S <- 0
+n <- length(X) 
+for(i in 1:1000){
+  simData <- runif(n, 0, M)
+  sim_S[i] <- (n+1)*max(simData)/n
+}
+hist(sim_S)
+abline(v=max(X))
+quantile(sim_S, c(.025, .975))
+
+```
+This interval contains the sample maximum. And in fact the data was drawn from $\text{Uniform}(0,.95)$. Would it contain .95 95% of the time?
+```{r}
+NMC1 <- 1000
+n <- length(X) 
+containsM <- rep(FALSE, NMC1)
+
+for(j in 1:NMC1){
+  X.sim <- runif(n, 0, .95) #Generate a new sample
+  M.sim <- (n+1)*max(X.sim)/n
+  sim_S <- 0
+  for(i in 1:1000){
+    simData <- runif(n, 0, M.sim)
+    sim_S[i] <- (n+1)*max(simData)/n
+  }
+  containsM[j] <- quantile(sim_S,.025) <= .95 & quantile(sim_S, .975) >= .95
+}
+mean(containsM)
+```
+Our coverage rate is not as good as we would hope. How does this improve with a larger sample size?
+
+```{r}
+ns <- seq(50,500,50)
+NMC1 <- 200 #decreasing for speed
+coverage <- rep(0, length(ns))
+for(k in 1:length(ns)){
+  n <- ns[k]
+  containsM <- rep(FALSE, NMC1)
+  
+  for(j in 1:NMC1){
+    X.sim <- runif(n, 0, .95) #Generate a new sample
+    M.sim <- (n+1)*max(X.sim)/n
+    sim_S <- 0
+    for(i in 1:1000){
+      simData <- runif(n, 0, M.sim)
+      sim_S[i] <- (n+1)*max(simData)/n
+    }
+    containsM[j] <- quantile(sim_S,.025) <= .95 & quantile(sim_S, .975) >= .95
+  }
+  coverage[k] <- mean(containsM)
+}
+
+plot(x=ns, y=coverage, type="l", main="coverage rate with increasing n")
+```
+
+Oh that's not pretty at all. Looks like our supposed 95\% interval is more like an 86\% interval. Why is this the case?
+Short answer - the population maximum / sample maxium relationship is not as friendly as the population mean/sample mean relationship. How could we modify our confidence interval estimate?
+
+Turns out (from a little research https://en.wikipedia.org/wiki/German_tank_problem) that the lower bound for a 95% confidence interval would be the sample max $\max(X)$ and the upper bound would be $\max(X)/\alpha^{1/n}$
+
+```{r}
+NMC1 <- 1000
+n <- 50 
+containsM <- rep(FALSE, NMC1)
+
+for(j in 1:NMC1){
+  X.sim <- runif(n, 0, .95) #Generate a new sample
+  M.sim <- (n+1)*max(X.sim)/n
+  sim_S <- 0
+  for(i in 1:1000){
+    simData <- runif(n, 0, M.sim)
+    sim_S[i] <- max(simData)
+  }
+  containsM[j] <- max(X.sim) <= .95 & max(M.sim)/.05^(1/n) >= .95
+}
+mean(containsM)
+```
+
+
+Our coverage rate is not as good as we would hope. How does this improve with a larger sample size?
+
+```{r}
+ns <- seq(50,500,50)
+NMC1 <- 1000 #decreasing for speed
+coverage <- rep(0, length(ns))
+for(k in 1:length(ns)){
+  n <- ns[k]
+  containsM <- rep(FALSE, NMC1)
+  
+  for(j in 1:NMC1){
+    X.sim <- runif(n, 0, .95) #Generate a new sample
+    containsM[j] <- max(X.sim) <= .95 & max(X.sim)/.05^(1/n) >= .95
+  }
+  coverage[k] <- mean(containsM)
+}
+
+plot(x=ns, y=coverage, type="l", main="coverage rate with increasing n")
+```
+
+
+
+
+## Estimating the mean of a normal population
+
+Say that our population is a normal distribution With a mean of 50 and standard deviation of 13
+
+```{r}
+mu <- 50
+sigma <- 13
+```
+
+Look at the variability of the sample mean with varying sample sizes
+
+```{r}
+sample.sizes <- seq(1,200)
+
+x.bars <- vector("numeric")
+sds <- vector("numeric")
+for(i in 1:200){
+  my.sample <- rnorm(n=sample.sizes[i], mean=mu, sd=sigma)
+  x.bars[i]=mean(my.sample)  
+  sds[i]=sd(my.sample)
+}
+plot(x.bars)
+abline(h=mu)
+
+plot(sds)
+abline(h=sigma)
+```
+
+Estimate the standard error of the sample mean
+based on NMC <- 100
+
+```{r}
+NMC <- 100
+
+std.errors <- vector("numeric") 
+theoretical.standard.error <- vector("numeric")
+for(i in 1:200){
+  
+  x.bars <- vector("numeric")
+  for(j in 1:NMC){
+    my.sample <- rnorm(n=sample.sizes[i], mean=mu, sd=sigma)
+    x.bars[j]=mean(my.sample)  
+  }
+  std.errors[i] <- sd(x.bars)
+  theoretical.standard.error[i] <- sigma/sqrt(sample.sizes[i])
+}
+
+plot(std.errors, type="l")
+lines(theoretical.standard.error, lty=2)
+```
+
+
+Suppose we sample from this population with a sample size of 20
+```{r}
+
+NMC <- 10000
+x.bars <- vector("numeric")
+for(i in 1:NMC){
+  my.sample <- rnorm(n=20, mean=mu, sd=sigma)
+  x.bars[i]<- mean(my.sample)
+}
+hist(x.bars)
+```
+
+Find an interval which contains 95% of the sample means
+```{r}
+quantile(x.bars, probs=c(0.025, 0.975))
+```
+
+
+Let's stop playing God. 
+```{r}
+mu <- runif(1,0, 100)
+
+my.sample <- rnorm(n=20, mean=mu, sd=sigma)
+my.xbar <- mean(my.sample)
+my.sd <- sd(my.sample)
+NMC <- 10000
+x.bars <- vector("numeric")
+for(i in 1:NMC){
+  my.simulated.sample <- rnorm(n=20, mean=my.xbar, sd=my.sd)
+  x.bars[i]<- mean(my.simulated.sample)
+}
+```
+
+Estimate my 95% confidence interval based on the quantiles
+```{r}
+hist(x.bars)
+bounds <- quantile(x.bars, probs=c(0.025, 0.975))
+```
+
+Does the confidence interval correctly capture the population mean?
+```{r}
+bounds[1] <= mu & bounds[2] >=mu
+```
+
+
+
+Let's check the accuracy rate of this method
+```{r}
+my.sample.size <- 20
+NMC2 <- 1000
+correct.count <- 0
+margin <- vector("numeric")
+
+for(j in 1:NMC2){
+  my.sample <- rnorm(n=my.sample.size, mean=mu, sd=sigma)
+  my.xbar <- mean(my.sample)
+  my.sd <- sd(my.sample)
+  NMC <- 250
+  x.bars <- vector("numeric")
+  for(i in 1:NMC){
+    my.simulated.sample <- rnorm(n=my.sample.size, mean=my.xbar, sd=my.sd)
+    x.bars[i]<- mean(my.simulated.sample)
+  }
+  #Estimate my 95% confidence interval based on 
+  bounds <- quantile(x.bars, probs=c(.025, .975))
+  margin[j] <- as.numeric(diff(bounds))
+  #does the confidence interval correctly capture the
+  #population mean?
+  correct.count <- correct.count + as.numeric(bounds[1] <= mu & bounds[2] >=mu)
+}
+correct.count/NMC2
+mean(margin)
+```
+
+
+95% middle probability, n=20
+
+accuracy .947
+
+mean margin: 11.05
+
+
+Let's repeat this with a sample size of 40
+
+95% middle probability, n=20
+accuracy .945
+mean margin 7.86
+
+
+This increases the precision (i.e. decreases the margin) while keeping accuracy the same
+
+Can we get 100% accuracy rate? (nope!)
+
+
+
+what if the population standard deviation decreases
+```{r}
+sigma <- 6
+```
+
+Let's check the accuracy rate of this method
+```{r}
+my.sample.size <- 20
+NMC2 <- 1000
+correct.count <- 0
+margin <- vector("numeric")
+
+for(j in 1:NMC2){
+  my.sample <- rnorm(n=my.sample.size, mean=mu, sd=sigma)
+  my.xbar <- mean(my.sample)
+  my.sd <- sd(my.sample)
+  NMC <- 250
+  x.bars <- vector("numeric")
+  for(i in 1:NMC){
+    my.simulated.sample <- rnorm(n=my.sample.size, mean=my.xbar, sd=my.sd)
+    x.bars[i]<- mean(my.simulated.sample)
+  }
+  #Estimate my 95% confidence interval based on 
+  bounds <- quantile(x.bars, probs=c(.025, .975))
+  margin[j] <- as.numeric(diff(bounds))
+  #does the confidence interval correctly capture the
+  #population mean?
+  correct.count <- correct.count + as.numeric(bounds[1] <= mu & bounds[2] >=mu)
+}
+correct.count/NMC2
+mean(margin)
+```
+
+
+
+
+# Some examples of confidence interval estimation
+
+Suppose we have a geometric random variable (i.e population) with some unknown p
+```{r}
+p <- runif(1)
+```
+
+fact: mean of a geometric distribution is (1-p)/p, variance of a geometric is (1-p)/p^2
+
+Use MC to simulate many samples from a Geometric with p.hat as the parameter
+```{r}
+NMC2 <- 1000
+correct.count <- 0
+for(j in 1:NMC2){
+  my.sample <- rgeom(n=25, prob=p)
+  p.hat <- 1 / (mean(my.sample) + 1)
+  NMC <- 1000
+  p.hats <- vector("numeric")
+  for(i in 1:NMC){
+    simulated.sample <- rgeom(n=25, prob=p.hat)
+    p.hats[i] <- 1 / (mean(simulated.sample) + 1)
+  }
+  #Let's do a 90% confidence interval for the population parameter p
+  bounds <- quantile(p.hats, probs = c(.05, .95))
+  correct.count <- correct.count + as.numeric(bounds[1] <= p & bounds[2] >=p)
+}
+correct.count / NMC2
+```
+
+
+Let's use the central limit theorem for a Poisson population
+
+Let's get a 95% confidence interval
+
+```{r}
+rate <- runif(1,5, 100)
+NMC2 <- 100000
+correct.count <- 0
+for(j in 1:NMC2){
+  my.sample <- rpois(n=100, lambda=rate)
+
+  x.bar <- mean(my.sample)
+  s <- sd(my.sample)
+  
+  #Let's do a 90% confidence interval for the population parameter p
+  bounds <- x.bar + qnorm(c(.025, .975)) * s/sqrt(100)
+  correct.count <- correct.count + as.numeric(bounds[1] <= rate & bounds[2] >=rate)
+}
+correct.count / NMC2
+```

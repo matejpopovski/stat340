@@ -1,0 +1,193 @@
+---
+title: "Homework 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## Problem \#1: Testing coin flips <small>(6 pts)</small>
+
+In the six sequences below, only one of them is actually **randomly generated from independent flips of a fair coin**. Use a combination of everything you know (common sense, Monte Carlo, hypothesis testing, etc.) to identify which is actually random and explain your reasoning.
+
+(For full points, conduct a formal test and report a $p$-value for each sequence. You may use a combination of multiple tests to arrive at your answer. If you cannot compute a p-value for each sequence, you can still earn a significant amount of partial credit by carefully explaining your reasoning and response as best as you can.)
+
+My advice is **be creative** with the test statistics you come up with to eliminate each sequence! Think of some way of summarizing a sequence of flips that might be useful for comparing against a simulated sequence of random flips. After you come up with an idea for a statistic, remember to run it on many MC generated completely random flips to produce a distribution under the null, which you can then compare with your data to get a p-value. Also, be careful of now you define "more extreme" than the data.
+
+(2 bonus points available if you can find a single test that is powerful enough to reject all the fake sequences together in one step. Yes, at least one such possible test exists.)
+
+```{r}
+flips1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT"
+
+flips2 = "HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT"
+
+flips3 = "HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH"
+
+flips4 = "HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH"
+
+flips5 = "HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTT"
+
+flips6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
+
+# you can use the function below to split the above sequences in vectors of flips
+split = function(str) strsplit(str, split="")[[1]]
+fl1=split(flips1)
+fl2=split(flips2)
+fl3=split(flips3)
+fl4=split(flips4)
+fl5=split(flips5)
+fl6=split(flips6)
+# Function to calculate entropy for a binary sequence
+calculate_entropy <- function(seq) {
+  # Calculate proportions of heads (H) and tails (T)
+  p_H <- sum(seq == "H") / length(seq)
+  p_T <- sum(seq == "T") / length(seq)
+  
+  # Ensure no zero probabilities (avoiding log(0))
+  if (p_H == 0 || p_T == 0) return(0)
+  
+  # Entropy formula
+  entropy <- -p_H * log2(p_H) - p_T * log2(p_T)
+  return(entropy)
+}
+
+# Function to simulate random binary sequences
+generate_random_sequence <- function(n) {
+  sample(c("H", "T"), n, replace = TRUE)
+}
+
+# Monte Carlo simulation function to test randomness via entropy
+num_simulations <- 1000
+monte_carlo_entropy_test <- function(observed_seq, num_simulations) {
+  # Length of the observed sequence
+  n <- length(observed_seq)
+  
+  # Calculate entropy of the observed sequence
+  observed_entropy <- calculate_entropy(observed_seq)
+  
+  # Calculate entropy for random sequences
+  entropies <- numeric(num_simulations)
+  
+  for (i in 1:num_simulations) {
+    # Generate a random sequence
+    random_seq <- generate_random_sequence(n)
+    
+    # Compute entropy for the random sequence
+    entropies[i] <- calculate_entropy(random_seq)
+  }
+  
+  # Calculate the proportion of random entropies greater than or equal to the observed entropy
+  p_value <- mean(entropies >= observed_entropy)
+  
+  # Return the results
+  list(observed_entropy = observed_entropy, entropies = entropies, p_value = p_value)
+}
+
+# Function to determine if the sequence is random based on p-value
+is_random <- function(p_value, alpha = 0.05) {
+  if (p_value < alpha) {
+    return("The sequence is unlikely to be random (Reject H0)")
+  } else {
+    return("The sequence appears to be random (Fail to reject H0)")
+  }
+}
+
+# Run the Monte Carlo entropy test
+test_result <- monte_carlo_entropy_test(fl1, num_simulations = 1000)
+cat("Observed Entropy: fl1", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+test_result <- monte_carlo_entropy_test(fl2, num_simulations = 1000)
+cat("Observed Entropy: fl2", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+test_result <- monte_carlo_entropy_test(fl3, num_simulations = 1000)
+cat("Observed Entropy: fl3", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+test_result <- monte_carlo_entropy_test(fl4, num_simulations = 1000)
+cat("Observed Entropy: fl4", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+test_result <- monte_carlo_entropy_test(fl5, num_simulations = 1000)
+cat("Observed Entropy: fl5", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+test_result <- monte_carlo_entropy_test(fl6, num_simulations = 1000)
+# Output the results
+cat("Observed Entropy: fl6", test_result$observed_entropy, "\n")
+cat("P-value:", test_result$p_value, "\n")
+cat(is_random(test_result$p_value), "\n")
+
+
+
+
+
+```
+
+## Problem \#2: Finding the Trick Coin <small>(6 pts; 2pts each)</small>
+
+I have two coins in my pocket - a trick coin with two heads and a fair coin with one head and one tail(s?). We'll play a game. I will grab one coin at random, and flip it $N$ times. After that you will have to decide if it is the fair coin or the trick coin. The null hypothesis is that it is the fair coin. 
+
+**Decision Rule 1**: If after $N$ flips there are no tails, then you decide it is the trick coin. If there is at least 1 tail then you know it is the fair coin. 
+
+a. Using "Decision Rule 1", what is the lowest number of flips $N$ would you need in order to have a significance level less than 5% for this test?
+
+α=0.05
+
+H0: Coin is fair.  P(H)=P(T)=1/2
+
+P(number of in N flips/H0) < 0.05
+                  P(no T in N flips/H0)=(1/2)^N < 0.05 
+                  
+                 N > ln(0.05)/-ln(2) N > -.2.9957/-0.6931 ~ 4.32
+
+The lower number of flips is 5
+Fliping the coin 5 times and getting no tails under assumption coin is fair (H0), is less than 5%, so we reject the null hypothesis and conclude that the coin is a trick coin
+
+
+b. Using $N$ from part a, what is the power of the test?
+
+
+
+c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
+
+
+
+d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
+
+
+## Problem \#3: Testing the maximum of a uniform distribution <small>(8 pts; 2 pts each)</small>
+
+We sample $X_1, X_x,\ldots,X_n \overset{\text{iid}}\sim\text{Uniform}(0,m)$ where $m$ is an unknown maximum. Sleazy Jim tells you that $m=1$ but you're not so sure. The 50 values sampled are in the following data file:
+
+```{r}
+X <- read.csv("uniform_sample.csv")$x
+```
+
+a. Write out in formal notation the null and alternative hypotheses. 
+b. Come up with a test statistic and measure your sampled data. Is this a one-sided test or two-sided test?
+c. Simulate a distribution for the test statistic under the null hypothesis of size at least 1000. Display a histogram of your test statistic distribution.
+d. Calculate the $p$-value for this data and make a conclusion.
+
+## Problem \#4: Blurtle <small>(10 pts; 2 pt each)</small>
+
+Have you been playing the hot new game Blurtle? It's a (fictional) word game you can play daily - you have to guess a 5 letter word and you only have 6 attempts. I've been playing for the past 100 days and I've been tracking my number of guesses. I'm trying to figure out whether I have been getting better or not.
+
+The file `blurtle.csv` contains 100 rows of data, giving the number of tries to guess the word. If it took 7 guesses that actually means I failed (you don't actually get a 7th guess). 
+
+```{r}
+blurtle <- read.csv("blurtle.csv")
+```
+
+Your task is to perform a permutation test on the data to determine if there is statistical evidence of a true improvement trend.
+
+a. State the null and alternative hypotheses
+b. Determine a test statistic that identifies a trend in the number of tries. There are many good ones you could use - be creative.
+c. Decide whether the test will be a one or two-tailed test
+d. Simulate a distribution of test statistics under the null hypothesis
+e. Calculate the test statistic on the observed data, calculate the $p$-value and state your conclusions.
+
+

@@ -1,0 +1,159 @@
+---
+title: "Homework 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## Problem \#1: Testing coin flips <small>(6 pts)</small>
+
+In the six sequences below, only one of them is actually **randomly generated from independent flips of a fair coin**. Use a combination of everything you know (common sense, Monte Carlo, hypothesis testing, etc.) to identify which is actually random and explain your reasoning.
+
+(For full points, conduct a formal test and report a $p$-value for each sequence. You may use a combination of multiple tests to arrive at your answer. If you cannot compute a p-value for each sequence, you can still earn a significant amount of partial credit by carefully explaining your reasoning and response as best as you can.)
+
+My advice is **be creative** with the test statistics you come up with to eliminate each sequence! Think of some way of summarizing a sequence of flips that might be useful for comparing against a simulated sequence of random flips. After you come up with an idea for a statistic, remember to run it on many MC generated completely random flips to produce a distribution under the null, which you can then compare with your data to get a p-value. Also, be careful of now you define "more extreme" than the data.
+
+(2 bonus points available if you can find a single test that is powerful enough to reject all the fake sequences together in one step. Yes, at least one such possible test exists.)
+
+```{r}
+flips1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT"
+
+flips2 = "HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT"
+
+flips3 = "HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH"
+
+flips4 = "HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH"
+
+flips5 = "HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTT"
+
+flips6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
+
+# you can use the function below to split the above sequences in vectors of flips
+# split = function(str) strsplit(str, split="")[[1]]
+
+ sequence_bin1 <- as.numeric(unlist(strsplit(flips1, "")) == "H")
+ sequence_bin2 <- as.numeric(unlist(strsplit(flips2, "")) == "H")
+ sequence_bin3 <- as.numeric(unlist(strsplit(flips3, "")) == "H")
+ sequence_bin4 <- as.numeric(unlist(strsplit(flips4, "")) == "H")
+ sequence_bin5 <- as.numeric(unlist(strsplit(flips5, "")) == "H")
+ sequence_bin6 <- as.numeric(unlist(strsplit(flips6, "")) == "H")
+
+
+
+# Function to calculate autocorrelation for a given lag
+compute_autocorrelation <- function(sequence, lag) {
+  n <- length(sequence)
+  if (lag >= n) return(NA)
+  
+  seq1 <- sequence[1:(n-lag)]
+  seq2 <- sequence[(lag+1):n]
+  
+  return(cor(seq1, seq2))
+}
+
+# Generate a random coin flip sequence (H = 1, T = 0)
+generate_random_sequence <- function(n) {
+  sample(c(0, 1), size = n, replace = TRUE)
+}
+
+# Function to perform the Monte Carlo test with autocorrelation
+autocorrelation_test <- function(observed_seq, n_sim = 1000, max_lag = 5) {
+  n <- length(observed_seq)
+  
+  # Compute autocorrelation for observed sequence
+  observed_autocorrs <- sapply(1:max_lag, function(lag) compute_autocorrelation(observed_seq, lag))
+  
+  # Monte Carlo simulation
+  sim_autocorrs <- matrix(NA, nrow = n_sim, ncol = max_lag)
+  
+  for (i in 1:n_sim) {
+    random_seq <- generate_random_sequence(n)
+    sim_autocorrs[i, ] <- sapply(1:max_lag, function(lag) compute_autocorrelation(random_seq, lag))
+  }
+  
+  # Calculate p-values for each lag
+  p_values <- sapply(1:max_lag, function(lag) {
+    mean(abs(sim_autocorrs[, lag]) >= abs(observed_autocorrs[lag]))
+  })
+  
+  return(list(observed_autocorrs = observed_autocorrs, sim_autocorrs = sim_autocorrs, p_values = p_values))
+}
+
+# Example usage:
+# set.seed(123)
+# flips1 <- rep(c(1, 0), times = 100)  # Example deterministic sequence
+# flips2 <- sample(c(1, 0), 200, replace = TRUE)  # Example random sequence
+
+# Run autocorrelation test
+test_result_flips1 <- autocorrelation_test(sequence_bin1, n_sim = 10000, max_lag = 5)
+test_result_flips2 <- autocorrelation_test(sequence_bin2, n_sim = 10000, max_lag = 5)
+test_result_flips3 <- autocorrelation_test(sequence_bin3, n_sim = 10000, max_lag = 5)
+test_result_flips4 <- autocorrelation_test(sequence_bin4, n_sim = 10000, max_lag = 5)
+test_result_flips5 <- autocorrelation_test(sequence_bin5, n_sim = 10000, max_lag = 5)
+test_result_flips6 <- autocorrelation_test(sequence_bin6, n_sim = 10000, max_lag = 5)
+
+# Print results
+print("Autocorrelation Test for flips1:")
+print(test_result_flips1$p_values)
+print("Autocorrelation Test for flips2:")
+print(test_result_flips2$p_values)
+print("Autocorrelation Test for flips3:")
+print(test_result_flips3$p_values)
+print("Autocorrelation Test for flips4:")
+print(test_result_flips4$p_values)
+print("Autocorrelation Test for flips5:")
+print(test_result_flips5$p_values)
+print("Autocorrelation Test for flips6:")
+print(test_result_flips6$p_values)
+
+```
+
+
+
+## Problem \#2: Finding the Trick Coin <small>(6 pts; 2pts each)</small>
+
+I have two coins in my pocket - a trick coin with two heads and a fair coin with one head and one tail(s?). We'll play a game. I will grab one coin at random, and flip it $N$ times. After that you will have to decide if it is the fair coin or the trick coin. The null hypothesis is that it is the fair coin. 
+
+**Decision Rule 1**: If after $N$ flips there are no tails, then you decide it is the trick coin. If there is at least 1 tail then you know it is the fair coin. 
+
+a. Using "Decision Rule 1", what is the lowest number of flips $N$ would you need in order to have a significance level less than 5% for this test?
+b. Using $N$ from part a, what is the power of the test?
+c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
+d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
+
+
+## Problem \#3: Testing the maximum of a uniform distribution <small>(8 pts; 2 pts each)</small>
+
+We sample $X_1, X_x,\ldots,X_n \overset{\text{iid}}\sim\text{Uniform}(0,m)$ where $m$ is an unknown maximum. Sleazy Jim tells you that $m=1$ but you're not so sure. The 50 values sampled are in the following data file:
+
+```{r}
+X <- read.csv("uniform_sample.csv")$x
+```
+
+a. Write out in formal notation the null and alternative hypotheses. 
+b. Come up with a test statistic and measure your sampled data. Is this a one-sided test or two-sided test?
+c. Simulate a distribution for the test statistic under the null hypothesis of size at least 1000. Display a histogram of your test statistic distribution.
+d. Calculate the $p$-value for this data and make a conclusion.
+
+## Problem \#4: Blurtle <small>(10 pts; 2 pt each)</small>
+
+Have you been playing the hot new game Blurtle? It's a (fictional) word game you can play daily - you have to guess a 5 letter word and you only have 6 attempts. I've been playing for the past 100 days and I've been tracking my number of guesses. I'm trying to figure out whether I have been getting better or not.
+
+The file `blurtle.csv` contains 100 rows of data, giving the number of tries to guess the word. If it took 7 guesses that actually means I failed (you don't actually get a 7th guess). 
+
+```{r}
+blurtle <- read.csv("blurtle.csv")
+```
+
+Your task is to perform a permutation test on the data to determine if there is statistical evidence of a true improvement trend.
+
+a. State the null and alternative hypotheses
+b. Determine a test statistic that identifies a trend in the number of tries. There are many good ones you could use - be creative.
+c. Decide whether the test will be a one or two-tailed test
+d. Simulate a distribution of test statistics under the null hypothesis
+e. Calculate the test statistic on the observed data, calculate the $p$-value and state your conclusions.
+
+

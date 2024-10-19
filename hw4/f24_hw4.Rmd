@@ -306,6 +306,8 @@ c. How wide of a space would you need to be 99% sure that 3 Billys would fit? *H
 ```{r}
 qnorm(0.99, 3*mean_billy, sqrt(3)*sd_billy)
 
+quantile(total_width, 0.99)
+
 ```
 
 

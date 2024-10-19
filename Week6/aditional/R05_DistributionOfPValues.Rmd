@@ -1,0 +1,233 @@
+---
+title: "Distribution of P-values"
+author: "Brian Powers"
+date: "2024-02-20"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Simple Hypothesis Test
+
+I want to sample from $N(\mu, 5^2)$
+
+Say I want to test $H_0: \mu = 10$ vs $H_A: \mu > 10$
+
+I can use the test statistic simply being $\bar{X}$
+
+```{r}
+generate_data <- function(n, mu){
+  return(rnorm(n, mu, 5))
+}
+
+test_stat <- function(someData){
+  return(mean(someData))
+}
+```
+
+## What rejection rule to use??????
+
+Suppose we want to use a significance level of 7%
+
+```{r}
+set.seed(1)
+myData <- rnorm(25, 11, 5)
+```
+
+Let's generate a test statistic distribution under the null hypothesis
+
+```{r}
+NMC <- 10000
+t.sim <- replicate(NMC, test_stat(generate_data(25, 10)))
+hist(t.sim)
+```
+
+We want to pick a rejection threshold (a critical value) $t_\alpha$
+designed to achieve a significance level (type 1 error rate) of .07. IF
+$\bar{X} \geq t_\alpha$ we reject $H_0$, and this should occur 7% of the
+time when $H_0$ is true.
+
+```{r}
+t.crit <- quantile(t.sim, .93)
+#verify
+mean(t.sim >= t.crit)
+```
+
+Let's just make sure that if the null hypothesis is true that we end up
+rejecting 7%
+
+```{r}
+result <- FALSE
+for(i in 1:NMC){
+  nullData <- generate_data(25, 10)
+  result[i] <- test_stat(nullData) >= t.crit
+  # result will be TRUE if the test stat is beyond the critical
+  # value, ie. we reject the null
+  #False otherwise
+}
+mean(result)
+```
+
+I'm curious about the p-values you get from this test. Let's repeat with
+the null hypothesis, and just record p-values.
+
+```{r}
+p.val <- 0
+for(i in 1:NMC){
+  nullData <- generate_data(25, 10)
+  p.val[i] <- mean(t.sim >= test_stat(nullData))
+}
+hist(p.val)
+```
+
+If the null hypothesis is true, and we get data and calculate a p-value,
+the p-value will be uniformly distributed according to a uniform(0,1)
+
+What about the distribution of p-values if the mean of the normal = 11
+(i.e. the null is false)
+
+```{r}
+p.val <- 0
+for(i in 1:NMC){
+  nullData <- generate_data(25, 11)
+  p.val[i] <- mean(t.sim >= test_stat(nullData))
+}
+hist(p.val)
+mean(p.val <=0.07)
+mean(p.val >0.07)
+```
+
+So it seems if the data was drawn from a normal distribution with a mean
+of 11, we have a 32.77% probability of getting "strong evidence" to
+reject H_0. That's the power of this test.
+
+# Achieving exact alpha with a discrete test statistic distribution
+
+Going back to the example from lecture, suppose we want to achieve an
+exact type 1 error rate of 2.5%. We're flipping a coin and we want to
+know what rejection rule we should use for the lower-bound on the number
+of heads - to conclude that the coin is not fair.
+
+To remind you - we are flipping a coin 200 times, we have to come up
+with a rule such that if the flips are producing too low of heads, we
+reject the null hypothesis (and we would do something similar for the
+upper tail).
+
+The goal is to find some rejection rule for low X that will reject 2.5%
+of the time for a fair coin.
+
+```{r}
+#P (X <= 85) for X~Binom(200, .5)
+pbinom(85, 200, .5)
+
+#P (X <= 86) for X~Binom(200, .5)
+pbinom(86, 200, .5)
+
+#P(X = 86)
+dbinom(86, 200, .5)
+```
+
+$$P(X <= 85) = 0.0200186$$
+
+$$P(X <= 86) = 0.02798287$$
+
+$$P(X=86) = .00796$$
+
+The idea is we will reject always when X \<= 85, sometimes when X \<=
+86, and never when X \> 86. What do we want for the sometimes? We want
+$$P(X \leq 85) + P(reject \cap X=86) = 0.025$$ In other words:
+
+$$P(reject \cap X=86) = 0.025-P(X \leq 85)$$ Expanding the left hand
+side
+
+$$P(reject | X=86)\cdot P(X=86) = 0.025-P(X \leq 85)$$ Divide both sides
+by $P(X=86)$ $$P(reject | X=86) = \dfrac{0.025-P(X \leq 85)}{P(X=86)}$$
+
+```{r}
+#We look at the probability under H0 that we get 86 heads
+P.reject.86 <- (.025 - pbinom(85, 200, .5) )/dbinom(86, 200, .5)
+P.reject.86
+```
+
+So if we get 86 heads, we will reject 62.5% of the time. That's the
+idea.
+
+```{r}
+hack_decision_rule <- function(T){
+  #T is the number of heads
+  if(T <= 85){ return (TRUE)} #always reject if T <= 85
+  else if(T==86) {return(rbinom(1, 1, P.reject.86))}
+  else {return (FALSE)}
+}
+
+trials <- rbinom(100000, 200, .5)
+reject <- FALSE
+for(i in 1:100000){
+  reject[i] <- hack_decision_rule(trials[i])
+}
+mean(reject)
+```
+
+There are two other ways that we could attempt (that come to my mind) to achieve an exact $\alpha$ with a discrete test statistic distribution. 
+
+1. If $X \leq 86$ reject
+$p$ of the time 
+2. Always reject 2.5% of the time.
+
+Both of these will attain an $\alpha$ of 0.025, but they are not as powerful. Let's consider different probabilities from 0 to .5 and compare the powers We're only refining the rejection rule for the lower tail, so we don't need to look at the upper tail right now.
+
+```{r}
+set.seed(1)
+
+rule1.p <- 0.025/pbinom(86,200, .5)
+
+hack_decision_rule1 <- function(T){
+  if(T <= 86){
+    return(runif(1) < rule1.p)
+  } else {
+    return(FALSE)
+  }
+}
+hack_decision_rule2 <- function(T){
+  return(runif(1) < 0.025)
+}
+
+pseq <- seq(0,.5,.01)
+
+rr_0 <- rep(0,length(pseq))
+rr_1 <- rr_0
+rr_2 <- rr_0
+NMC <- 5000
+for(j in 1:length(pseq)){
+  p <- pseq[j]
+  for(i in 1:NMC){
+    #generate data
+    nheads <- rbinom(1, 200, p)
+    rr_0[j] <- rr_0[j] + hack_decision_rule(nheads)
+    rr_1[j] <- rr_1[j] + hack_decision_rule1(nheads)
+    rr_2[j] <- rr_2[j] + hack_decision_rule2(nheads)
+  }
+}
+rr_0 <- rr_0 / NMC
+rr_1 <- rr_1 / NMC
+rr_2 <- rr_2 / NMC
+
+plot(x=pseq, y=rr_0, type="l", ylab="rejection rate", xlab="Prob of H", main="Power Comparison of Hack Rejection Rules")
+abline(h=0.025, col="red")
+lines(x=pseq, y=rr_1, col="blue")
+lines(x=pseq, y=rr_2, col="orange")
+legend(x=0, y=.6, legend=c("Hack rule", "reject sometimes if T<=86", "reject sometimes"), col=c("black","blue","orange"), lwd=1)
+```
+
+Compare their levels:
+```{r}
+rr_0[51]
+rr_1[51]
+rr_2[51]
+
+```
