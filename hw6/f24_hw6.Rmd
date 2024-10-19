@@ -153,6 +153,21 @@ a. Using "Decision Rule 1", what is the lowest number of flips $N$ would you nee
 > The minimum number of flips we need is 5, after that we would be able to conclude whther the coin was fair or trick.
 
 b. Using $N$ from part a, what is the power of the test?
+
+> To calculate the power of the test with N equals 5, we use the formula:
+
+> Power equals 1 minus P(no tails), which is equal to 1 minus 0.5 raised to the power of N.
+
+> For N equals 5, we first calculate P(no tails):
+
+> P(no tails) equals 0.5 raised to the power of 5, which equals 1 over 32, approximately 0.03125.
+
+> Next, we calculate the power:
+
+> Power equals 1 minus P(no tails) equals 1 minus 0.5 raised to the power of 5, which equals 1 minus 0.03125, resulting in approximately 0.96875.
+
+> Thus, the power of the test when N equals 5 is approximately 0.96875, meaning there is a 96.875% chance of correctly rejecting the null hypothesis if the chosen coin is the fair coin.
+
 c. Suppose $N=4$ is decided. How can you modify the decision process to have a significance level of exactly 5%? Does this change the power of the test?
 d. Extra Credit (2 points): Suppose if you guess correct you win \$100 (and if you're wrong you get nothing), but each flip of the coin costs \$10. What strategy would you use to maximize your expected profit from this game?
 
