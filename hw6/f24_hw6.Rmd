@@ -122,7 +122,8 @@ print(comparison)
 # Calculate p-values for each sequence
 p_values <- sapply(results, function(longest_run) {
   # P-value is the proportion of simulated runs that are less than or equal to the longest run
-  mean(longest_runs <= longest_run)
+  #mean(longest_runs <= longest_run)
+  2 * min(mean(longest_runs >= longest_run), mean(longest_runs <= longest_run))
 })
 
 # Combine the results into a data frame
@@ -132,6 +133,12 @@ comparison <- data.frame(Sequence = paste0("Flips", 1:6),
 
 # Print comparison results
 print(comparison)
+
+
+```
+```{r}
+p_value <- 2 * min(mean(longest_runs >= average_longest_run), mean(longest_runs <= average_longest_run))
+p_value
 
 
 ```
@@ -211,9 +218,9 @@ a. Write out in formal notation the null and alternative hypotheses.
 
 b. Come up with a test statistic and measure your sampled data. Is this a one-sided test or two-sided test?
 
-> Test statistic T=Xmax   where Xmax=max(x1,.....xn)=  9.944338254
+> Test statistic T=Xmax   where Xmax=max(x1,.....xn) =  0.9443383
 
-> It is two-sided test because we want to test friends claim that m=1  and actually do not know direction of the claim, is m>1 or m<1. 
+> It is two-sided test because we want to test friend's claim that m=1  and actually do not know direction of the claim, is m>1 or m<1. 
 
 c. Simulate a distribution for the test statistic under the null hypothesis of size at least 1000. Display a histogram of your test statistic distribution.
 
