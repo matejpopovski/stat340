@@ -122,8 +122,8 @@ print(comparison)
 # Calculate p-values for each sequence
 p_values <- sapply(results, function(longest_run) {
   # P-value is the proportion of simulated runs that are less than or equal to the longest run
-  #mean(longest_runs <= longest_run)
-  2 * min(mean(longest_runs >= longest_run), mean(longest_runs <= longest_run))
+  mean(longest_runs <= longest_run)
+  #2 * min(mean(longest_runs >= longest_run), mean(longest_runs <= longest_run))      # if we want 2 sided test
 })
 
 # Combine the results into a data frame
