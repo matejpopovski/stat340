@@ -538,7 +538,6 @@ p_value <- (sum(abs(perm_stats) >= abs(observed_stat)) + 1) / (length(perm_stats
 hist(perm_stats, main = "Permutation Test Statistics", xlab = "Spearman Correlation", breaks = 30)
 abline(v = observed_stat, col = "red", lwd = 2)
 
-# Print results
 print(paste("Observed test statistic: ", observed_stat))
 print(paste("P-value: ", p_value))
 ```
