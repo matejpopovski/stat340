@@ -445,7 +445,7 @@ abline(v = obs_max, col = "red", lwd = 2)
 
 d. Calculate the $p$-value for this data and make a conclusion.
 
-Calculated p>0.05 so we fail to reject H0. There is not enough evidence to reject m=1
+Calculated p = 0.952 > 0.05 so we fail to reject H0. There is not enough evidence to reject m = 1
 
 ## Problem \#4: Blurtle <small>(10 pts; 2 pt each)</small>
 
