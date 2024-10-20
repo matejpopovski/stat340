@@ -510,7 +510,21 @@ abline(v = observed_stat, col = "red", lwd = 2)
 print(paste("Observed test statistic: ", observed_stat))
 print(paste("P-value: ", p_value))
 ```
-We conclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that number of guesses by days is lowering.
+> We conclude that there is enough evidence to reject the H0 hypothesis. Test statistic has negative value meaning that there is enough evidence that number of guesses by days is lowering.
 
+> As a check we can do a regression on the data on a scatter plot and follow the line. If it has negative slope, that means that the number of tres is decreasing over time and we are making progress - numebr of guesses is lowering. 
+
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Create scatter plot with regression line
+ggplot(blurtle, aes(x = day, y = tries)) +
+  geom_point() +  # Scatter plot points
+  geom_smooth(method = "lm", color = "blue", se = FALSE) +  # Linear regression line
+  labs(title = "Number of Tries Over Time (Blurtle Game)", x = "Day", y = "Number of Tries") +
+  theme_minimal()
+
+```
 
 
