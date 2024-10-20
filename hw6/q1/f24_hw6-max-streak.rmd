@@ -138,7 +138,14 @@ cat("P-values for each observed streak length:", p_values, "\n")
 
 ```
 
-> Here 
+> Another test I would use is Autocorrelation
+
+
+
+
+
+
+
 
 ## Problem \#2: Finding the Trick Coin <small>(6 pts; 2pts each)</small>
 
