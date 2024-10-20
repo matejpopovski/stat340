@@ -153,9 +153,6 @@ flips5 = "HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHH
 
 flips6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
 
-# you can use the function below to split the above sequences in vectors of flips
-# split = function(str) strsplit(str, split="")[[1]]
-
  sequence_bin1 <- as.numeric(unlist(strsplit(flips1, "")) == "H")
  sequence_bin2 <- as.numeric(unlist(strsplit(flips2, "")) == "H")
  sequence_bin3 <- as.numeric(unlist(strsplit(flips3, "")) == "H")
@@ -202,11 +199,6 @@ autocorrelation_test <- function(observed_seq, n_sim = 1000, max_lag = 5) {
   return(list(observed_autocorrs = observed_autocorrs, sim_autocorrs = sim_autocorrs, p_values = p_values))
 }
 
-# Example usage:
-# set.seed(123)
-# flips1 <- rep(c(1, 0), times = 100)  # Example deterministic sequence
-# flips2 <- sample(c(1, 0), 200, replace = TRUE)  # Example random sequence
-
 # Run autocorrelation test
 test_result_flips1 <- autocorrelation_test(sequence_bin1, n_sim = 10000, max_lag = 5)
 test_result_flips2 <- autocorrelation_test(sequence_bin2, n_sim = 10000, max_lag = 5)
@@ -231,7 +223,7 @@ print(test_result_flips6$p_values)
 
 ```
 
-
+> Here we can conclude that for different lags, flips4 and flips6 are the most consistent, with probabilities higher thatn 0.05
 
 
 
