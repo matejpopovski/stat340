@@ -223,7 +223,7 @@ print(test_result_flips6$p_values)
 
 ```
 
-> Here we can conclude that for different lags, flips4 and flips6 are the most consistent, with probabilities higher thatn 0.05
+> Here we can conclude that for different lags, flips4 and flips6 are the most consistent, with probabilities higher thatn 0.05.
 
 
 
