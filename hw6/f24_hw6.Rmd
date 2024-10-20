@@ -327,11 +327,7 @@ print(test_result_flips6$p_values)
 
 > Here we can conclude that for different lags, flips4 and flips6 are the most consistent, with probabilities higher thatn 0.05.
 
-
 > The final conclusion is: flips4 is the fair coin. Flips4 is randomly generated from independent flips of a fair coin.
-
-
-
 
 
 ## Problem \#2: Finding the Trick Coin <small>(6 pts; 2pts each)</small>
