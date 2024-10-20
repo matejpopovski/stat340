@@ -746,7 +746,8 @@ print(&quot;Autocorrelation Test for flips1:&quot;)</code></pre>
 the most consistent, with probabilities higher thatn 0.05.</p>
 </blockquote>
 <blockquote>
-<p>The final conclusion is: flips4 is the fair coin.</p>
+<p>The final conclusion is: flips4 is the fair coin. Flips4 is randomly
+generated from independent flips of a fair coin.</p>
 </blockquote>
 </div>
 <div id="problem-2-finding-the-trick-coin-6-pts-2pts-each" class="section level2">
@@ -848,6 +849,10 @@ $10. What strategy would you use to maximize your expected profit from
 this game?</li>
 </ol>
 <blockquote>
+<p>In case we substract the 10$ AFTER we multiply with the
+probability:</p>
+</blockquote>
+<blockquote>
 <p>For N=1: Probability = 0.50 1-1/2 E(1)=0.50*100-10=40</p>
 </blockquote>
 <blockquote>
@@ -858,6 +863,48 @@ this game?</li>
 </blockquote>
 <blockquote>
 <p>For N=4: Probability = 0.9375 1-1/2^4 E(4)=0.9375*100-40=53.75</p>
+</blockquote>
+<blockquote>
+<p>In case we substract the 10$ BEFORE we multiply with the
+probability:</p>
+</blockquote>
+<blockquote>
+<p>Initial Decision Rule (0 flips): Expected value without any flips:
+You have a 50% chance of either coin being selected randomly. Expected
+value = 50% of $100 + 50% of $0 = $50. You could guess without flipping,
+but this would only give an expected profit of $50.</p>
+</blockquote>
+<blockquote>
+<p>Decision After 1 Flip: If you flip once, the coin will either show
+heads or tails. If you see tails, you know it’s the fair coin (since the
+trick coin never shows tails), so you guess fair and win $100. If you
+see heads, the coin could still be either the trick or fair coin, so you
+remain uncertain. Cost for 1 flip = $10. Expected profit after 1 flip:
+Probability of seeing tails (knowing it’s the fair coin): 50%. If tails:
+profit = $100 - $10 (cost of flip) = $90. If heads: you remain uncertain
+but can still guess randomly (50% chance of being right). Expected
+profit for heads: 50% of ($100 - $10) = $45. Overall expected profit
+after 1 flip: 50% of $90 + 50% of $45 = $67.5.</p>
+</blockquote>
+<blockquote>
+<p>Decision After 2 Flips: If you flip twice: If you see at least one
+tail, you know the coin is fair and win $100. If both flips are heads,
+you become more confident it’s the trick coin, but the fair coin is
+still possible. Cost for 2 flips = $20. Expected profit after 2 flips:
+Probability of seeing at least one tail (knowing it’s the fair coin) is
+75%. If at least one tail: profit = $100 - $20 (cost) = $80. If both
+flips are heads, you remain uncertain, but you can guess randomly.
+Expected profit for both heads: 50% of ($100 - $20) = $40. Overall
+expected profit after 2 flips: 75% of $80 + 25% of $40 = $70.</p>
+</blockquote>
+<blockquote>
+<p>Decision After 3 Flips: With each additional flip, the probability
+that you are correct increases, but so does the cost. Expected profit
+after 3 flips: Cost for 3 flips = $30. If you get at least one tail,
+profit = $100 - $30 = $70. If all 3 flips are heads, profit = 50% of
+($100 - $30) = $35. Overall expected profit after 3 flips: 87.5% of $70
++ 12.5% of $35 = $66.875. Conclusion: The expected profit is highest
+after 1 flip, where the expected profit is $67.5.</p>
 </blockquote>
 </div>
 <div id="problem-3-testing-the-maximum-of-a-uniform-distribution-8-pts-2-pts-each" class="section level2">

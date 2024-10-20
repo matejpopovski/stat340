@@ -131,7 +131,6 @@ comparison <- data.frame(Sequence = paste0("Flips", 1:6),
                          LongestRun = results,
                          PValue = p_values)
 
-# Print comparison results
 print(comparison)
 
 ```
@@ -190,7 +189,6 @@ convert_to_numeric <- function(sequence) {
   return(as.numeric(sequence == 'H'))
 }
 
-# Example sequences
 flips1 <- unlist(strsplit("HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT", ""))
 flips2 <- unlist(strsplit("HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT", ""))
 flips3 <- unlist(strsplit("HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH", ""))
@@ -206,7 +204,6 @@ flips4_num <- convert_to_numeric(flips4)
 flips5_num <- convert_to_numeric(flips5)
 flips6_num <- convert_to_numeric(flips6)
 
-# Calculate max streak length
 max_streak_flips1 <- max_streak_length(flips1_num)
 max_streak_flips2 <- max_streak_length(flips2_num)
 max_streak_flips3 <- max_streak_length(flips3_num)
@@ -239,12 +236,11 @@ observed_streaks <- c(1, 4, 6, 9, 10, 12)
 # Calculate the proportion of simulated streaks that are longer than or equal to each observed streak
 p_values <- sapply(observed_streaks, function(obs) mean(simulated_streaks >= obs))
 
-# Results
 cat("P-values for each observed streak length:", p_values, "\n")
 
 ```
 
-> Another test I would use is Autocorrelation
+> Another method I would use is Autocorrelation.
 
 ```{r}
 flips1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT"
