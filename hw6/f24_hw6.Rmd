@@ -147,6 +147,124 @@ p_value
 
 
 
+> The solution above checks only for Heads, so here is another solution that checks for any (heads or tails) longest sequence.
+
+```{r}
+flips1 = "HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT"
+
+flips2 = "HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT"
+
+flips3 = "HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH"
+
+flips4 = "HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH"
+
+flips5 = "HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTT"
+
+flips6 = "TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT"
+
+# you can use the function below to split the above sequences in vectors of flips
+split = function(str) strsplit(str, split="")[[1]]
+split(flips1)
+
+# Function to calculate autocorrelation for a given lag
+autocorrelation <- function(sequence, lag) {
+  n <- length(sequence)
+  sequence_lagged <- sequence[(lag + 1):n]
+  sequence_original <- sequence[1:(n - lag)]
+  
+  # Compute correlation between original and lagged sequence
+  return(cor(sequence_original, sequence_lagged))
+}
+
+# Function to calculate the maximum streak length
+max_streak_length <- function(sequence) {
+  max_streak <- 0
+  current_streak <- 1
+  
+  for (i in 2:length(sequence)) {
+    if (sequence[i] == sequence[i - 1]) {
+      current_streak <- current_streak + 1
+    } else {
+      max_streak <- max(max_streak, current_streak)
+      current_streak <- 1
+    }
+  }
+  max_streak <- max(max_streak, current_streak) # Handle case when last streak is the longest
+  return(max_streak)
+}
+
+# Convert coin flips sequences to 0s and 1s (H = 1, T = 0)
+convert_to_numeric <- function(sequence) {
+  return(as.numeric(sequence == 'H'))
+}
+
+# Example sequences
+flips1 <- unlist(strsplit("HTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHTHT", ""))
+flips2 <- unlist(strsplit("HHHTHTTTHHTHHTHHHTTTTHTHTHHTTHTHHHTHHTHTTTHTHHHTHTTTHTHTHHTHTHTTHTHHTHTHTTTHTHHHTHTHTTHTHTHHTHTHTHHHTHTTTHTHHTHTHTHHTTTHTHHTHHTTTTHTHTHHHTHTTHTHHTHTHTTHTHHTHTHHHTHHHTHTTTHTTHTTTHTHHHTHTHTTHTHHTHHTHTTT", ""))
+flips3 <- unlist(strsplit("HHTHTHTTTHTHHHTHHTTTHTHHTHTTTHTHTHHTHTHTTHTHHHHHHTTTHTHTHHTHTTTHTHHTHTHTTTHTHHHTTHTTTHTHTHHHHTHTTHHTTTTTHTHHHTHTHTTTTTHHHTHHTHHTHHHTTTTHTHTHHHTHHTTTTTHTHHHTHTHTHTTTHTHHHTHTHTHTTHTHHTHTHTHTTTTHTHHHTHTH", ""))
+flips4<- unlist(strsplit("HTHHHHHHHTHTTHHTTHHHTHTHTTTHHTHHHTHHTTHTTTTTTTTTHTHHTTTTTHTHTHTHHTTHTTHTTTTTHHHTHTTTHTHTHHHTHTTTTHTHTHHTTHTHTTHHTHTHHHHTHTTHHTTHTTHTTHTHHHHHHTTTTTTHHHTTHTHHHHTTTHTTHHHTTHTHHTTTHHTHHTTTHTHHTHHHTHHTTHHH", ""))
+flips5<- unlist(strsplit("HHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTTHHHHHHHHHHTTTTTTTTTT", ""))
+flips6<- unlist(strsplit("TTHTTTHTTTTTTTHTHTHTHTTHTTHTHHTHHTTTHHTHTTTHTHHTHHHTHTTHHTHHTTHTHTTTTHTHTTTHHTTTTTTTTHTHHTTHTTTTTTHTHTHTHTTTHTTHHTTHTTTHHTTTHTTHTTTTHTTTTHHTTTHTHTHHHTTTTTTHTHHTTTTTTTTTTTTHHHTTTHHHTTTHTTTHTHTTHTTTTTHT", ""))
+
+# Convert to numeric
+flips1_num <- convert_to_numeric(flips1)
+flips2_num <- convert_to_numeric(flips2)
+flips3_num <- convert_to_numeric(flips3)
+flips4_num <- convert_to_numeric(flips4)
+flips5_num <- convert_to_numeric(flips5)
+flips6_num <- convert_to_numeric(flips6)
+
+
+# Calculate autocorrelation for Lag 1 and Lag 2
+autocorr_flips1_lag1 <- autocorrelation(flips1_num, 1)
+autocorr_flips1_lag2 <- autocorrelation(flips1_num, 2)
+autocorr_flips2_lag1 <- autocorrelation(flips2_num, 1)
+autocorr_flips2_lag2 <- autocorrelation(flips2_num, 2)
+
+# Calculate max streak length
+max_streak_flips1 <- max_streak_length(flips1_num)
+max_streak_flips2 <- max_streak_length(flips2_num)
+max_streak_flips3 <- max_streak_length(flips3_num)
+max_streak_flips4 <- max_streak_length(flips4_num)
+max_streak_flips5 <- max_streak_length(flips5_num)
+max_streak_flips6 <- max_streak_length(flips6_num)
+
+# Results
+cat("Flips1 Autocorrelation (Lag 1):", autocorr_flips1_lag1, "\n")
+cat("Flips1 Autocorrelation (Lag 2):", autocorr_flips1_lag2, "\n")
+cat("Flips2 Autocorrelation (Lag 1):", autocorr_flips2_lag1, "\n")
+cat("Flips2 Autocorrelation (Lag 2):", autocorr_flips2_lag2, "\n")
+cat("Flips1 Max Streak Length:", max_streak_flips1, "\n")
+cat("Flips2 Max Streak Length:", max_streak_flips2, "\n")
+cat("Flips3 Max Streak Length:", max_streak_flips3, "\n")
+cat("Flips4 Max Streak Length:", max_streak_flips4, "\n")
+cat("Flips5 Max Streak Length:", max_streak_flips5, "\n")
+cat("Flips6 Max Streak Length:", max_streak_flips6, "\n")
+
+# Function to simulate coin flips and find max streak length
+simulate_max_streak <- function(n_flips) {
+  sequence <- sample(c(0, 1), n_flips, replace = TRUE)  # Random sequence (0 = T, 1 = H)
+  max_streak_length(sequence)
+}
+simulate_max_streak(200)
+# Simulate max streak lengths for many random sequences
+
+n_simulations <- 10000
+n_flips <- 200
+simulated_streaks <- replicate(n_simulations, simulate_max_streak(n_flips))
+
+# Compare observed max streaks with simulated distribution
+observed_streaks <- c(1, 4, 6, 9, 10, 12)
+
+# Calculate the proportion of simulated streaks that are longer than or equal to each observed streak
+p_values <- sapply(observed_streaks, function(obs) mean(simulated_streaks >= obs))
+
+# Results
+cat("P-values for each observed streak length:", p_values, "\n")
+
+```
+
+
 
 
 
