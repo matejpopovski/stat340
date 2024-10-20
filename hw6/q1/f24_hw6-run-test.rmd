@@ -45,17 +45,17 @@ runs_test <- function(sequence) {
 
 #proba
  sequence_bin1 <- as.numeric(unlist(strsplit(flips1, "")) == "H")
- sequence_bin1
+ #sequence_bin1
  sequence_bin2 <- as.numeric(unlist(strsplit(flips2, "")) == "H")
- sequence_bin2
+ #sequence_bin2
  sequence_bin3 <- as.numeric(unlist(strsplit(flips3, "")) == "H")
- sequence_bin3
+ #sequence_bin3
  sequence_bin4 <- as.numeric(unlist(strsplit(flips4, "")) == "H")
- sequence_bin4
+ #sequence_bin4
  sequence_bin5 <- as.numeric(unlist(strsplit(flips5, "")) == "H")
- sequence_bin5
+ #sequence_bin5
  sequence_bin6 <- as.numeric(unlist(strsplit(flips6, "")) == "H")
- sequence_bin6
+ #sequence_bin6
  
 # Apply runs test to each sequence
 p_values <- sapply(list(flips1, flips2, flips3, flips4, flips5, flips6), runs_test)
@@ -70,7 +70,7 @@ n_flips <- 200
 # coin_flips <- sample(c("H", "T"), size = n_flips, replace = TRUE, prob = c(0.5, 0.5))
  coin_flips <- sample(c(1, 0), size = n_flips, replace = TRUE, prob = c(0.5, 0.5))
 # Outp ut the sequence
-print(coin_flips)
+#print(coin_flips)
 
 # you can use the function below to split the above sequences in vectors of flips
 # split = function(flips1) strsplit(str, split="")[[1]]
@@ -87,7 +87,7 @@ abs(coin_flips - bin)
 }
 # Observed test statistic (for original sequences)
 obs_stat <- test_statistic(coin_flips, bin)
-obs_stat
+#obs_stat
 # Permutation test function
 permutation_test <- function(coin_flips, bin, n_permutations = 1000) {
   combined <- c(coin_flips, bin)  # Combine both sequences into one dataset
@@ -110,7 +110,7 @@ permutation_test <- function(coin_flips, bin, n_permutations = 1000) {
 result <- permutation_test(coin_flips,bin, n_permutations = 10000)
 
 # Output the p-value
-cat("Observed Test Statistic:", result$obs_stat, "\n")
+#cat("Observed Test Statistic:", result$obs_stat, "\n")
 cat("Permutation Test P-value:", result$p_value, "\n")
 
 # Optional: Visualize the distribution of permutation test statistics
