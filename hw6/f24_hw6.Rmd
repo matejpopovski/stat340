@@ -559,3 +559,48 @@ ggplot(blurtle, aes(x = day, y = tries)) +
 ```
 
 
+```{r}
+# Load necessary library
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  install.packages("ggplot2")
+}
+library(ggplot2)
+
+# Parameters for the Poisson distribution
+lambda <- 20
+
+# Generate possible values of k (number of events)
+k_values <- 0:40
+
+# Calculate Poisson probabilities
+poisson_probabilities <- dpois(k_values, lambda)
+
+# Create a data frame for plotting
+data <- data.frame(k_values, poisson_probabilities)
+
+# Plot the Poisson distribution
+ggplot(data, aes(x = k_values, y = poisson_probabilities)) +
+  geom_bar(stat = "identity", fill = "lightcoral") +
+  ggtitle("Poisson Distribution (lambda = 20)") +
+  xlab("Number of Events (k)") +
+  ylab("Probability") +
+  theme_minimal()
+
+# Access specific values
+whole_number_value <- dpois(24, lambda)  # Whole number k = 22
+decimal_number_value <- dpois(24.5, lambda)  # Decimal k = 21.5 (invalid in Poisson)
+decimal_number_value2 <- dpois(25, lambda)
+
+whole_number_value
+decimal_number_value
+decimal_number_value2
+
+```
+
+```{r}
+binomial(100, 0.7)
+```
+
+
+
+
