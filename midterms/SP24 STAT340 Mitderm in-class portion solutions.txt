@@ -6,8 +6,8 @@ MC4: a, c; The only way for two events to be independent and mutually exclusive 
 MC5: c. P(X<12) is the probability X < mu+sigma = .50 + .34
 MC6: a. TP
      b. FN
-	 c. TN
-	 d. FP
+	c. TN
+	d. FP
 MC7: d, we have never seen any symmetric distributions where values close to zero were evidence of the alternative hypothesis
 MC8: A
 MC9: E
