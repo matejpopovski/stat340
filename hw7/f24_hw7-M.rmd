@@ -1,0 +1,635 @@
+---
+title: "Homework 7"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+?quantile
+
+```
+
+## Problem \#1: Estimating Quantiles <small>(8 pts; 2pts each)</small>
+
+There are 9 algorithms in R to estimate population quantiles. Type `?quantile` to read about them. Here we will investigate the variance of some of these estimators. To use the quantile function you use the syntax
+`quantile(vector, probs, type)`.
+For example if you have data in a vector called `sampleData` and you wish to estimate the 80th percentile using algorithm 7 (the default), you use
+`quantile(sampleData, .80, type=7)`
+
+Suppose we're interested in the 95th percentile for $X$, and we know that $X$ follows a uniform distribution. We want to randomly sample $n=30$ values and estimate the 95th percentile. Using MC simulation estimate the following:
+
+a. Which quantile algorithm (4 through 9) has the smallest absolute bias ($|\hat{\theta}-\theta|$)? *Hint: you can use $unif(0,1)$ for the purposes of this estimation, as your answer won't depend on the upper and lower bounds chosen.*
+copil     samo  bias
+```{r}
+set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from U(0, 1)
+samples <- matrix(runif(num_simulations * n_samples), ncol = n_samples)
+
+# True 95th percentile of U(0, 1)
+true_percentile <- quantile_index
+
+# Quantile algorithms 4 through 9
+quantile_algorithms <- 4:9
+absolute_biases <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  
+  absolute_bias <- mean(abs(estimated_percentiles - true_percentile))
+ 
+  absolute_biases[i] <- absolute_bias
+}
+
+absolute_biases
+
+# Find the algorithm with the smallest absolute bias
+min_bias_index <- which.min(absolute_biases)
+best_algorithm <- quantile_algorithms[min_bias_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest absolute bias: %f\n", best_algorithm, absolute_biases[min_bias_index]))
+```
+popraveno a. so histogram i ispis na site bias i 
+ 
+```{r}
+set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from U(0, 1)
+samples <- matrix(runif(num_simulations * n_samples), ncol = n_samples)
+
+# True 95th percentile of U(0, 1)
+true_percentile <- qunif(quantile_index)
+true_percentile
+# Quantile algorithms 4 through 9
+quantile_algorithms <- 4:9
+absolute_biases <- numeric(length(quantile_algorithms))
+mean_percentiles <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  mean_percentile <- mean(estimated_percentiles)
+  absolute_bias <- mean(abs(estimated_percentiles - true_percentile))
+  
+  mean_percentiles[i] <- mean_percentile
+  absolute_biases[i] <- absolute_bias
+  
+  cat(sprintf("Algorithm %d: Mean Percentile = %f, Absolute Bias = %f\n", algorithm, mean_percentile, absolute_bias))
+}
+
+
+# Find the algorithm with the smallest absolute bias
+min_bias_index <- which.min(absolute_biases)
+best_algorithm <- quantile_algorithms[min_bias_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest absolute bias: %f\n", best_algorithm, absolute_biases[min_bias_index]))
+
+# Plot the histogram of the simulated distributions of percentiles for the best algorithm
+best_algorithm <- quantile_algorithms[which.min(absolute_biases)]
+best_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = best_algorithm)
+best_percentiles
+hist(best_percentiles, breaks = 50, main = sprintf("Histogram of Simulated 95th Percentiles values (Algorithm %d)", best_algorithm), xlab = "Percentile Values")
+abline(v = true_percentile, col = "red", lty=2, lwd = 4)
+#abline(v = mean(quantile_estimates[, best_algorithm]), col = "black", lwd = 2)
+abline(v = mean(best_percentiles), col = "black", lwd = 2)
+
+```
+
+b. Which quantile algorithm (4 through 9) has the smallest variance?
+
+```{r}
+set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from U(0, 1)
+samples <- matrix(runif(num_simulations * n_samples), ncol = n_samples)
+
+# Quantile algorithms 4 through 9
+quantile_algorithms <- 4:9
+variances <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  variances[i] <- var(estimated_percentiles)
+  
+  cat(sprintf("Algorithm %d: Variance = %f\n", algorithm, variances[i]))
+}
+
+# Find the algorithm with the smallest variance
+min_variance_index <- which.min(variances)
+best_algorithm_variance <- quantile_algorithms[min_variance_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest variance: %f\n", best_algorithm_variance, variances[min_variance_index]))
+
+```
+
+c. Which method is best for estimating the 95th percentile from a uniform distribution? Justify your answer.
+
+alg 6 ima minimalen bias i minimalna varianca
+
+d. What about if $X\sim N(\mu, \sigma^2)$? Would you prefer a different method for estimating the 95th percentile from a normal distribution? *Hint: repeat the same analysis for $N(0,1)$.*
+
+```{r}
+#mean, bias, variances
+set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from Normal(0, 1)
+samples <- matrix(rnorm(num_simulations * n_samples), ncol = n_samples)
+
+# True 95th percentile of N(0, 1)
+true_percentile <- qnorm(quantile_index)
+
+# Quantile algorithms 4 through 9
+quantile_algorithms <- 4:9
+absolute_biases <- numeric(length(quantile_algorithms))
+mean_percentiles <- numeric(length(quantile_algorithms))
+variances <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  mean_percentile <- mean(estimated_percentiles)
+  absolute_bias <- mean(abs(estimated_percentiles - true_percentile))
+  
+  mean_percentiles[i] <- mean_percentile
+  absolute_biases[i] <- absolute_bias
+  variances[i] <- var(estimated_percentiles)
+  
+  cat(sprintf("Algorithm %d: Mean Percentile = %f, Absolute Bias = %f\n", algorithm,   mean_percentile, absolute_bias))
+cat(sprintf("Algorithm %d: Variance = %f\n", algorithm, variances[i]))
+}
+# Find the algorithm with the smallest absolute bias
+min_bias_index <- which.min(absolute_biases)
+best_algorithm <- quantile_algorithms[min_bias_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest absolute bias: %f\n", best_algorithm, absolute_biases[min_bias_index]))
+
+# Find the algorithm with the smallest variance
+min_variance_index <- which.min(variances)
+best_algorithm_variance <- quantile_algorithms[min_variance_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest variance: %f\n", best_algorithm_variance, variances[min_variance_index]))
+
+
+
+# Plot the histogram of the simulated distributions of percentiles for the best algorithm
+best_algorithm <- quantile_algorithms[which.min(absolute_biases)]
+best_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = best_algorithm)
+
+hist(best_percentiles, breaks = 50, main = sprintf("Histogram of Simulated 95th Percentiles (Algorithm %d)", best_algorithm), xlab = "Percentile Values")
+abline(v=mean_percentile, lwd=3)
+abline(v=true_percentile, col="red", lty=2, lwd=3)
+
+
+
+```
+```{r}
+#samo varianci
+#set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from N(0, 1)
+samples <- matrix(rnorm(num_simulations * n_samples), ncol = n_samples)
+
+# Quantile algorithms 4 through 9
+quantile_algorithms <- 4:9
+variances <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  variances[i] <- var(estimated_percentiles)
+  
+  cat(sprintf("Algorithm %d: Variance = %f\n", algorithm, variances[i]))
+}
+
+# Find the algorithm with the smallest variance
+min_variance_index <- which.min(variances)
+best_algorithm_variance <- quantile_algorithms[min_variance_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest variance: %f\n", best_algorithm_variance, variances[min_variance_index]))
+
+```
+```{r}
+#poedini algoritmi  nesto ne e vo red?
+set.seed(42)
+n_samples <- 30
+num_simulations <- 10000
+quantile_index <- 0.95
+
+# Generate random samples from Normal(0, 1)
+samples <- matrix(rnorm(num_simulations * n_samples), ncol = n_samples)
+
+# True 95th percentile of N(0, 1)
+true_percentile <- qnorm(quantile_index)
+# Quantile algorithms 4 through 9
+# quantile_algorithms <- 4:9
+quantile_algorithms <- 4
+absolute_biases <- numeric(length(quantile_algorithms))
+mean_percentiles <- numeric(length(quantile_algorithms))
+variances <- numeric(length(quantile_algorithms))
+
+for (i in seq_along(quantile_algorithms)) {
+  algorithm <- quantile_algorithms[i]
+  estimated_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = algorithm)
+  mean_percentile <- mean(estimated_percentiles)
+  absolute_bias <- mean(abs(estimated_percentiles - true_percentile))
+  
+  mean_percentiles[i] <- mean_percentile
+  absolute_biases[i] <- absolute_bias
+  variances[i] <- var(estimated_percentiles)
+  cat(sprintf("Algorithm %d: Mean Percentile = %f, Absolute Bias = %f\n", algorithm,  mean_percentile, absolute_bias))
+cat(sprintf("Algorithm %d: Variance = %f\n", algorithm, variances[i]))
+}
+# Find the algorithm with the smallest absolute bias
+min_bias_index <- which.min(absolute_biases)
+best_algorithm <- quantile_algorithms[min_bias_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest absolute bias: %f\n", best_algorithm, absolute_biases[min_bias_index]))
+
+# Find the algorithm with the smallest variance
+min_variance_index <- which.min(variances)
+best_algorithm_variance <- quantile_algorithms[min_variance_index]
+
+cat(sprintf("Quantile algorithm %d has the smallest variance: %f\n", best_algorithm_variance, variances[min_variance_index]))
+
+# Plot the histogram of the simulated distributions of percentiles for the best algorithm
+best_algorithm <- quantile_algorithms[which.min(absolute_biases)]
+best_percentiles <- apply(samples, 1, quantile, probs = quantile_index, type = best_algorithm)
+
+hist(best_percentiles, breaks = 50, main = sprintf("Histogram of Simulated 95th Percentiles (Algorithm %d)", best_algorithm), xlab = "Percentile Values")
+abline(v=mean_percentile, lwd=3)
+abline(v=true_percentile, col="red", lty=2, lwd=3)
+
+
+```
+```{r}
+qnorm(0.95,0,1)
+```
+
+zaednicki kod za hw7-1  a,b,c  uniformna gt
+```{r}
+# Parameters
+n <- 30                  # Sample size
+true_quantile <- 0.95    # True quantile we're estimating
+num_simulations <- 10000 # Number of simulations
+
+# Storage for quantile estimates for each algorithm (types 4 to 9)
+quantile_estimates <- matrix(NA, nrow = num_simulations, ncol = 6)
+
+# Run Monte Carlo simulations
+set.seed(42)  # For reproducibility
+for (i in 1:num_simulations) {
+  # Generate a random sample of n from Uniform[0, 1]
+  sample_data <- runif(n, min = 0, max = 1)
+  
+  # Calculate 95th percentile for each quantile algorithm (types 4 to 9)
+  quantile_estimates[i, ] <- sapply(4:9, function(type) quantile(sample_data, probs = true_quantile, type = type))
+}
+
+# Step 1: Calculate the true 95th percentile for Uniform[0,1]
+true_value <- qunif(true_quantile, min = 0, max = 1)
+
+# Step 2: Calculate Absolute Bias and Variance for each algorithm
+bias <- colMeans(quantile_estimates) - true_value
+abs_bias <- abs(bias)
+variances <- apply(quantile_estimates, 2, var)
+
+# Identify the best algorithm based on minimum absolute bias and minimum variance
+best_abs_bias_algorithm <- which.min(abs_bias) + 3  # Offset by 3 to map to types 4 to 9
+best_variance_algorithm <- which.min(variances) + 3 # Offset by 3 to map to types 4 to 9
+
+# Print results
+cat("quantile_estimates:",colMeans(quantile_estimates) , "\n")
+cat("Absolute Biases:", abs_bias, "\n")
+cat("Variances:", variances, "\n")
+cat("Best algorithm by absolute bias: Type", best_abs_bias_algorithm, "\n")
+cat("Best algorithm by variance: Type", best_variance_algorithm, "\n")
+
+# Step 3: Plot histogram for the best algorithm based on absolute bias or variance
+# Here, let's assume we're focusing on the best algorithm by absolute bias
+best_algorithm <- best_abs_bias_algorithm - 3  # Adjust index for zero-indexed R columns
+hist(quantile_estimates[, best_algorithm], breaks = 30, col = "lightblue", 
+     main = paste("Histogram of 95th Percentile Estimates (Type", best_abs_bias_algorithm, ")"),
+     xlab = "95th Percentile Estimates")
+abline(v = true_value, col = "red", lty=2, lwd = 4)
+abline(v = mean(quantile_estimates[, best_algorithm]), col = "black", lwd = 2)
+
+```
+za hw-7 1d gt  so cop  4,4
+
+```{r}
+# Parameters
+n <- 30                  # Sample size
+true_quantile <- 0.95    # True quantile we're estimating
+num_simulations <- 10000 # Number of simulations
+
+# Storage for quantile estimates for each algorithm (types 4 to 9)
+quantile_estimates <- matrix(NA, nrow = num_simulations, ncol = 6)
+
+# Run Monte Carlo simulations
+set.seed(42)  # For reproducibility
+for (i in 1:num_simulations) {
+  # Generate a random sample of n from N(0, 1)
+  sample_data <- rnorm(n, mean = 0, sd = 1)
+  
+  # Calculate 95th percentile for each quantile algorithm (types 4 to 9)
+  quantile_estimates[i, ] <- sapply(4:9, function(type) quantile(sample_data, probs = true_quantile, type = type))
+}
+
+# Step 1: Calculate the true 95th percentile for N(0, 1)
+true_value <- qnorm(true_quantile, mean = 0, sd = 1)
+true_value
+# Step 2: Calculate Absolute Bias and Variance for each algorithm
+bias <- colMeans(quantile_estimates - true_value)
+bias1 <- colMeans(quantile_estimates) - true_value
+allmaens <-colMeans(quantile_estimates)
+allmaens
+abs_bias <- abs(bias)
+variances <- apply(quantile_estimates, 2, var)
+# Identify the best algorithm based on minimum absolute bias and minimum variance
+best_abs_bias_algorithm <- which.min(abs_bias) + 3  # Offset by 3 to map to types 4 to 9
+best_variance_algorithm <- which.min(variances) + 3 # Offset by 3 to map to types 4 to 9
+
+# Print results
+cat("Absolute Biases:", abs_bias, "\n")
+cat("Variances:", variances, "\n")
+cat("Best algorithm by absolute bias: Type", best_abs_bias_algorithm, "\n")
+cat("Best algorithm by variance: Type", best_variance_algorithm, "\n")
+
+# Step 3: Plot histogram for the best algorithm based on absolute bias or variance
+# Here, let's assume we're focusing on the best algorithm by absolute bias
+best_algorithm <- best_abs_bias_algorithm - 3  # Adjust index for zero-indexed R columns
+hist(quantile_estimates[, best_algorithm], breaks = 30, col = "lightblue", 
+     main = paste("Histogram of 95th Percentile Estimates (Type", best_abs_bias_algorithm, ")"),
+     xlab = "95th Percentile Estimates values")
+abline(v = true_value, col = "red", lty=2,lwd = 2)
+abline(v = mean(quantile_estimates[, best_algorithm]), col = "black", lwd = 2)
+
+```
+
+
+## Problem \#2: Estimating a Geometric $p$ <small>(6 pts; 2 pts each)</small>
+
+
+a. Use the method of moments to come up with an estimator for a geometric distributions parameter $p$. *Hint: Use the fact that if $X\sim Geom(p)$ then $EX=\frac{1-p}{p}*$.
+
+$$ \hat{p} = \frac{1}{\bar{X} + 1} $$
+
+b. Estimate the sampling distribution of this estimator when we sample $n=13$ values from from $Geom(.15)$. Show the histogram of the estimated sampling distribution.
+
+```{r}
+set.seed(42)
+n_samples <- 13
+num_simulations <- 10000
+true_p <- 0.15
+
+# Function to generate a random sample from Geometric(p) and estimate p
+estimate_p <- function(p, n) {
+  samples <- rgeom(n, p) + 1  # rgeom generates the number of failures before the first success
+  sample_mean <- mean(samples)
+  estimated_p <- 1 / (sample_mean + 1)
+  return(estimated_p)
+}
+
+# Generate estimates of p
+estimates <- replicate(num_simulations, estimate_p(true_p, n_samples))
+mean(estimates)
+# Plot the histogram
+hist(estimates, breaks = 50, main = "Sampling Distribution of the Estimator for p", xlab = "Estimated p", xlim = c(0, 0.5))
+abline(v = true_p, col = "red", lwd = 2)
+abline(v = mean(estimates), col = "black", lwd = 2)
+```
+
+
+
+c. Estimate the bias of this estimator. Is it biased? If it is biased how would you modify it so that you could create an unbiased estimator?
+
+
+E(X)  is $E(X) = \frac{1 - p}{p} \]$
+
+```{r}
+set.seed(42)
+n_samples <- 13
+num_simulations <- 10000
+true_p <- 0.15
+
+# Function to generate a random sample from Geometric(p) and estimate p
+estimate_p <- function(p, n) {
+  samples <- rgeom(n, p) + 1  # rgeom generates the number of failures before the first success
+  sample_mean <- mean(samples)
+  estimated_p <- 1 / (sample_mean + 1)
+  return(estimated_p)
+}
+
+# Generate estimates of p
+estimates <- replicate(num_simulations, estimate_p(true_p, n_samples))
+
+# Calculate the mean of the estimated p values
+mean_estimated_p <- mean(estimates)
+
+# Calculate the bias
+bias <- mean_estimated_p - true_p
+
+cat(sprintf("True p: %f\n", true_p))
+cat(sprintf("Mean of estimated p: %f\n", mean_estimated_p))
+cat(sprintf("Bias of the estimator: %f\n", bias))
+
+```
+
+
+## Problem \#3: Estimating $\lambda$ from a Poisson Distribution<small>(8 pts; 2 pts each)</small>
+
+It is interesting that if $X\sim Pois(\lambda)$ that $EX=VarX=\lambda$. One could use either $\bar{X}$ or $S^2$ as an estimator of $\lambda$ perhaps. 
+
+a. Using $n=15$ and $\lambda=20$ for this problem, use MC simulation to estimate the sampling distribution of The estimator $\bar{X}$. Show its histogram. 
+
+
+```{r}
+set.seed(42)
+n_samples <- 15
+num_simulations <- 10000
+lambda <- 20
+
+# Function to generate a sample from Poisson(lambda) and calculate the sample mean
+estimate_lambda_mean <- function(lambda, n) {
+  samples <- rpois(n, lambda)
+  sample_mean <- mean(samples)
+  return(sample_mean)
+}
+
+# Generate estimates of lambda using the sample mean
+estimates_mean <- replicate(num_simulations, estimate_lambda_mean(lambda, n_samples))
+#estimates_mean
+mean1<-mean(estimates_mean)
+
+# Plot the histograms
+
+hist(estimates_mean, breaks = 50, main = "Sampling Distribution of Mean Estimator", xlab = "Estimated lambda", xlim = c(min(estimates_mean), max(estimates_mean)))
+abline(v = lambda, col = "red", lty=2,lwd = 4)
+abline(v = mean1, col = "black", lwd = 2)
+
+cat(sprintf("True lambda: %f\n", lambda))
+cat(sprintf("Mean of estimated lambdas using mean: %f\n", mean1))
+cat(sprintf("Variance of estimated lambdas using mean: %f\n", var(estimates_mean)))
+
+```
+
+
+b. Repeat the same but this time use $S^2$. 
+
+```{r}
+set.seed(42)
+n_samples <- 15
+num_simulations <- 10000
+lambda <- 20
+
+
+# Function to generate a sample from Poisson(lambda) and calculate the sample variance
+estimate_lambda_variance <- function(lambda, n) {
+  samples <- rpois(n, lambda)
+  sample_variance <- var(samples)
+  return(sample_variance)
+}
+
+# Generate estimates of lambda using the sample variance
+estimates_variance <- replicate(num_simulations, estimate_lambda_variance(lambda, n_samples))
+#estimates_variance
+mean2=mean(estimates_variance)
+var2=var(estimates_variance)
+# Plot the histograms
+
+hist(estimates_variance, breaks = 50, main = "Sampling Distribution of Variance Estimator", xlab = "Estimated lambda", xlim = c(min(estimates_variance), max(estimates_variance)))
+abline(v = lambda, col = "red",lty=2, lwd = 4)
+abline(v = mean2, col = "black", lwd = 2)
+
+
+cat(sprintf("True lambda: %f\n", lambda))
+cat(sprintf("Mean of estimated lambdas using variance: %f\n", mean(estimates_variance)))
+# los rezultat
+cat(sprintf("Variance of estimated lambdas using variance: %f\n", var(estimates_variance)))
+
+```
+
+
+
+c. Compare the two estimators. Would you prefer one over the other? Why?
+
+> I would prefere mean1 which uses X_bar estimator. The sample mean of Xbar has a much lower variance than S^2, making it more stable as an estimator in this case.
+
+d. What about a linear combination of the two variables? Could you construct an estimator of $\lambda$ of the form $a\bar{X} + bS^2$ that would be better than using either of them by themselves? 
+
+```{r}
+set.seed(42)
+n_samples <- 15
+num_simulations <- 10000
+lambda <- 20
+
+# Function to generate a sample from Poisson(lambda) and calculate the combined estimator
+estimate_combined <- function(lambda, n) {
+  samples <- rpois(n, lambda)
+  sample_mean <- mean(samples)
+  sample_variance <- var(samples)
+  combined_estimator <- 0.5 * sample_mean + 0.5 * sample_variance
+  return(combined_estimator)
+}
+
+# Generate estimates of lambda using the combined estimator
+estimates_combined <- replicate(num_simulations, estimate_combined(lambda, n_samples))
+mean1
+# Plot the histogram
+hist(estimates_combined, breaks = 50, main = "Sampling Distribution of Combined Estimator", xlab = "Estimated lambda")
+abline(v = lambda, col = "red", lty=2,lwd = 4)
+abline(v = mean(estimates_combined), col = "black", lwd = 2)
+
+cat(sprintf("True lambda: %f\n", lambda))
+cat(sprintf("Mean of combined estimator: %f\n", mean(estimates_combined)))
+cat(sprintf("Variance of combined estimator: %f\n", var(estimates_combined)))
+
+```
+kombiniran kod  za abcd
+```{r}
+# Set parameters
+n <- 15                # Sample size
+lambda_poisson <- 20   # Poisson lambda parameter
+num_simulations <- 10000  # Number of simulations
+
+# Step 1: Monte Carlo Simulations
+# Generate samples from Poisson(lambda = 20) distribution
+#set.seed(42)
+samples <- replicate(num_simulations, rpois(n, lambda = lambda_poisson))
+
+# Calculate sample means (X_bar) and sample variances (S^2) for each sample
+sample_means <- apply(samples, 2, mean)
+sample_variances <- apply(samples, 2, var)
+
+# Step 2: Plot histograms for X_bar and S^2
+par(mfrow = c(1, 2))
+
+# Histogram for X_bar
+hist(sample_means, breaks = 30, col = "skyblue", border = "black",
+     main = "Sampling Distribution of Sample Mean (X̄)",
+     xlab = "Sample Mean (X̄)", ylab = "Frequency")
+     abline(v = lambda_poisson, col = "red", lty=2,lwd = 4)
+     abline(v = mean(sample_means), col = "black", lwd = 2)
+# Histogram for S^2
+hist(sample_variances, breaks = 30, col = "salmon", border = "black",
+     main = "Sampling Distribution of Sample Variance (S²)",
+     xlab = "Sample Variance (S²)", ylab = "Frequency")
+     abline(v = lambda_poisson, col = "red", lty=2,lwd = 4)
+     abline(v = mean(sample_variances), col = "black", lwd = 2)
+# Step 3: Calculate variances of X̄ and S²
+mean_X_bar<-mean(sample_means)
+var_X_bar <- var(sample_means)
+mean_S_squared<-mean(sample_variances)
+var_S_squared <- var(sample_variances)
+
+# Step 4: Combined Estimator a*X̄ + b*S²
+# Using weights a = 0.5 and b = 0.5
+a <- 0.5
+b <- 0.5
+combined_estimator <- a * sample_means + b * sample_variances
+mean_combined <- mean(combined_estimator)
+var_combined <- var(combined_estimator)
+
+# Print results
+cat("Mean of X̄:", mean_X_bar, "\n")
+cat("Variance of X̄:", var_X_bar, "\n")
+cat("Mean of S²:", mean_S_squared, "\n")
+cat("Variance of S²:", var_S_squared, "\n")
+cat("Mean of Combined Estimator (0.5*X̄ + 0.5*S²):", mean_combined, "\n")
+cat("Variance of Combined Estimator (0.5*X̄ + 0.5*S²):", var_combined, "\n")
+
+```
+
+
+
+## Problem \#4: The Standard Error of $\bar{X}$ <small>(8 pts; 2 pts each)</small>
+
+What would be the required sample size $n$ so that the standard error of $\bar{X}$ (i.e. $ SD(\bar{X}) $) would be 2 (or just under 2) for the following populations:
+
+a. $Normal(1000, 10^2)$
+b. $Pois(75)$
+c. $Binom(200, .35)$
+d. $exp(.05)$
+
+$ \sqrt{n} \geq \frac{10}{2} \] \[ \sqrt{n} \geq 5 \] \[ n \geq 25 $
+
+
+
