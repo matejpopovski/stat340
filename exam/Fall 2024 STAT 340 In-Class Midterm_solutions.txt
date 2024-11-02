@@ -1,0 +1,37 @@
+Fall 2024 STAT 340 In-Class Midterm
+
+MC1.	a,b,e
+MC2.	b
+MC3.	b
+MC4.	a
+MC5a.	pnorm
+   b.	dnorm
+   c.	qnorm
+   d.	rnorm
+MC6.	b,e
+MC7.	b
+MC8.	c
+MC9a.	type 2
+   b. 	true negative
+   c.	type 1
+   d.	true positive
+MC10.	d
+MC11.	a,b,c,d,e
+MC12.	c,e
+
+SA1a.	false, X is continuous so P(X=0)=P(X=1)=0
+   b.	true, F(x) is nondecreasing. Or you could argue that F(a) = P(X <= a), F(b)=P(X <= b) = P(X <= a) + P(a < X <= b)
+   c.	true, P(E|F)=0 implies P(E and F)/P(F)=0 so P(E and F)=0, they are mutually exclusive
+   d.	false, P(E)*P(F)>0 and P(E and F)=0 from part c.
+SA2a.	-3*5
+   b.	2*3
+   c.	5 + -2
+   d.   2^2 + 3^2
+SA3a.	P(pos | D) = 0.88
+   b.	P(D|+) = P(D)P(+|D) / [ P(D)P(+|D) + P(no D)P(+|no D) ] = .003 * .88 / (.003*.88 + .997*.04]
+   c.	P(-) = P(D)P(-|D) + P(no D)P(-|no D) = .003*.12 + .997*.96
+SA4a.	H0: photo is not a raccoon, Ha: photos is a raccoon.
+   b.	Photo of not a raccoon is flagged as a raccoon by the algorithm
+   c.	WE have strong evidence it is a raccoon
+        or only 1.4% of non-raccoon photos are as (or more) raccoon-like as this photo
+   d.	The false positive rate (Type 1 error rate) of this classifier is approximately 19/1000 = .019
