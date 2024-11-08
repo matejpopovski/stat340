@@ -304,6 +304,8 @@ a. Create a plot that shows the coverage rate of a 95\% confidence interval for 
 
 If this is taking too long to run, lower both of these to 200 replicates.
 
+> p = 1/(1+x_hat)
+
 ```{r}
 set.seed(1)
 p <- seq(.1,.9,.1)
