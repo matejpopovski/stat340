@@ -287,7 +287,7 @@ batch_size <- min_batch_size(p, required_prob)
 cat("The minimum batch size to ensure at least 5 functional widgets with a probability of at least", required_prob, "is", batch_size, ".\n")
 ```
 
-
+> Approach with 
 
 ## Problem 4: Estimating Coverage Rate (6 points)
 
