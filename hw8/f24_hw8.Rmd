@@ -388,3 +388,13 @@ abline(h = 0.95, lty = 2)
 
 
 b. What do you observe? Does the coverage of MC intervals tend to be affected by the value of $p$? In what way?
+
+> 1.	Small ( p ) Values:
+For small values of ( p ) (up to around 0.3), the estimator (\hat{p}) tends to perform well, and the coverage rate is close to the nominal 95%. This is because the variance of the estimator is relatively low, and the distribution of the estimator is more symmetric.
+
+> 2.	Moderate ( p ) Values:
+As ( p ) increases towards 0.5, the variance of the estimator increases, and the distribution becomes more skewed. This can lead to wider confidence intervals that may not capture the true ( p ) as effectively, resulting in a drop in the coverage rate.
+
+> 3.	Extreme ( p ) Values:
+For very high values of ( p ) (close to 0.9), the estimator (\hat{p}) becomes highly variable and biased. The confidence intervals become less reliable, and the coverage rate drops sharply.
+
