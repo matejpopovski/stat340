@@ -118,7 +118,7 @@ chisq_test
 The following numbers were sampled from a population. You can assume they are independent and identically distributed (they are, in fact).
 
 ```{r}
-mysteryData <- c(16.91,19.96,16.55,16.77,19.64,16.87,16.50,14.19,16.54,18.64,11.27,17.08)
+mysteryData <- c(16.91,19.96,16.55,16.77,19.64,16.87,16.50,14.19,16.54,18.64,11.27,17.08) 
 ```
 
 We want to estimate the population median with a 95\% confidence interval.
