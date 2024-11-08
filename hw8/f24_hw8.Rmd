@@ -264,6 +264,9 @@ cat("Monte Carlo Approach - Minimum batch size:", min_batch_size_mc, "\n")
 
 ```
 
+> Approach with Binomial Distribution:
+
+
 
 
 ## Problem 4: Estimating Coverage Rate (6 points)
