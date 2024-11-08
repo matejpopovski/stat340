@@ -199,7 +199,6 @@ ci_b_lower
 ci_b_upper
 ```
 
-
 ## Problem 3: Closing the loop <small>6 pts</small>
 
 In our discussion of the Universal Widgets of Madison company from lecture, we said that we were interested in two questions:
