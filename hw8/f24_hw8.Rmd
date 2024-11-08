@@ -137,9 +137,41 @@ sd_estimate
 
 b. Construct a 95\% confidence interval assuming the population is a normal distribution. Use the Monte Carlo Approach. Use 1000 Monte Carlo replicates.
 
+```{r}
+set.seed(123)
+n_replicates <- 1000
+sample_size <- length(mysteryData)
+
+# Monte Carlo simulation
+monte_carlo_medians <- replicate(n_replicates, {
+
+  simulated_sample <- rnorm(sample_size, mean = mean_estimate, sd = sd_estimate)
+
+  median(simulated_sample)
+})
+
+ci_lower <- quantile(monte_carlo_medians, 0.025)
+ci_upper <- quantile(monte_carlo_medians, 0.975)
+
+ci_lower
+ci_upper
+```
+
 c. Now assume that the population is uniformly distributed. Come up with estimates for the min and max of the uniform distribution using the method of moments. This is based on $\bar{X}$, the sample mean and $S$, the sample standard deviation. The point estimates for a and b are given by  $$\bar{X} \pm \sqrt{3} S$$ 
 
+```{r}
+a_estimate <- mean_estimate - sqrt(3) * sd_estimate
+b_estimate <- mean_estimate + sqrt(3) * sd_estimate
+
+a_estimate
+b_estimate
+```
+
 d. Construct a 95\% confidence interval assuming the population is a uniform distribution. Use 1000 Monte Carlo replicates.
+
+```{r}
+
+```
 
 
 ## Problem 3: Closing the loop <small>6 pts</small>
