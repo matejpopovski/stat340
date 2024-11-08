@@ -260,8 +260,6 @@ find_batch_size <- function(target_prob, max_size = 200) {
 min_batch_size_mc <- find_batch_size(0.99)
 cat("Monte Carlo Approach - Minimum batch size:", min_batch_size_mc, "\n")
 
-
-
 ```
 
 > Approach with Binomial Distribution:
