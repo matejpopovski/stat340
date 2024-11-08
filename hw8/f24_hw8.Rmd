@@ -348,7 +348,7 @@ coverage <- rep(0, length(p_values))
 results <- data.frame(p = p_values, coverage = coverage)
 NMC1 <- 500
 NMC2 <- 500
-n <- 12  # sample size
+n <- 12
 
 for (j in 1:nrow(results)) {
   p <- results$p[j]
