@@ -381,7 +381,6 @@ for (j in 1:nrow(results)) {
   results[j, "coverage"] <- mean(contains)
 }
 
-
 plot(x = results$p, y = results$coverage, ylim = c(min(results$coverage), 1), type = "l",
      xlab = "True p", ylab = "Coverage Rate", main = "Coverage Rate of 95% CI")
 abline(h = 0.95, lty = 2)
