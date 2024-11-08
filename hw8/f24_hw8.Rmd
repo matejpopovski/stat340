@@ -289,6 +289,7 @@ cat("The minimum batch size to ensure at least 5 functional widgets with a proba
 
 > Based on both the Monte Carlo and Binomial Distribution methods, the minimum batch size required to ensure that there are at least 5 functional widgets with a probability of at least 0.99 is 10.
 
+
 ## Problem 4: Estimating Coverage Rate (6 points)
 
 Suppose we want to estimate the $p$ parameter from a Geometric distribution. By doing some research you would find that an unbiased estimator for $p$ is given as:
