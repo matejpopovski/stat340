@@ -272,7 +272,7 @@ required_prob <- 0.99
 
 # Function to calculate the minimum batch size
 min_batch_size <- function(p, required_prob) {
-  for (n in 1:1000) {  # Arbitrary large number for upper limit
+  for (n in 1:1000) { 
     prob <- 1 - pbinom(4, n, p)  # Probability of having at least 5 functional widgets
     if (prob >= required_prob) {
       return(n)
