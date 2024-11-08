@@ -387,5 +387,4 @@ abline(h = 0.95, lty = 2)
 ```
 
 
-
 b. What do you observe? Does the coverage of MC intervals tend to be affected by the value of $p$? In what way?
