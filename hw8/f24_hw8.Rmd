@@ -170,7 +170,33 @@ b_estimate
 d. Construct a 95\% confidence interval assuming the population is a uniform distribution. Use 1000 Monte Carlo replicates.
 
 ```{r}
+set.seed(123)
+n_replicates <- 1000
 
+monte_carlo_a <- numeric(n_replicates)
+monte_carlo_b <- numeric(n_replicates)
+
+for (i in 1:n_replicates) {
+
+  simulated_sample <- runif(length(mysteryData), min = a_estimate, max = b_estimate)
+  
+  sample_mean <- mean(simulated_sample)
+  sample_sd <- sd(simulated_sample)
+  
+  monte_carlo_a[i] <- sample_mean - sqrt(3) * sample_sd
+  monte_carlo_b[i] <- sample_mean + sqrt(3) * sample_sd
+}
+
+ci_a_lower <- quantile(monte_carlo_a, 0.025)
+ci_a_upper <- quantile(monte_carlo_a, 0.975)
+
+ci_b_lower <- quantile(monte_carlo_b, 0.025)
+ci_b_upper <- quantile(monte_carlo_b, 0.975)
+
+ci_a_lower
+ci_a_upper
+ci_b_lower
+ci_b_upper
 ```
 
 
