@@ -261,6 +261,8 @@ cat("Monte Carlo Approach - Minimum batch size:", min_batch_size_mc, "\n")
 
 ```
 
+> For the Monte Carlo method, I simulated batches of varying sizes and calculated the probability of having at least 5 functional widgets in each batch, iterating until I found the smallest batch size that met the required probability of 0.99.
+
 > Approach with Binomial Distribution:
 
 ```{r}
@@ -283,6 +285,8 @@ batch_size <- min_batch_size(p, required_prob)
 
 cat("The minimum batch size to ensure at least 5 functional widgets with a probability of at least", required_prob, "is", batch_size, ".\n")
 ```
+
+> For the binomial distribution method, I used the cumulative distribution function (CDF) of the binomial distribution to directly calculate the probability of having at least 5 functional widgets in a batch, and identified the minimum batch size that satisfies the 0.99 probability requirement.
 
 > Based on both the Monte Carlo and Binomial Distribution methods, the minimum batch size required to ensure that there are at least 5 functional widgets with a probability of at least 0.99 is 10.
 
