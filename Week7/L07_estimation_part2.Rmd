@@ -254,6 +254,7 @@ for ( i in 1:Nrep) {
 }
 
 # Now construct the confidence interval
+hist(replicates)
 CI <- quantile( replicates, probs=c(0.025, 0.975) );
 cat(CI)
 ```

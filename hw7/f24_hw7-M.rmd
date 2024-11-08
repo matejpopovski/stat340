@@ -422,7 +422,7 @@ abline(v = mean(estimates), col = "black", lwd = 2)
 c. Estimate the bias of this estimator. Is it biased? If it is biased how would you modify it so that you could create an unbiased estimator?
 
 
-E(X)  is $E(X) = \frac{1 - p}{p} \]$
+E(X)  is $E(X) = \frac{1 - p}{p}$
 
 ```{r}
 set.seed(42)
@@ -432,7 +432,7 @@ true_p <- 0.15
 
 # Function to generate a random sample from Geometric(p) and estimate p
 estimate_p <- function(p, n) {
-  samples <- rgeom(n, p) + 1  # rgeom generates the number of failures before the first success
+  samples <- rgeom(n, p) # rgeom generates the number of failures before the first success
   sample_mean <- mean(samples)
   estimated_p <- 1 / (sample_mean + 1)
   return(estimated_p)
@@ -452,6 +452,7 @@ cat(sprintf("Mean of estimated p: %f\n", mean_estimated_p))
 cat(sprintf("Bias of the estimator: %f\n", bias))
 
 ```
+
 
 
 ## Problem \#3: Estimating $\lambda$ from a Poisson Distribution<small>(8 pts; 2 pts each)</small>

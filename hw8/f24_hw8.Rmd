@@ -33,11 +33,34 @@ There are 14 corps in the data set, studied over 20 years, for a total of 280 de
 Assuming that the mule kicks data follows a Poisson distribution, produce a point estimate for the rate parameter $\lambda$.
 There are no strictly right or wrong answers, here, though there are certainly better or worse ones.
 
+```{r}
+lambda_estimate <- mean(mule_kicks$deaths)
+lambda_estimate
+```
+
+
 ### Part b: constructing a CI <small>4pts</small>
 
 Using everything you know (Monte Carlo, CLT, etc.), construct a confidence interval for the rate parameter $\lambda$.
 Explain in reasonable detail what you are doing and why you are constructing the confidence interval in this way (a few sentences is fine!).
 
+```{r}
+# Number of observations
+n <- length(mule_kicks$deaths)
+
+# Standard error using lambda estimate
+se <- sqrt(lambda_estimate / n)
+
+# Critical value for 95% confidence level
+z_value <- qnorm(0.975)  # 1.96 for a 95% CI
+
+# Confidence interval
+ci_lower <- lambda_estimate - z_value * se
+ci_upper <- lambda_estimate + z_value * se
+
+ci_lower
+ci_upper
+```
 
 
 ### Part c: assessing a model <small>3pts</small>
@@ -49,6 +72,45 @@ Use any and all tools that you know to assess (either with code or simply in wor
 
 Once again, there are no strictly right or wrong answers here.
 Explain and defend your decisions and thought processes in a reasonable way and you will receive full credit.
+
+```{r}
+# Calculate mean and variance
+sample_mean <- mean(mule_kicks$deaths)
+sample_variance <- var(mule_kicks$deaths)
+
+sample_mean
+sample_variance
+
+```
+
+> A key property of the Poisson distribution is that the mean should equal the variance (lamda). Calculating these values for the deaths column, we find that they are quite similar.
+
+```{r}
+ggplot(data.frame(deaths), aes(x = deaths)) +
+  geom_histogram(aes(y = ..density..), bins = 10, fill = 'skyblue', alpha = 0.7) +
+  stat_function(fun = dpois, args = list(lambda = mean(deaths)), color = 'red', size = 1) +
+  labs(title = "Histogram of Deaths with Poisson Fit",
+       x = "Number of Deaths",
+       y = "Density")
+```
+
+> When we graph the data, we can see that the histogram closely follows the red Poisson curve, which again supports the assumption.
+
+```{r}
+# Observed counts and expected frequencies
+counts <- table(mule_kicks$deaths)
+expected_counts <- dpois(as.numeric(names(counts)), lambda = sample_mean) * length(mule_kicks$deaths)
+
+counts
+expected_counts
+
+# Chi-squared test
+chisq_test <- chisq.test(counts, p = expected_counts, rescale.p = TRUE)
+chisq_test
+
+```
+
+> With a Chi-squared statistic of 2.1498 and a p-value of 0.7082, we do not have sufficient evidence to reject the Poisson distribution as a reasonable model for this data.
 
 
 ## Problem 2: A Confidence interval for the median (8 points)
