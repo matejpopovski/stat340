@@ -222,6 +222,48 @@ Neither of these is necessarily better than the other, and you do not need to us
 Indeed, you are free to try doing something else entirely, if you wish.
 Just explain clearly what you are doing and why!
 
+> Approach with Monte Carlo:
+
+```{r}
+set.seed(123)
+
+# Given probability of functional widget
+p <- 0.82
+
+# Function to simulate a batch of widgets and check if at least 5 are functional
+simulate_batch <- function(batch_size) {
+  # Generate a batch of widgets, 1 represents functional, 0 non-functional
+  batch <- rbinom(batch_size, 1, p)
+  # Check if at least 5 widgets are functional (i.e., sum of 1's in the batch)
+  return(sum(batch) >= 5)
+}
+
+# Function to estimate the minimum batch size for 99% probability
+find_batch_size <- function(target_prob, max_size = 200) {
+  for (batch_size in 5:max_size) {
+    # Simulate 10000 batches and check the proportion with at least 5 functional widgets
+    results <- replicate(10000, simulate_batch(batch_size))
+    
+    # Calculate probability of having at least 5 functional widgets in a batch
+    prob_at_least_5 <- mean(results)
+    
+    cat("Batch size:", batch_size, "Probability of at least 5 functional widgets:", prob_at_least_5, "\n")
+    
+    if (prob_at_least_5 >= target_prob) {
+      return(batch_size)
+    }
+  }
+  return(NA) # if no size meets the probability
+}
+
+# Find the minimum batch size that ensures at least 5 functional widgets with 99% probability
+min_batch_size_mc <- find_batch_size(0.99)
+cat("Monte Carlo Approach - Minimum batch size:", min_batch_size_mc, "\n")
+
+
+
+```
+
 
 
 ## Problem 4: Estimating Coverage Rate (6 points)
