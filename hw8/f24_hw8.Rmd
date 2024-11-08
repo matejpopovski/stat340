@@ -266,6 +266,26 @@ cat("Monte Carlo Approach - Minimum batch size:", min_batch_size_mc, "\n")
 
 > Approach with Binomial Distribution:
 
+```{r}
+p <- 0.82  # probability of a widget being functional
+required_prob <- 0.99  # required probability of having at least 5 functional widgets
+
+# Function to calculate the minimum batch size
+min_batch_size <- function(p, required_prob) {
+  for (n in 1:1000) {  # Arbitrary large number for upper limit
+    prob <- 1 - pbinom(4, n, p)  # Probability of having at least 5 functional widgets
+    if (prob >= required_prob) {
+      return(n)
+    }
+  }
+  return(NULL)
+}
+
+# Calculate the minimum batch size
+batch_size <- min_batch_size(p, required_prob)
+
+cat("The minimum batch size to ensure at least 5 functional widgets with a probability of at least", required_prob, "is", batch_size, ".\n")
+```
 
 
 
