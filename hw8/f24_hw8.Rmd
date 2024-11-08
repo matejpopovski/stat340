@@ -227,7 +227,6 @@ Just explain clearly what you are doing and why!
 ```{r}
 set.seed(123)
 
-# Given probability of functional widget
 p <- 0.82
 
 # Function to simulate a batch of widgets and check if at least 5 are functional
