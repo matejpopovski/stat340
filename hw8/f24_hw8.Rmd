@@ -125,6 +125,16 @@ We want to estimate the population median with a 95\% confidence interval.
 
 a. First assume that the population is normally distributed. Come up with estimates for the parameters of the normal distribution based on the data.
 
+> In normal distribution the mean equals the median.
+
+```{r}
+mean_estimate <- mean(mysteryData)
+sd_estimate <- sd(mysteryData)
+
+mean_estimate
+sd_estimate
+```
+
 b. Construct a 95\% confidence interval assuming the population is a normal distribution. Use the Monte Carlo Approach. Use 1000 Monte Carlo replicates.
 
 c. Now assume that the population is uniformly distributed. Come up with estimates for the min and max of the uniform distribution using the method of moments. This is based on $\bar{X}$, the sample mean and $S$, the sample standard deviation. The point estimates for a and b are given by  $$\bar{X} \pm \sqrt{3} S$$ 
