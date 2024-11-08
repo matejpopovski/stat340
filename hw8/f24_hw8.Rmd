@@ -86,6 +86,7 @@ sample_variance
 > A key property of the Poisson distribution is that the mean should equal the variance (lamda). Calculating these values for the deaths column, we find that they are quite similar.
 
 ```{r}
+deaths <- mule_kicks$deaths
 ggplot(data.frame(deaths), aes(x = deaths)) +
   geom_histogram(aes(y = ..density..), bins = 10, fill = 'skyblue', alpha = 0.7) +
   stat_function(fun = dpois, args = list(lambda = mean(deaths)), color = 'red', size = 1) +
@@ -306,40 +307,6 @@ If this is taking too long to run, lower both of these to 200 replicates.
 
 > p = 1/(1+x_hat)
 
-```{r}
-set.seed(1)
-p <- seq(.1,.9,.1)
-coverage <- rep(0, length(p))
-results <- data.frame(p, coverage)
-NMC1 <- 500
-NMC2 <- 500
-
-for(j in 1:nrow(results)){
-  # pull out the value p from the results data frame
-  p <- results$p[j]
-  # the 'contains' vector will be a collection of TRUE and FALSE, based
-  # on whether each CI contains the value p
-  contains <- rep(FALSE, NMC1)
-  for(i in 1:NMC1){ #Construct NMC1 confidence intervals
-    #generate some data initially from the geometric distribution
-
-    #calculate the unbiased estimate of p
-    
-    #Now you want to use your p.hat to generate NMC2 sets of data
-    #Each time you want to calcualte an unbiased phat, and store it.
-    
-    #Your Monte Carlo Confidence interval should be based on
-    #appropriate sample quantiles
-    
-    #Last, assign 'contains[i]' to be TRUE or FALSE based on 
-    #whether p is >= than the lower bound AND <= the 
-    #upper bound. 
-  }
-  results[j, "coverage"] <- mean(contains)
-}
-plot(x=results$p, y=results$coverage, ylim=c(min(coverage),1), type="l")
-abline(h=.95, lty=2)
-```
 
 ```{r}
 set.seed(1)
