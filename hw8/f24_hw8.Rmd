@@ -343,48 +343,48 @@ abline(h=.95, lty=2)
 
 ```{r}
 set.seed(1)
-p_values <- seq(0.1, 0.9, 0.1)  # p values to evaluate
+p_values <- seq(0.1, 0.9, 0.1)
 coverage <- rep(0, length(p_values))
 results <- data.frame(p = p_values, coverage = coverage)
-NMC1 <- 500  # Number of Monte Carlo replicates for generating the confidence interval
-NMC2 <- 500  # Number of replicates to construct each MC interval
-sample_size <- 12  # Sample size
+NMC1 <- 500
+NMC2 <- 500
+n <- 12  # sample size
 
-# Loop through each value of p to estimate coverage
 for (j in 1:nrow(results)) {
-  p <- results$p[j]  # Get the current p value from the data frame
-  contains <- rep(FALSE, NMC1)  # Track whether each CI contains the true p
-
+  p <- results$p[j]
+  contains <- rep(FALSE, NMC1)
+  
   for (i in 1:NMC1) {
-    # Step 1: Generate a sample of size 12 from the geometric distribution
-    sample_data <- rgeom(sample_size, p)
+    # Generate data from the geometric distribution
+    data <- rgeom(n, p)
+    x_bar <- mean(data)
     
-    # Step 2: Calculate the unbiased estimate of p
-    p_hat <- 1 / (1 + (sample_size / (sample_size - 1)) * mean(sample_data))
+    # Calculate the unbiased estimate of p
+    p_hat <- 1 / (1 + (n / (n - 1)) * x_bar)
     
-    # Step 3: Use p_hat to generate NMC2 sets of data and calculate their p_hat estimates
-    p_hat_values <- rep(NA, NMC2)
-    for (k in 1:NMC2) {
-      sample_data_mc <- rgeom(sample_size, p)  # Generate new sample
-      p_hat_values[k] <- 1 / (1 + (sample_size / (sample_size - 1)) * mean(sample_data_mc))  # Unbiased estimate
-    }
+    # Generate NMC2 sets of data using p_hat
+    p_hat_samples <- replicate(NMC2, {
+      sample_data <- rgeom(n, p_hat)
+      sample_x_bar <- mean(sample_data)
+      1 / (1 + (n / (n - 1)) * sample_x_bar)
+    })
     
-    # Step 4: Construct a 95% confidence interval based on the quantiles of p_hat_values
-    lower_bound <- quantile(p_hat_values, 0.025)
-    upper_bound <- quantile(p_hat_values, 0.975)
+    # Calculate the 95% confidence interval
+    ci_lower <- quantile(p_hat_samples, 0.025)
+    ci_upper <- quantile(p_hat_samples, 0.975)
     
-    # Step 5: Check if the true p is within the confidence interval
-    contains[i] <- (p >= lower_bound) & (p <= upper_bound)
+    # Check if the true p is within the confidence interval
+    contains[i] <- (p >= ci_lower) & (p <= ci_upper)
   }
   
-  # Step 6: Estimate the coverage rate by calculating the proportion of successful intervals
+  # Calculate the coverage rate
   results[j, "coverage"] <- mean(contains)
 }
 
 # Plot the coverage rate
-plot(x = results$p, y = results$coverage, ylim = c(min(coverage), 1), type = "l", 
-     xlab = "p", ylab = "Coverage Rate", main = "Coverage Rate for Different p Values")
-abline(h = 0.95, lty = 2, col = "red")  # Add a horizontal line at 0.95 for reference
+plot(x = results$p, y = results$coverage, ylim = c(min(results$coverage), 1), type = "l",
+     xlab = "True p", ylab = "Coverage Rate", main = "Coverage Rate of 95% CI")
+abline(h = 0.95, lty = 2)
 
 ```
 
