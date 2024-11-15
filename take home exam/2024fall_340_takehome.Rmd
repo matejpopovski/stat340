@@ -118,6 +118,7 @@ cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound,
 
 ```
 ```{r}
+# d)
 set.seed(123)
 
 true_a <- 3.9
@@ -157,7 +158,7 @@ In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100
 ```{r}
 x = USArrests$Assault
 y = USArrests$Murder
-# plot(x,y)
+plot(x,y)
 ```
 
 a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
@@ -172,11 +173,15 @@ e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit 
 ```{r}
 # insert code here
 
+#  ) 
+
+
+
 ```
 
 *write discussion here*
 
-
+> a) Based on the scatterplot of the Assault and Murder variables, it appears that the relationship between these two variables is roughly linear, as the points tend to align along a straight line with minimal deviation. This suggests that a linear model would be reasonable for fitting the data. There are no clear signs of significant non-linear patterns or outliers that would undermine the assumptions of linear regression, making it appropriate to proceed with fitting a linear model to this dataset.
 
 
 
