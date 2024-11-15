@@ -136,6 +136,7 @@ d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. U
 # a) and b)
 a_hat_unbiased <- (n + 1) / n * max(abs(data))
 a_hat_unbiased
+
 ```
 ```{r}
 # c)
@@ -163,7 +164,6 @@ cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound,
 set.seed(123)
 
 true_a <- 3.9
-
 n <- 15
 
 num_simulations <- 10000
@@ -185,8 +185,8 @@ cat("The approximate bias of the estimator when the true value of 'a' is", true_
 
 *write discussion here*
 
-> a) Explanation: In the class example we have learned tha a= max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
-I chose unbiased point estimator (n+1)/n Abs{Xi} as point estimator because we have  Uniform($-a,a$) distribution with equal lover and upper bound.
+> a) Explanation: In the class example we have learned that a = max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
+I chose unbiased point estimator (n+1)/n abs{Xi} as point estimator because we have Uniform($-a,a$) distribution with equal lower and upper bound.
 
 > c) The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the lower bound with negative signs. I think it perform well because value of point estimator is in the interval.
 
