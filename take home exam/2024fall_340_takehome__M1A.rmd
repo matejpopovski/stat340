@@ -1,0 +1,366 @@
+---
+title: "FA24 STAT340 Midterm <small>take-home portion</small>"
+output: html_document
+---
+
+<style>h2{margin-top:5rem}h3,h4:not([class]){margin-top:4rem}
+.main-container{padding:2rem}</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,warning=F,message=F,
+                      fig.width=5,fig.height=4,fig.align="center")
+```
+
+
+## Q1 - Testing
+
+Infinity Cable (fictional) manufactures fiber optic cable for industrial purposes. They have three manufacturing facilities in Alderwood, Brentwick and Coppergrove. A recent quality control audit sampled various 1 kilometer lengths of cable from the three facilities and counted the number of flaws in the cables:
+
+```{r}
+cables = data.frame(
+  site = rep(c("Alderwood","Brentwick","Coppergrove"), times=c(53,48,51)),
+  flaws = c(6,4,4,1,2,1,4,2,4,3,4,8,2,4,6,2,4,1,2,2,0,2,5,2,3,3,3,2,5,4,4,
+            1,4,3,5,4,4,3,3,4,0,3,4,4,3,5,3,2,1,1,2,3,4,2,5,1,2,2,3,1,2,3,
+            0,4,2,4,2,2,2,4,4,2,3,5,2,3,2,2,3,1,3,1,1,1,1,0,3,4,4,4,2,2,4,
+            3,3,2,1,7,3,1,1,3,6,3,7,4,2,3,1,0,4,1,3,4,8,3,3,1,4,3,3,2,2,3,
+            3,1,0,4,6,3,3,3,7,3,4,3,2,2,4,3,1,4,1,5,3,3,2,3,3,1,3,1)
+)
+```
+
+Your job is to perform a comparison using the testing techniques we've covered in this course to see if there is evidence that the facilities actually produce cable of different quality. Do not use techniques we have not covered in this course.
+
+a. (2pts) A colleague suggests that we should focus our attention on a comparison of Alderwood and Brentwick (ignoring Coppergrove), since they seem to have the largest gap in average number of flaws. Why specifically would this not be a good approach?
+
+b. Now you will perform the test. You should
+
+   i. (1pt) State your null and alternative hypotheses, 
+   ii. (1pt) decide on the test statistic to use, 
+   iii. (1pt) state whether this is a one or two-sided test, and explain why, 
+   iv. (2pts) produce a simulated distribution for your test statistic under the null hypothesis 
+   v. (2pts) calculate the $p$-value sta
+   vi. (1pt) make your conclusion distribution of
+
+*Hint: your test statistic should somehow compare all 3 groups. There are many possible statistics you could use. If you are stuck consider a statistic based on the site means or the site variances.*
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+a. (2pts) A colleague suggests that we should focus our attention on a comparison of Alderwood and Brentwick (ignoring Coppergrove), since they seem to have the largest gap in average number of flaws. Why specifically would this not be a good approach?
+
+Comparing only the two facilities with the largest gap can be useful if you are specifically interested in identifying the most significant difference. However, to get a complete picture, it's generally better to compare all facilities. This ensures you’re considering all possible differences and understanding the overall variability. 
+
+b. Now you will perform the test. You should
+
+   i. (1pt) State your null and alternative hypotheses, 
+   
+   H0:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| = 0
+   H1:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| != 0
+   
+   ii. (1pt) decide on the test statistic to use, 
+   
+   I will use statistic:  Sum of absolute differences among the means of all three manufacture's lenghts of cables
+    |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)|
+   
+   iii. (1pt) state whether this is a one or two-sided test, and explain why, 
+   
+   It is two side test because I want to know if there are no differences  H0 test stat=0
+   and alternative there are differences
+   
+   iv. (2pts) produce a simulated distribution for your test statistic under the null hypothesis 
+   
+   Code is provided using Monte Carlo simulations with perturbations 
+   
+   v. (2pts) calculate the $p$-value sta
+   
+   Calculated p=0.113000 
+   
+   vi. (1pt) make your conclusion distribution of
+   
+   On the level of alfa=0.05  There is not enough evidence to reject null hypotheses
+
+
+
+```{r}
+set.seed(42)
+
+# Given data
+cables <- data.frame(
+  site = rep(c("Alderwood", "Brentwick", "Coppergrove"), times = c(53, 48, 51)),
+  flaws = c(6, 4, 4, 1, 2, 1, 4, 2, 4, 3, 4, 8, 2, 4, 6, 2, 4, 1, 2, 2, 0, 2, 5, 2, 3, 3, 3, 2, 5, 4, 4,
+            1, 4, 3, 5, 4, 4, 3, 3, 4, 0, 3, 4, 4, 3, 5, 3, 2, 1, 1, 2, 3, 4, 2, 5, 1, 2, 2, 3, 1, 2, 3,
+            0, 4, 2, 4, 2, 2, 2, 4, 4, 2, 3, 5, 2, 3, 2, 2, 3, 1, 3, 1, 1, 1, 1, 0, 3, 4, 4, 4, 2, 2, 4,
+            3, 3, 2, 1, 7, 3, 1, 1, 3, 6, 3, 7, 4, 2, 3, 1, 0, 4, 1, 3, 4, 8, 3, 3, 1, 4, 3, 3, 2, 2, 3,
+            3, 1, 0, 4, 6, 3, 3, 3, 7, 3, 4, 3, 2, 2, 4, 3, 1, 4, 1, 5, 3, 3, 2, 3, 3, 1, 3, 1)
+)
+
+# Calculate the sum of absolute differences
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs(mean(data$flaws[data$site == pair[1]]) - mean(data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+
+# Observed sum of absolute differences
+observed_sad <- calculate_sad(cables)
+
+# Monte Carlo simulation
+num_replicates <- 1000
+simulated_sad <- replicate(num_replicates, {
+  shuffled_data <- cables
+  shuffled_data$flaws <- sample(shuffled_data$flaws)
+  calculate_sad(shuffled_data)
+})
+
+# Calculate p-value
+p_value <- mean(simulated_sad >= observed_sad)
+
+# Output the results
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+set.seed(123)
+
+# Given data
+
+
+# Calculate means and variances for each site
+means <- tapply(cables$flaws, cables$site, mean)
+variances <- tapply(cables$flaws, cables$site, var)
+
+# Output the results
+cat("Means of flaws per kilometer for each facility:\n")
+print(means)
+cat("\nVariances of flaws per kilometer for each facility:\n")
+print(variances)
+
+
+# Calculate the sum of absolute differences
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs((data$flaws[data$site == pair[1]]) - (data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+# Observed sum of absolute differences
+observed_sad <- calculate_sad(cables)
+
+# Monte Carlo simulation
+num_replicates <- 1000
+simulated_sad <- replicate(num_replicates, {
+  shuffled_data <- cables
+  shuffled_data$flaws <- sample(shuffled_data$flaws)
+  calculate_sad(shuffled_data)
+})
+
+# Calculate p-value
+p_value <- mean(simulated_sad >= observed_sad)
+
+# Output the results
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
+```
+
+
+
+
+*write discussion here*
+
+
+```{r}
+set.seed(42)
+
+# Given data
+cables <- data.frame(
+  site = rep(c("Alderwood", "Brentwick", "Coppergrove"), times = c(53, 48, 51)),
+  flaws = c(6, 4, 4, 1, 2, 1, 4, 2, 4, 3, 4, 8, 2, 4, 6, 2, 4, 1, 2, 2, 0, 2, 5, 2, 3, 3, 3, 2, 5, 4, 4,
+            1, 4, 3, 5, 4, 4, 3, 3, 4, 0, 3, 4, 4, 3, 5, 3, 2, 1, 1, 2, 3, 4, 2, 5, 1, 2, 2, 3, 1, 2, 3,
+            0, 4, 2, 4, 2, 2, 2, 4, 4, 2, 3, 5, 2, 3, 2, 2, 3, 1, 3, 1, 1, 1, 1, 0, 3, 4, 4, 4, 2, 2, 4,
+            3, 3, 2, 1, 7, 3, 1, 1, 3, 6, 3, 7, 4, 2, 3, 1, 0, 4, 1, 3, 4, 8, 3, 3, 1, 4, 3, 3, 2, 2, 3,
+            3, 1, 0, 4, 6, 3, 3, 3, 7, 3, 4, 3, 2, 2, 4, 3, 1, 4, 1, 5, 3, 3, 2, 3, 3, 1, 3, 1)
+)
+
+# Calculate the observed sum of absolute differences
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs(mean(data$flaws[data$site == pair[1]]) - mean(data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+observed_sad <- calculate_sad(cables)
+
+# Perturbation technique
+num_replicates <- 1000
+perturbed_sad <- replicate(num_replicates, {
+  perturbed_data <- cables
+  perturbation <- rnorm(nrow(perturbed_data), mean = 0, sd = 0.1)
+  perturbed_data$flaws <- perturbed_data$flaws + perturbation
+  calculate_sad(perturbed_data)
+})
+
+# Calculate p-value
+p_value <- mean(perturbed_sad >= observed_sad)
+
+# Output the results
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
+```
+
+```{r}
+set.seed(42)
+
+# Given data
+cables <- data.frame(
+  site = rep(c("Alderwood", "Brentwick", "Coppergrove"), times = c(53, 48, 51)),
+  flaws = c(6, 4, 4, 1, 2, 1, 4, 2, 4, 3, 4, 8, 2, 4, 6, 2, 4, 1, 2, 2, 0, 2, 5, 2, 3, 3, 3, 2, 5, 4, 4,
+            1, 4, 3, 5, 4, 4, 3, 3, 4, 0, 3, 4, 4, 3, 5, 3, 2, 1, 1, 2, 3, 4, 2, 5, 1, 2, 2, 3, 1, 2, 3,
+            0, 4, 2, 4, 2, 2, 2, 4, 4, 2, 3, 5, 2, 3, 2, 2, 3, 1, 3, 1, 1, 1, 1, 0, 3, 4, 4, 4, 2, 2, 4,
+            3, 3, 2, 1, 7, 3, 1, 1, 3, 6, 3, 7, 4, 2, 3, 1, 0, 4, 1, 3, 4, 8, 3, 3, 1, 4, 3, 3, 2, 2, 3,
+            3, 1, 0, 4, 6, 3, 3, 3, 7, 3, 4, 3, 2, 2, 4, 3, 1, 4, 1, 5, 3, 3, 2, 3, 3, 1, 3, 1)
+)
+
+# Calculate the sum of absolute differences
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs(mean(data$flaws[data$site == pair[1]]) - mean(data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+# Observed sum of absolute differences
+observed_sad <- calculate_sad(cables)
+
+# Perturbation technique
+num_replicates <- 1000
+perturbed_sad <- replicate(num_replicates, {
+  perturbed_data <- cables
+  perturbation <- rnorm(nrow(perturbed_data), mean = 0, sd = 0.1)  # Adding small random noise
+  perturbed_data$flaws <- perturbed_data$flaws + perturbation
+  calculate_sad(perturbed_data)
+})
+
+# Calculate p-value
+p_value <- mean(perturbed_sad >= observed_sad)
+
+# Output the results
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
+```
+
+
+
+
+## Q2 - Estimation
+
+Let $X_i$ be i.i.d random variables following continuous Uniform($-a,a$) for some unknown positive parameter $a$. Suppose you draw the following sample of $n=15$ observations:
+
+```{r}
+data = c(-1.97, -1.07, 0.61, 3.43, -2.51, 3.35, 3.74, 1.35,
+         1.08, -3.68, -2.47, -2.72, 1.57, -0.97, 2.27)
+```
+
+a. (3pts) Using what you know about estimation, find a reasonable point estimator $\hat a$. Explain why you think this gives a reasonable estimate of the parameter $a$.
+   - Note: you do NOT need to find the BEST estimator to earn full points on this part (or later parts), just one that can be argued to be reasonable.
+b. (2pts) Apply your estimator to the given sample data. What is your point estimate for $a$?
+c. (3pts) Using the MC method shown in class, compute **and interpret** a 95\% confidence interval for $a$. Also, *briefly* (1-2 sentences) explain how well you think this interval would actually perform.
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+
+
+
+
+
+
+## Q3 - Regression
+
+In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100,000 people) of various types of crimes in each US state (source: the World Almanac). Consider the `Assault` and `Murder` columns as X and Y variables:
+
+```{r}
+x = USArrests$Assault
+y = USArrests$Murder
+# plot(x,y)
+```
+
+a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
+b. (2pts) Regardless of your answer to part a, fit a linear model to this data. Show the summary print out with the full table of coefficients.
+c. (2pts) Does this result show a significant relation between x,y? Answer why or why not and give a p-value.
+d. (2pts) Give a 95% confidence interval for the true slope.
+e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit look reasonable? Explain why or why not.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+
+
+
+
+
