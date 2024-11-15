@@ -191,6 +191,33 @@ upper_bound <- 0.041909 + t_critical * 0.004507
 c(lower_bound, upper_bound)
 
 ```
+```{r}
+#plot the line
+pp <- ggplot( model,
+              aes(x=USArrests$Assault,y=USArrests$Murder));
+pp <- pp +geom_point() + geom_smooth(method="lm",
+                                     formula="y~x",
+                                     se=FALSE);
+pp <- pp + labs( x="Assult)",
+                 y="Murder",
+                 title="Murder and Assult" )
+pp
+
+#residuals
+resids <- residuals(model)
+hist(resids)
+
+#Homoscedasticity
+plot(model, which=1)
+
+plot(model, which=2)
+
+#all standard diagnostic
+par(mfrow = c(2, 2))
+plot(model)
+
+```
+
 
 
 *write discussion here*
@@ -206,4 +233,8 @@ prvo gpt vtoro baba da se proveri.
 
 > d) 95% Confidance interval for the slope  (0.03284621, 0.05097104)
 
-
+> e) 
+1. Residuals vs Fitted: From the linear plot checking of the linearity assumption shows that residuals are rather randomly scattered around the fitted line. 
+2. Histogram of residuals with some longer right tail
+3. Homosedacity  Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values 
+4. Normal Q-Q:  The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
