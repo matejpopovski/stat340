@@ -105,10 +105,11 @@ HA: At least one of the facilities has a different average number of flaws compa
 > As a check for my work, I will use Anova test, which is a statistical technique used to compare the means of three or more groups.
 
 ```{r}
-# Perform ANOVA test
 anova_test <- aov(flaws ~ site, data = cables)
 summary(anova_test)
 ```
+
+> Since the p-value (0.0958) is greater than the commonly used significance level of 0.05, we fail to reject the null hypothesis. Anova test agrees with my solution above.
 
 
 ## Q2 - Estimation
