@@ -51,13 +51,13 @@ b. Now you will perform the test. You should
 
    i. (1pt) State your null and alternative hypotheses, 
    
-   H0:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| = 0
-   H1:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| != 0
+   H0:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mean(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| = 0
+   H1:  |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mean(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)| != 0
    
    ii. (1pt) decide on the test statistic to use, 
    
    I will use statistic:  Sum of absolute differences among the means of all three manufacture's lenghts of cables
-    |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mea(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)|
+    |mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mean(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)|
    
    iii. (1pt) state whether this is a one or two-sided test, and explain why, 
    

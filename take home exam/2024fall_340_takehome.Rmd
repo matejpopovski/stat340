@@ -55,7 +55,7 @@ b. Now you will perform the test. You should
 
 > b)
 
-> i) H0: There is no difference in the quality of cables produced by the three facilities. Specifically, mean Alderwood = mean Brentwick = mean Coppergrove
+> i) H0: There is no difference in the quality of cables produced by the three facilities. Specifically, mean(Alderwood) = mean(Brentwick) = mean(Coppergrove)
 HA: At least one facility produces cables with a different mean number of flaws.
 
 > ii) 
