@@ -1,0 +1,104 @@
+---
+title: 'STAT340 Midterm - take home portion'
+output: html_document
+author: 'PLEASE WRITE YOUR NAME HERE'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE,message=FALSE,warning=FALSE,error=TRUE,
+                      fig.width=6,fig.height=6,fig.align='center')
+if(!require(tidyverse)) install.packages("tidyverse")
+library(tidyverse)
+
+# force more digits to be printed
+options(pillar.sigfig=7,width=100)
+```
+
+
+## Rules
+
+- Remember you can use any and all notes, files, videos, and cheat sheets presented in class or found on Canvas. You may also reference R documentation manuals for any function. However, you may NOT search for other help online or discuss exam materials with anyone.
+ - **All plots MUST include proper titles, labels**, etc. for full credit!
+ - Please **KNIT as you go along and CHECK YOUR OUTPUT to ensure there are no errors**! We have added `error=TRUE` as a default argument in the setup chunk above (line 10 in the Rmd) which will allow the document to knit even if there are errors (so that you can still submit an HTML file in the end for us to grade). Files with errors in the knitted output may be penalized!
+ - Also make sure you do NOT delete the blank lines around section headers (e.g. the ## Question x and ### Part x lines). Deleting the extra lines may cause R to knit document sections incorrectly, and we use these sections to help navigate through your exams. If they are messed up, it could make it more likely for us to accidentally miscalculate your score.
+ - ***If you have ANY questions, please email the instructor and also CC all TAs in your section!*** and we will try to answer them as quickly as we can.
+
+<br/><br/>
+
+
+
+
+### Question 1    <small>(4,3,3pts)</small>
+
+
+Suppose you and your friend play the following simple game. You two start by deciding a number of turns N to play. On each turn, a fair and balanced coin is flipped. If the outcome is heads, you get a point. If the outcome is tails, your friend gets a point. At the end of the N turns the person with the most points wins.
+
+
+
+
+#### Part A
+
+
+Let N=5. Make a plot showing the distribution of the absolute value point difference between the winner and the loser (choose a large NMC iteration size that your computer can reasonably handle). What are the mean and variance of this distribution?
+
+
+```{r}
+# insert code here
+
+```
+
+
+
+
+#### Part B
+
+
+Repeat the previous step for N=10, N=20, N=50, N=100, and N=200. You should be able to just copy and paste the code and rerun.
+
+
+```{r}
+# insert code here
+
+```
+
+
+
+
+#### Part C
+
+
+Using your previous result, make a rough plot showing the mean of the absolute value point difference VS N (if you can, make both axes log-scaled and draw a smoothed curve through the points). What do you notice? What would you guess the underlying relationship is between mean absolute difference and N?
+
+
+```{r}
+# insert code here
+
+```
+
+
+<br/><br/>
+
+
+
+
+### Question 2    <small>(10pts)</small>
+
+
+You are called in as an expert analyst to consult on an employment discrimination lawsuit filed against a small company. Not counting the executives who co-founded the company, there are a total of 20 hired employees, 10 men and 10 women. You find out that out of these 20 employees, the 4 highest-paid employees are all male. Is there significant evidence of income discrimination? Conduct a formal test at the standard alpha=0.05, report a p-value, and write a conclusion.
+
+Note: this function counts the number of 1's a vector starts with, feel free to use if you wish (or not)
+
+```{r}
+count_leading_1 = function(x){
+  nchar(sub("^(1*).*","\\1",paste(x,collapse="")))
+}
+```
+
+e.g. `count_leading_1(c(1,1,0,0,1,0,1))` gives 2
+
+
+```{r}
+# insert code here
+
+
+```

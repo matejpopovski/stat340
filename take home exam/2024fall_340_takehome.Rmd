@@ -1,0 +1,164 @@
+---
+title: "FA24 STAT340 Midterm <small>take-home portion</small>"
+output: html_document
+---
+
+<style>h2{margin-top:5rem}h3,h4:not([class]){margin-top:4rem}
+.main-container{padding:2rem}</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,warning=F,message=F,
+                      fig.width=5,fig.height=4,fig.align="center")
+```
+
+
+## Q1 - Testing
+
+Infinity Cable (fictional) manufactures fiber optic cable for industrial purposes. They have three manufacturing facilities in Alderwood, Brentwick and Coppergrove. A recent quality control audit sampled various 1 kilometer lengths of cable from the three facilities and counted the number of flaws in the cables:
+
+```{r}
+cables = data.frame(
+  site = rep(c("Alderwood","Brentwick","Coppergrove"), times=c(53,48,51)),
+  flaws = c(6,4,4,1,2,1,4,2,4,3,4,8,2,4,6,2,4,1,2,2,0,2,5,2,3,3,3,2,5,4,4,
+            1,4,3,5,4,4,3,3,4,0,3,4,4,3,5,3,2,1,1,2,3,4,2,5,1,2,2,3,1,2,3,
+            0,4,2,4,2,2,2,4,4,2,3,5,2,3,2,2,3,1,3,1,1,1,1,0,3,4,4,4,2,2,4,
+            3,3,2,1,7,3,1,1,3,6,3,7,4,2,3,1,0,4,1,3,4,8,3,3,1,4,3,3,2,2,3,
+            3,1,0,4,6,3,3,3,7,3,4,3,2,2,4,3,1,4,1,5,3,3,2,3,3,1,3,1)
+)
+```
+
+Your job is to perform a comparison using the testing techniques we've covered in this course to see if there is evidence that the facilities actually produce cable of different quality. Do not use techniques we have not covered in this course.
+
+a. (2pts) A colleague suggests that we should focus our attention on a comparison of Alderwood and Brentwick (ignoring Coppergrove), since they seem to have the largest gap in average number of flaws. Why specifically would this not be a good approach?
+
+b. Now you will perform the test. You should
+
+   i. (1pt) State your null and alternative hypotheses, 
+   ii. (1pt) decide on the test statistic to use, 
+   iii. (1pt) state whether this is a one or two-sided test, and explain why, 
+   iv. (2pts) produce a simulated distribution for your test statistic under the null hypothesis 
+   v. (2pts) calculate the $p$-value
+   vi. (1pt) make your conclusion
+
+*Hint: your test statistic should somehow compare all 3 groups. There are many possible statistics you could use. If you are stuck consider a statistic based on the site means or the site variances.*
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+> a) Focusing only on Alderwood and Brentwick while ignoring Coppergrove is not a good approach because it excludes relevant data, leading to biased analysis and potentially false conclusions. Coppergrove's data might provide critical context or reveal overarching trends across all facilities that could explain the differences. Analyzing only two facilities reduces the validity of the results and contradicts standard statistical principles, which require using all relevant data to ensure robust and accurate comparisons.
+
+> b)
+
+> i) H0: There is no difference in the quality of cables produced by the three facilities. Specifically, mean Alderwood = mean Brentwick = mean Coppergrove
+HA: At least one facility produces cables with a different mean number of flaws.
+
+> ii) 
+
+> iii) 
+
+> iv) 
+
+> v) 
+
+> vi) 
+
+
+
+
+## Q2 - Estimation
+
+Let $X_i$ be i.i.d random variables following continuous Uniform($-a,a$) for some unknown positive parameter $a$. Suppose you draw the following sample of $n=15$ observations:
+
+```{r}
+data = c(-1.97, -1.07, 0.61, 3.43, -2.51, 3.35, 3.74, 1.35,
+         1.08, -3.68, -2.47, -2.72, 1.57, -0.97, 2.27)
+```
+
+a. (3pts) Using what you know about estimation, find a reasonable point estimator $\hat a$. Explain why you think this gives a reasonable estimate of the parameter $a$.
+   - Note: you do NOT need to find the BEST estimator to earn full points on this part (or later parts), just one that can be argued to be reasonable.
+b. (2pts) Apply your estimator to the given sample data. What is your point estimate for $a$?
+c. (3pts) Using the MC method shown in class, compute **and interpret** a 95\% confidence interval for $a$. Also, *briefly* (1-2 sentences) explain how well you think this interval would actually perform.
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+# a) and b)
+hat_a <- max(abs(data))
+hat_a
+```
+```{r}
+# c)
+set.seed(123)
+
+max_abs <- function(data) {
+  return(max(abs(data)))
+}
+
+# Number of bootstrap samples
+MCN <- 10000
+
+# Generate bootstrap samples and calculate the estimator for each
+bootstrap_estimates <- replicate(MCN, {
+  sample_data <- sample(data, length(data), replace = TRUE)
+  max_abs(sample_data)
+})
+
+# Calculate 95% confidence interval (2.5th and 97.5th percentiles)
+ci_lower <- quantile(bootstrap_estimates, 0.025)
+ci_upper <- quantile(bootstrap_estimates, 0.975)
+
+ci_lower
+ci_upper
+
+```
+
+
+*write discussion here*
+
+> a) Explanation: A reasonable point estimator for a_hat is the maximum of the absolute values of the sample, max(abs(X_i)), because the continuous Uniform distribution with bounds minus a and a requires all observed values to lie within the interval from minus a to a. This estimator ensures that a is large enough to encompass all the data points while being the smallest value that satisfies this condition, making it a logical and straightforward choice for estimating a.
+
+> c) The interval constructed by the Monte Carlo method should provide a reasonable estimate for a, though the performance may vary depending on the sample size and variability of the data. With a larger sample size, the interval would likely become more accurate. Given the sample size of 15, the interval should perform reasonably well but may have some variability. 
+
+
+
+## Q3 - Regression
+
+In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100,000 people) of various types of crimes in each US state (source: the World Almanac). Consider the `Assault` and `Murder` columns as X and Y variables:
+
+```{r}
+x = USArrests$Assault
+y = USArrests$Murder
+# plot(x,y)
+```
+
+a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
+b. (2pts) Regardless of your answer to part a, fit a linear model to this data. Show the summary print out with the full table of coefficients.
+c. (2pts) Does this result show a significant relation between x,y? Answer why or why not and give a p-value.
+d. (2pts) Give a 95% confidence interval for the true slope.
+e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit look reasonable? Explain why or why not.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+
+
+
+
+

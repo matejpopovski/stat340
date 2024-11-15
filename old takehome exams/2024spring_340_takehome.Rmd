@@ -1,0 +1,61 @@
+---
+title: "SP24 STAT340 Midterm <small>take-home portion</small>"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F)
+```
+
+
+## Testing problem <small>7,3pts for a,b</small>
+
+You're sitting by Lake Mendota one summer fishing, drinking a spotted cow and counting the birds that fly by to pass the time. You have a hunch one day that the distribution of birds flying may not be what you initially thought. You decide to set aside your fishing pole and run an experiment (the fish weren't biting today anyway).
+
+Every 15 minutes, you record down the number of birds you see flying by you overhead. You do this over the course of an entire day and obtain 32 measurements (assume the distribution of birds doesn't change throughout the day). You obtain the following dataset.
+
+```{r}
+counts = c(5,3,0,10,8,0,0,7,5,12,8,5,11,4,0,6,0,4,0,0,4,3,4,0,2,4,3,3,5,5,4,4)
+```
+
+a. Conduct a formal hypothesis test (i.e. compute a p-value) to show that the distribution of bird counts you see is probably NOT poisson.
+
+b. Suppose you decide to model the distribution instead as approximately $c * X$ rounded to the nearest integer, where $c$ is some constant and $X$ is poisson with mean $\lambda$. Note $c$ and $\lambda$ do NOT have to be integers (they can be any real number). Produce point estimates for $c$ and $\lambda$.
+   - Hint: one easy way of doing this is to first find the theoretical mean and variance of $c * X$, then use that to figure out an estimator using the sample mean and variance for each of $c$ and $\lambda$
+
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+
+
+
+## Estimation problem <small>4,5,1 pts for a,b,c</small>
+
+We are attempting to estimate the median time that a certain chemical can remain stable. A chemical reaction is produced in a laboratory setting producing a compound. When the compound breaks down the experiment generates a tiny spark. We run an experiment and create 15 independent, but identical samples of this chemical and measure **the amount of time it remains stable until it sparks and decomposes**. The following is our dataset of the 15 wait times:
+
+```{r}
+chemical_times = c(0.542, 0.044, 0.073, 0.070, 0.108, 0.074, 0.291, 0.004, 0.050, 0.033, 0.061, 0.045, 0.168, 0.055, 0.061)
+```
+
+The experimenters would like to estimate the median time it takes before the chemical breaks down. Assume the times are well modeled by an exponential variable.
+
+a. Compute point estimates for any necessary parameters of this model.
+b. Use Monte Carlo estimation to compute a 95% confidence interval for the median time that the chemical remains stable.
+c. Use MC to estimate the coverage rate of the nominal "95%" confidence interval you just computed. Would you estimate that a confidence interval calculated in this manner is too wide, too narrow or just about the right width?
+   - Hint: treat your point estimate as the "TRUE value", then use this to redraw the initial starting dataset (i.e. redraw a new `chemical_times`). Then, use each of these redrawn initial datasets to create an MC confidence interval by the same process above, and check if your "TRUE value" point estimate is in it. Report a final percent coverage.
+
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+

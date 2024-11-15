@@ -1,0 +1,29 @@
+STAT340: Spring 2024 Midterm (In-class) Solutions
+
+MC1: all distribution have a mean of 4
+MC2: c; a is a pmf, b is a histogram of sample data, d has connected points which is inappropriate for a discrete distribution
+MC3: d
+MC4: a, c; The only way for two events to be independent and mutually exclusive is if one of them has Probability zero
+MC5: c. P(X<12) is the probability X < mu+sigma = .50 + .34
+MC6: a. TP
+     b. FN
+     c. FP
+     d. TN
+MC7: d, we have never seen any symmetric distributions where values close to zero were evidence of the alternative hypothesis
+MC8: A
+MC9: E
+SA1: Many correct answers. Here are some examples
+     a. The time you spot each bird, if the birds are spread out evenly over the park.
+     b. You observe 20 crows. Assuming independence and equal probability, let X be the number of female crows observed out of 20.
+     c. Let X be the number of non-crows spotted before the first crow, assuming independence and constant probability of seeing a crow
+     d. Let X be the weight of the first crow spotted. We could model X using a normal distribution reasonably.
+SA2: a. P(Orange | I like it) = 8/(8+4)
+     b. A geometric is not appropriate because p changes significantly as you eat candies.
+     c. getting a dark and liking a candy are not mutually exclusive because I like blue, which are also dark.
+     d. P(dark)=16/48, P(like)=12/48, P(dark & like)=4/48 = 16/48*12/48 so yes they are independent events
+SA3: a. for Trimax A the type 1 error rate is 9/50
+     b. For Trimax B the power is 43/50
+     c. Accuracy of Trimax C is (39+50)/100
+     d. It could be argued that a type II error is very bad, and Trimax C has no type II errors (i.e. 100% power).
+        Trimax B has highest accuracy which is also desirable. B also has lower type I errors.
+        It would be hard to argue in favor of Trimax A.

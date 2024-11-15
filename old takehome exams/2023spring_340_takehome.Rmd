@@ -1,0 +1,140 @@
+---
+title: 'STAT340 Midterm - take home portion'
+output: html_document
+author: 'PLEASE WRITE YOUR NAME HERE'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,message=F,warning=F,error=TRUE,fig.align='center')
+if(!require(tidyverse)) install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+## Rules
+
+- Remember you can use any and all notes, files, videos, and cheat sheets presented in class or found on Canvas. You may also reference R documentation manuals for any function. However, you may NOT search for other help online or discuss exam materials with anyone.
+- All plots MUST include proper titles, labels, etc. for full credit.
+- Please **KNIT as you go along and CHECK YOUR OUTPUT to ensure there are no errors**! We have added `error=TRUE` as a default argument in the setup chunk above which will allow the document to knit even if there are errors (so that you can still submit an HTML file in the end for us to grade). Files with errors in the knitted output may be penalized!
+- If you have any questions, please email both me AND your TA to ensure fastest response time.
+
+
+<br/><br/><br/>
+
+
+
+
+### Question 1  <small>(5pts each part, 10pts total)</small>
+
+Pete and Repete play on the school basketball team. The coach feels like Repete is a less consistent player in terms of points scored per game. A random sampling of 15 of each of their performances is collected
+
+```{r}
+pete.scores   = c(19, 17, 20, 19, 18, 17, 20, 19, 24, 20, 18, 24, 20, 22, 21)
+repete.scores = c(15, 19, 20, 21,  9, 28, 18, 19, 21, 19, 14, 17, 14,  5,  9)
+```
+
+a. Perform a permutation test with at least 10k Monte Carlo runs to determine if there is statistical evidence to support the claim that Repete is less consistent than Pete. Use *one* of the following test statistics:
+
+   i. The difference of standard deviations
+   ii. The difference of ranges
+   iii. The ratio of sample variances
+
+   Determine if the test should be a one-sided or a two-sided test. Calculate your observed test statistic and estimate its p-value empirically (using the Monte Carlo method), and make a conclusion using a significance level of 0.05.
+
+
+```{r}
+# insert code here
+
+```
+
+
+
+
+b. Next consider the question of whether there is evidence that their median points per game are different. Again perform a Monte Carlo test with at least 10k runs. Use the same significance level of 0.05. Determine if this should be a one or two-sided test, find the observed test statistic, its Monte Carlo p-value and make your conclusion.
+
+```{r}
+# insert code here
+
+```
+
+
+
+
+<br/><br/><br/>
+
+
+
+### Question 2   <small>(2,6,1,1pts for a-d, 10pts total)</small>
+
+
+The [middle-square method](https://en.wikipedia.org/wiki/Middle-square_method) (feel free to click on this link and read the wiki page) is a very old and very crude pseudorandom generator function invented by John von Neumann in 1949. Despite its many flaws, it was much faster than other more rigorous methods at the time, so was useful in certain contexts where "perfect" randomness was not necessary.
+
+Suppose we start with the 6-digit seed number 455455. This is our first "random" number. Next, we square this number 455455²=207,439,257,025 and we take out the middle 6 digits 439257 and this becomes out next "random" number. This process is repeated as many times as needed to get a sequence of "random" numbers.
+
+Due to the primitive nature of this method, the sequence generated actually fails many common tests of true randomness and is therefore NOT a good way of generating random numbers. Below, we have generated a sequence of 200 numbers using this method starting from the initial seed value of 455455. Conduct a Monte Carlo test to show there is indeed strong evidence to indicate this method is NOT a good pseudorandom algorithm.
+
+**Use $\alpha=0.05$**. You are NOT allowed to use a different **$\alpha$**.
+
+```{r}
+middle_square = function(x) as.integer(substr(as.character(x^2),4,9))
+
+N = 200
+mc.mid = c(455455,rep(NA,N-1))
+
+for(i in 1:(N-1)) mc.mid[i+1] = middle_square(mc.mid[i])
+
+mc.mid
+```
+
+
+Hints:
+
+1. Note the numbers generated using this method are always an integer with at most 6 digits (it may of course have less digits if the middle number starts with leading zeros). Therefore, you may model the generated observations under the null as being random integers sampled from 1-999,999. You can simulate this using `sample(999999,size=??,replace=??)` with the arguments `size` and `replace` set appropriately.
+   Alternatively, you can also divide the observations by 1,000,000 and treat the resultant vector as drawn from Uniform(0,1), i.e. uniform distribution defined as $x=1$ if $0\leq x\leq1$. Or you could even divide by 100,000 and treat it as Uniform (0,10). Or something else entirely, it's up to you.
+2. As usual, generate under the null, use a summarizing statistic, and compare the simulations with your data. Make sure to think very carefully about which tail to take for your test.
+3. There are MANY different statistics that will work here (I personally found 6 while writing this exam), you just need to come up with something that has high enough power to reject the null. I've listed some functions below that you may find useful while trying to construct a statistic. To be clear, you do NOT have to use these functions, it's just a reference in case you want it.
+   - `x%%y` computes the remainder of vector `x` when divided by `y`, e.g. `5%%2=1`
+   - `floor(x)` and `ceiling(x)` can be used to round a vector `x` down or up to the nearest integer
+   - `as.character(x)` and `as.numeric(x)` can convert a vector to a character or convert back to a number
+   - if you want to force a numeric vector `x` to print with leading 0's, try `sprintf(x,fmt="%06d")`
+   - `strsplit(string,"")[[1]]` will let you **split a _single_ input string** into a vector of the digits (note the input MUST be a single string, not a vector)
+   - remember `table(x)` can be used to show a frequency table, and the output of this is just a named vector (i.e. a vector with names for each value, but you can usually ignore the names), so for example `table(c(5,5,6,7,7,7))` will give the vector `c(2,1,3)` indicating there are 2, 1, and 3 each of 5, 6, and 7.
+
+Final hint: there are at least 3 simple descriptive summary statistics that do NOT use any of the listed functions above and can easily reject the null here. Look closely at the data in comparison to the null-generated samples and you should be able to identify them. However, a more creative (but still logically sound) solution may result in even higher power. If you either come up with a very creative (and correct) solution, or come up with a statistic that matches or beats the p-value of the best statistic I came up with, you may be awarded up to 3 bonus points at my discretion.
+
+
+<br/><br/><br/>
+
+
+
+a. Write down a null and alternative hypothesis for this question. Use specific, technical, statistical language here (just saying "random" will NOT be sufficient, what are you specific assuming under the null?).
+
+> REPLACE THIS WITH YOUR RESPONSE
+
+
+b. Construct a statistic, and simulate its distribution under the null. Your result should be a single vector of M numbers, where M is your number of MC iterations, and each number is the result of running your summary statistic on a null-generated sample of size 200.
+
+```{r}
+# insert code here
+
+```
+
+
+
+c. Show a histogram with the null distribution and a line showing what statistic you observed in your real data set. You are welcome to use either tidyverse or base R graphics, just make sure you add a title and axes labels.
+   - If you want to make a really quick base R plot, remember you can use `hist(x)` to get a histogram of a vector `x` and `abline(v=___)` to add a vertical line to the plot at $x=___$.
+
+
+```{r}
+# insert code here
+
+```
+
+
+
+d. Compute the p-value of your test.
+
+```{r}
+# insert code here
+
+```

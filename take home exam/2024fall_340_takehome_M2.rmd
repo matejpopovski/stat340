@@ -1,0 +1,222 @@
+---
+title: "FA24 STAT340 Midterm <small>take-home portion</small>"
+output: html_document
+---
+
+<style>h2{margin-top:5rem}h3,h4:not([class]){margin-top:4rem}
+.main-container{padding:2rem}</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,warning=F,message=F,
+                      fig.width=5,fig.height=4,fig.align="center")
+```
+
+
+## Q1 - Testing
+
+Infinity Cable (fictional) manufactures fiber optic cable for industrial purposes. They have three manufacturing facilities in Alderwood, Brentwick and Coppergrove. A recent quality control audit sampled various 1 kilometer lengths of cable from the three facilities and counted the number of flaws in the cables:
+
+```{r}
+cables = data.frame(
+  site = rep(c("Alderwood","Brentwick","Coppergrove"), times=c(53,48,51)),
+  flaws = c(6,4,4,1,2,1,4,2,4,3,4,8,2,4,6,2,4,1,2,2,0,2,5,2,3,3,3,2,5,4,4,
+            1,4,3,5,4,4,3,3,4,0,3,4,4,3,5,3,2,1,1,2,3,4,2,5,1,2,2,3,1,2,3,
+            0,4,2,4,2,2,2,4,4,2,3,5,2,3,2,2,3,1,3,1,1,1,1,0,3,4,4,4,2,2,4,
+            3,3,2,1,7,3,1,1,3,6,3,7,4,2,3,1,0,4,1,3,4,8,3,3,1,4,3,3,2,2,3,
+            3,1,0,4,6,3,3,3,7,3,4,3,2,2,4,3,1,4,1,5,3,3,2,3,3,1,3,1)
+)
+```
+
+Your job is to perform a comparison using the testing techniques we've covered in this course to see if there is evidence that the facilities actually produce cable of different quality. Do not use techniques we have not covered in this course.
+
+a. (2pts) A colleague suggests that we should focus our attention on a comparison of Alderwood and Brentwick (ignoring Coppergrove), since they seem to have the largest gap in average number of flaws. Why specifically would this not be a good approach?
+
+b. Now you will perform the test. You should
+
+   i. (1pt) State your null and alternative hypotheses, 
+   ii. (1pt) decide on the test statistic to use, 
+   iii. (1pt) state whether this is a one or two-sided test, and explain why, 
+   iv. (2pts) produce a simulated distribution for your test statistic under the null hypothesis 
+   v. (2pts) calculate the $p$-value
+   vi. (1pt) make your conclusion
+
+*Hint: your test statistic should somehow compare all 3 groups. There are many possible statistics you could use. If you are stuck consider a statistic based on the site means or the site variances.*
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+
+
+
+
+
+
+## Q2 - Estimation
+
+Let $X_i$ be i.i.d random variables following continuous Uniform($-a,a$) for some unknown positive parameter $a$. Suppose you draw the following sample of $n=15$ observations:
+
+```{r}
+data = c(-1.97, -1.07, 0.61, 3.43, -2.51, 3.35, 3.74, 1.35,
+         1.08, -3.68, -2.47, -2.72, 1.57, -0.97, 2.27)
+```
+
+a. (3pts) Using what you know about estimation, find a reasonable point estimator $\hat a$. Explain why you think this gives a reasonable estimate of the parameter $a$.
+   - Note: you do NOT need to find the BEST estimator to earn full points on this part (or later parts), just one that can be argued to be reasonable.
+b. (2pts) Apply your estimator to the given sample data. What is your point estimate for $a$?
+c. (3pts) Using the MC method shown in class, compute **and interpret** a 95\% confidence interval for $a$. Also, *briefly* (1-2 sentences) explain how well you think this interval would actually perform.
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+*write discussion here*
+
+a. (3pts) Using what you know about estimation, find a reasonable point estimator $\hat a$. Explain why you think this gives a reasonable estimate of the parameter $a$.
+   - Note: you do NOT need to find the BEST estimator to earn full points on this part (or later parts), just one that can be argued to be reasonable.
+ 
+In the class example we have learned tha a= max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
+I chose unbiased point estimator (n+1)/n Abs{Xi} as point estimator because we have  Uniform($-a,a$) distribution with equal lover and upper bound.
+   
+   
+```{r}
+set.seed(123)
+# Sample size
+n <- length(data)
+
+# Calculate the unbiased estimator for 'a'
+a_hat_unbiased <- (n + 1) / n * max(abs(data))
+a_hat_unbiased
+
+cat("The unbiased point estimate for the parameter 'a' is", round(a_hat_unbiased, 2), "\n")
+
+# Number of Monte Carlo simulations
+num_simulations <- 10000
+
+# Initialize a vector to store the unbiased estimators from each simulation
+unbiased_estimators <- numeric(num_simulations)
+
+# Perform Monte Carlo simulations
+for (i in 1:num_simulations) {
+  # Generate a sample of the same size as the original data from a uniform distribution
+  simulated_sample <- runif(n, min = -a_hat_unbiased, max = a_hat_unbiased)
+  # Calculate the unbiased estimator for the simulated sample
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+# Calculate the 95% confidence interval
+lower_bound <- quantile(unbiased_estimators, 0.025)
+upper_bound <- quantile(unbiased_estimators, 0.975)
+
+cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound, 2), ", ", round(upper_bound, 2), ")\n")
+
+
+```
+b. (2pts) Apply your estimator to the given sample data. What is your point estimate for $a$?
+My point estimate rounded to 2 decimals is 3.99  (unrounded 3.989333)
+
+c.(3pts) Using the MC method shown in class, compute **and interpret** a 95\% confidence interval for $a$. Also, *briefly* (1-2 sentences) explain how well you think this interval would actually perform.
+The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the 
+lower bound with negative signs. I think it perform well because value of point estimator is in the interval 
+
+```{r}
+set.seed(123)
+# True value of 'a'
+true_a <- 3.9
+
+# Sample size
+n <- 15
+
+# Number of Monte Carlo simulations
+num_simulations <- 10000
+
+# Initialize a vector to store the unbiased estimators from each simulation
+unbiased_estimators <- numeric(num_simulations)
+
+# Perform Monte Carlo simulations
+for (i in 1:num_simulations) {
+  # Generate a sample of size n from a uniform distribution with true 'a'
+  simulated_sample <- runif(n, min = -true_a, max = true_a)
+  # Calculate the unbiased estimator for the simulated sample
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+# Calculate the bias of the estimator
+bias <- mean(unbiased_estimators) - true_a
+
+cat("The approximate bias of the estimator when the true value of 'a' is", true_a, "is", bias, "\n")
+
+```
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+The bias of my unbiased estimator comparing with true value is very low. What is expected
+
+
+```{r}
+# True value of 'a'
+true_a <- 3.9
+
+# Sample size
+n <- 15
+
+# Number of Monte Carlo simulations
+num_simulations <- 10000
+
+# Initialize a vector to store the unbiased estimators from each simulation
+unbiased_estimators <- numeric(num_simulations)
+
+# Perform Monte Carlo simulations
+for (i in 1:num_simulations) {
+  # Generate a sample of size n from a uniform distribution with true 'a'
+  simulated_sample <- runif(n, min = -true_a, max = true_a)
+  # Calculate the unbiased estimator for the simulated sample
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+# Calculate the bias of the estimator
+bias <- mean(unbiased_estimators) - true_a
+
+cat("The approximate bias of the estimator when the true value of 'a' is", true_a, "is", bias, "\n")
+
+```
+
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+
+
+
+
+## Q3 - Regression
+
+In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100,000 people) of various types of crimes in each US state (source: the World Almanac). Consider the `Assault` and `Murder` columns as X and Y variables:
+
+```{r}
+x = USArrests$Assault
+y = USArrests$Murder
+# plot(x,y)
+```
+
+a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
+b. (2pts) Regardless of your answer to part a, fit a linear model to this data. Show the summary print out with the full table of coefficients.
+c. (2pts) Does this result show a significant relation between x,y? Answer why or why not and give a p-value.
+d. (2pts) Give a 95% confidence interval for the true slope.
+e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit look reasonable? Explain why or why not.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+```
+
+*write discussion here*
+
+
+
+
+
+
