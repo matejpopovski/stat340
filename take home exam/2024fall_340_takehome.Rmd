@@ -47,6 +47,39 @@ b. Now you will perform the test. You should
 ```{r}
 # insert code here
 
+# b) iv) v)
+
+set.seed(123)
+
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs(mean(data$flaws[data$site == pair[1]]) - mean(data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+observed_sad <- calculate_sad(cables)
+
+num_replicates <- 1000
+simulated_sad <- replicate(num_replicates, {
+  shuffled_data <- cables
+  shuffled_data$flaws <- sample(shuffled_data$flaws)
+  calculate_sad(shuffled_data)
+})
+
+p_value <- mean(simulated_sad >= observed_sad)
+
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
 ```
 
 *write discussion here*
@@ -55,18 +88,19 @@ b. Now you will perform the test. You should
 
 > b)
 
-> i) H0: There is no difference in the quality of cables produced by the three facilities. Specifically, mean(Alderwood) = mean(Brentwick) = mean(Coppergrove)
-HA: At least one facility produces cables with a different mean number of flaws.
+> i) H0: There is no difference in the average number of flaws between the three facilities (Alderwood, Brentwick, and Coppergrove). The sum of the absolute differences in the means of each pair of facilities is equal to zero.
+HA: At least one of the facilities has a different average number of flaws compared to the others. The sum of the absolute differences in the means of the pairs of facilities is not equal to zero.
 
-> ii) 
+> ii) The test statistic I will use is the sum of the absolute differences in the mean number of flaws between each pair of facilities: 
+|mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mean(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)|
 
-> iii) 
+> iii) This is a two-sided test because the null hypothesis suggests that there is no difference in the average number of flaws between the three facilities (i.e., the test statistic equals zero). The alternative hypothesis, on the other hand, suggests that there is a difference in the average number of flaws, indicating that at least one facility differs from the others. A two-sided test is appropriate because we are interested in detecting differences in either direction (i.e., whether one facility has more or fewer flaws than another).
 
-> iv) 
+> iv) code above
 
-> v) 
+> v) P-value: 0.113000
 
-> vi) 
+> vi) Based on the calculated p-value of 0.113, which is greater than the significance level of 0.05, we fail to reject the null hypothesis (H0). This means that there is no significant difference in the number of flaws between the three manufacturing facilities (Alderwood, Brentwick, and Coppergrove). Therefore, we do not have sufficient evidence to suggest that the facilities produce cable with different levels of quality.
 
 
 
