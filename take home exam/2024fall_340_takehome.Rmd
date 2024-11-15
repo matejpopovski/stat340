@@ -93,41 +93,38 @@ d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. U
 # insert code here
 
 # a) and b)
-hat_a <- max(abs(data))
-hat_a
+a_hat_unbiased <- (n + 1) / n * max(abs(data))
+a_hat_unbiased
 ```
 ```{r}
 # c)
 set.seed(123)
+n <- length(data)
 
-max_abs <- function(data) {
-  return(max(abs(data)))
+num_simulations <- 10000
+
+unbiased_estimators <- numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+  simulated_sample <- runif(n, min = -a_hat_unbiased, max = a_hat_unbiased)
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
 }
 
-# Number of bootstrap samples
-MCN <- 10000
+# Calculate the 95% confidence interval
+lower_bound <- quantile(unbiased_estimators, 0.025)
+upper_bound <- quantile(unbiased_estimators, 0.975)
 
-# Generate bootstrap samples and calculate the estimator for each
-bootstrap_estimates <- replicate(MCN, {
-  sample_data <- sample(data, length(data), replace = TRUE)
-  max_abs(sample_data)
-})
-
-# Calculate 95% confidence interval (2.5th and 97.5th percentiles)
-ci_lower <- quantile(bootstrap_estimates, 0.025)
-ci_upper <- quantile(bootstrap_estimates, 0.975)
-
-ci_lower
-ci_upper
+cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound, 2), ", ", round(upper_bound, 2), ")\n")
 
 ```
 
 
 *write discussion here*
 
-> a) Explanation: A reasonable point estimator for a_hat is the maximum of the absolute values of the sample, max(abs(X_i)), because the continuous Uniform distribution with bounds minus a and a requires all observed values to lie within the interval from minus a to a. This estimator ensures that a is large enough to encompass all the data points while being the smallest value that satisfies this condition, making it a logical and straightforward choice for estimating a.
+> a) Explanation: In the class example we have learned tha a= max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
+I chose unbiased point estimator (n+1)/n Abs{Xi} as point estimator because we have  Uniform($-a,a$) distribution with equal lover and upper bound.
 
-> c) The interval constructed by the Monte Carlo method should provide a reasonable estimate for a, though the performance may vary depending on the sample size and variability of the data. With a larger sample size, the interval would likely become more accurate. Given the sample size of 15, the interval should perform reasonably well but may have some variability. 
+> c) The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the lower bound with negative signs. I think it perform well because value of point estimator is in the interval 
 
 
 
