@@ -117,6 +117,28 @@ upper_bound <- quantile(unbiased_estimators, 0.975)
 cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound, 2), ", ", round(upper_bound, 2), ")\n")
 
 ```
+```{r}
+set.seed(123)
+
+true_a <- 3.9
+
+n <- 15
+
+num_simulations <- 10000
+
+unbiased_estimators <- numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+
+  simulated_sample <- runif(n, min = -true_a, max = true_a)
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+bias <- mean(unbiased_estimators) - true_a
+
+cat("The approximate bias of the estimator when the true value of 'a' is", true_a, "is", bias, "\n")
+```
+
 
 
 *write discussion here*
