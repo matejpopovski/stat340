@@ -173,16 +173,37 @@ e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit 
 ```{r}
 # insert code here
 
-#  ) 
+# b) 
 
+model <- lm(Murder ~ Assault, data = USArrests)
 
+summary(model)
+```
+```{r}
+# d) 
+confint(model, level = 0.95)
+
+# check
+t_critical <- qt(0.975, df = 48)
+
+lower_bound <- 0.041909 - t_critical * 0.004507
+upper_bound <- 0.041909 + t_critical * 0.004507
+c(lower_bound, upper_bound)
 
 ```
+
 
 *write discussion here*
 
 > a) Based on the scatterplot of the Assault and Murder variables, it appears that the relationship between these two variables is roughly linear, as the points tend to align along a straight line with minimal deviation. This suggests that a linear model would be reasonable for fitting the data. There are no clear signs of significant non-linear patterns or outliers that would undermine the assumptions of linear regression, making it appropriate to proceed with fitting a linear model to this dataset.
 
+> c) Yes, this result shows a significant relationship between Assault (X) and Murder (Y). The p-value for the Assault coefficient is 2.6e-12, which is much smaller than the common significance level of 0.05. Since the p-value is so small, we can reject the null hypothesis that there is no relationship between Assault and Murder. This indicates that there is a statistically significant positive relationship between the two variables. Specifically, for each unit increase in the Assault rate, the Murder rate is estimated to increase by approximately 0.041909.
 
+The p value for intercept 0.464 is quite high, indicating that the intercept is not statistically significant. This means that the intercept (the expected value of Murder when Assault is zero) is not significantly different from zero.
+The p-value for the slope 2.6e-12 is extremely low, indicating that the Assault variable is highly statistically significant. This means there is a very strong evidence to suggest a relationship between Assault rates and Murder rates.
+
+prvo gpt vtoro baba da se proveri.
+
+> d) 95% Confidance interval for the slope  (0.03284621, 0.05097104)
 
 
