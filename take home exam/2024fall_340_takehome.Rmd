@@ -192,6 +192,8 @@ c(lower_bound, upper_bound)
 
 ```
 ```{r}
+# e)
+
 #plot the line
 pp <- ggplot( model,
               aes(x=USArrests$Assault,y=USArrests$Murder));
@@ -235,6 +237,6 @@ prvo gpt vtoro baba da se proveri.
 
 > e) 
 1. Residuals vs Fitted: From the linear plot checking of the linearity assumption shows that residuals are rather randomly scattered around the fitted line. 
-2. Histogram of residuals with some longer right tail
+2. The histogram shows that the residuals are somewhat right-skewed (longer right tail), which suggests that the residuals are not perfectly normally distributed.
 3. Homosedacity  Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values 
 4. Normal Q-Q:  The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
