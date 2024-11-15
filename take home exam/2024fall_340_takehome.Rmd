@@ -269,11 +269,6 @@ plot(model)
 
 > c) Yes, this result shows a significant relationship between Assault (X) and Murder (Y). The p-value for the Assault coefficient is 2.6e-12, which is much smaller than the common significance level of 0.05. Since the p-value is so small, we can reject the null hypothesis that there is no relationship between Assault and Murder. This indicates that there is a statistically significant positive relationship between the two variables. Specifically, for each unit increase in the Assault rate, the Murder rate is estimated to increase by approximately 0.041909.
 
-The p value for intercept 0.464 is quite high, indicating that the intercept is not statistically significant. This means that the intercept (the expected value of Murder when Assault is zero) is not significantly different from zero.
-The p-value for the slope 2.6e-12 is extremely low, indicating that the Assault variable is highly statistically significant. This means there is a very strong evidence to suggest a relationship between Assault rates and Murder rates.
-
-prvo gpt vtoro baba da se proveri.
-
 > d) 95% Confidance interval for the slope  (0.03284621, 0.05097104)
 
 > e) 
