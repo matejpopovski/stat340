@@ -146,7 +146,7 @@ cat("The approximate bias of the estimator when the true value of 'a' is", true_
 > a) Explanation: In the class example we have learned tha a= max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
 I chose unbiased point estimator (n+1)/n Abs{Xi} as point estimator because we have  Uniform($-a,a$) distribution with equal lover and upper bound.
 
-> c) The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the lower bound with negative signs. I think it perform well because value of point estimator is in the interval 
+> c) The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the lower bound with negative signs. I think it perform well because value of point estimator is in the interval.
 
 
 
