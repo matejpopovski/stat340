@@ -96,7 +96,7 @@ In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100
 ```{r}
 x = USArrests$Assault
 y = USArrests$Murder
-plot(x,y)
+# plot(x,y)
 ```
 
 a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
@@ -109,6 +109,7 @@ e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit 
 
 
 ```{r}
+library(ggplot2)
 # insert code here
 # Load the dataset
 data("USArrests")
