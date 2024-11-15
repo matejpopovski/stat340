@@ -104,7 +104,6 @@ HA: At least one of the facilities has a different average number of flaws compa
 
 
 
-
 ## Q2 - Estimation
 
 Let $X_i$ be i.i.d random variables following continuous Uniform($-a,a$) for some unknown positive parameter $a$. Suppose you draw the following sample of $n=15$ observations:
