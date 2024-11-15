@@ -255,10 +255,6 @@ plot(model, which=1)
 
 plot(model, which=2)
 
-#all standard diagnostic
-par(mfrow = c(2, 2))
-plot(model)
-
 ```
 
 
