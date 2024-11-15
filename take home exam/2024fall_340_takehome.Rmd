@@ -236,7 +236,7 @@ prvo gpt vtoro baba da se proveri.
 > d) 95% Confidance interval for the slope  (0.03284621, 0.05097104)
 
 > e) 
-1. Residuals vs Fitted: From the linear plot checking of the linearity assumption shows that residuals are rather randomly scattered around the fitted line. 
+1. Residuals vs Fitted: The residuals are approximately randomly scattered around zero without a clear pattern, which suggests that the linearity assumption holds. There is no obvious curve or trend in the residuals, which is a good sign that a linear model is appropriate.
 2. The histogram shows that the residuals are somewhat right-skewed (longer right tail), which suggests that the residuals are not perfectly normally distributed.
 3. Homosedacity  Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values 
 4. Normal Q-Q:  The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
