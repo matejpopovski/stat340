@@ -134,6 +134,7 @@ d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. U
 # insert code here
 
 # a) and b)
+n <- length(data)
 a_hat_unbiased <- (n + 1) / n * max(abs(data))
 a_hat_unbiased
 
@@ -141,7 +142,6 @@ a_hat_unbiased
 ```{r}
 # c)
 set.seed(123)
-n <- length(data)
 
 num_simulations <- 10000
 
@@ -234,7 +234,7 @@ c(lower_bound, upper_bound)
 ```
 ```{r}
 # e)
-
+library(ggplot2)
 #plot the line
 pp <- ggplot( model,
               aes(x=USArrests$Assault,y=USArrests$Murder));
@@ -273,6 +273,10 @@ plot(model)
 > e) 
 1. Residuals vs Fitted: The residuals are approximately randomly scattered around zero without a clear pattern, which suggests that the linearity assumption holds. There is no obvious curve or trend in the residuals, which is a good sign that a linear model is appropriate.
 2. The histogram shows that the residuals are relatively normally distributed, with a little longer right tail.
-3. Homosedacity: Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values.
-4. Normal Q-Q: The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
-5. 
+3. Homosedacity: The plot of residuals vs fitted values shows no clear funnel-shaped pattern, suggesting that the assumption of homoscedasticity (constant variance of residuals) is mostly met. There is a slight increase in variance as fitted values increase, but it is not very pronounced, so this is not a major concern.
+4. Normal Q-Q: The points in the Q-Q plot generally follow the diagonal line, indicating that the residuals are approximately normally distributed in the center of the distribution. However, there are some deviations in the right tail, suggesting that the residuals may not be perfectly normal in that region. While this indicates a slight departure from normality, it is not a major issue unless the non-normality is severe.
+
+> Conclusion: The diagnostic plots show no major violations of the model assumptions, indicating that the linear model is a good fit for the data. Moreover, our graphs confirm the assumption from a).
+
+
+
