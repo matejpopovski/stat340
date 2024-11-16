@@ -240,8 +240,8 @@ pp <- ggplot( model,
               aes(x=USArrests$Assault,y=USArrests$Murder));
 pp <- pp +geom_point() + geom_smooth(method="lm",
                                      formula="y~x",
-                                     se=FALSE);
-pp <- pp + labs( x="Assult)",
+                                     se=TRUE);
+pp <- pp + labs( x="Assult",
                  y="Murder",
                  title="Murder and Assult" )
 pp
@@ -255,6 +255,9 @@ plot(model, which=1)
 
 plot(model, which=2)
 
+#all standard diagnostic
+par(mfrow = c(2, 2))
+plot(model)
 ```
 
 
@@ -265,10 +268,11 @@ plot(model, which=2)
 
 > c) Yes, this result shows a significant relationship between Assault (X) and Murder (Y). The p-value for the Assault coefficient is 2.6e-12, which is much smaller than the common significance level of 0.05. Since the p-value is so small, we can reject the null hypothesis that there is no relationship between Assault and Murder. This indicates that there is a statistically significant positive relationship between the two variables. Specifically, for each unit increase in the Assault rate, the Murder rate is estimated to increase by approximately 0.041909.
 
-> d) 95% Confidance interval for the slope  (0.03284621, 0.05097104)
+> d) 95% Confidance interval for the slope  (0.03284621, 0.05097104). With 95% confidence, the true slope for the relationship between Assault (x) and Murder (y) is between 0.0328 and 0.0510.
 
 > e) 
 1. Residuals vs Fitted: The residuals are approximately randomly scattered around zero without a clear pattern, which suggests that the linearity assumption holds. There is no obvious curve or trend in the residuals, which is a good sign that a linear model is appropriate.
-2. The histogram shows that the residuals are somewhat right-skewed (longer right tail), which suggests that the residuals are not perfectly normally distributed.
-3. Homosedacity  Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values 
-4. Normal Q-Q:  The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
+2. The histogram shows that the residuals are relatively normally distributed, with a little longer right tail.
+3. Homosedacity: Rather linear around horizontal line y=0. Slightly higher variance for the bigger values tend to negative values.
+4. Normal Q-Q: The points rather follow the diagonal line especially for the central part. Small deviations showing non-normality for the right tail of distribution.
+5. 
