@@ -343,12 +343,19 @@ The Normal Q-Q plot show the residuals falling along the reference line but have
 
 Homoscedasticity: Variance of the error term seems like it is not constant.
 
-To achieve some improvement I can consider: transforming the response variable or predictors, add additional or more relevant predictors, or introduce Non-linearity
+To achieve some improvement I can consider: transforming the response variable or predictors, add additional or more relevant predictors, or introduce non-linear relationship.
 
 
 ## Problem 4) Using Multiple regression to fit nonlinear data (8 points; 2 pt each)
 
 Open the dataset `multData.csv`. This data set consists of three predictor variables, simply named `X1`, `X2` and `X3`. The response variable is `Y`. In this problem you will explore how to use the multiple regression model to model nonlinear relationships.
+
+```{r}
+data <- read.csv("multData.csv")
+print("First few rows of the dataset:")
+head(data)
+```
+
 
 ### a) the first model
 
@@ -356,6 +363,27 @@ First we will explore the relationship between $Y$ and the first two predictors 
 
 $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon$$
 Interpret the coefficients of both X1 and X2. 
+
+```{r}
+# Fit multiple regression model
+model <- lm(Y ~ X1 + X2, data = data)
+
+summary(model)
+
+```
+
+> The intercept is 948.53, represents the estimated value of the dependent variable Y, when both predictros X1, X2 are equal to zero.
+
+> Coefficient of the first predictor (-12.6318): The coefficient of the first predictor indicates that for each one-unit increase in the first predictor, the predicted value of the dependent variable decreases by 12.63 units, holding the second predictor constant. The negative sign suggests an inverse relationship between the first predictor and the dependent variable. The p-value (< 2e-16) indicates that this relationship is statistically significant.
+
+> Coefficient of the second predictor (-35.1420): The coefficient of the second predictor suggests that for each one-unit increase in the second predictor, the predicted value of the dependent variable decreases by 35.14 units, holding the first predictor constant. Like the first predictor, the second predictor also has a negative relationship with the dependent variable, and this effect is statistically significant with a p-value of 3.42e-09.
+
+In aditive model 
+estimate for X1 is -12.6318, with Std 0.2439.
+estimate for X2 is -35.1420, with Std 4.8472.
+Both p values are very small 2e-16 and 3.42e-09 indicating that the effect of X1 and X2  on  Y is highly statistically significant. 
+Multiple R-squared is 0.9831 and almost the same Adjusted R-squared:  0.9824, meaning that model explains  around 98%  of variability
+
 
 
 ### b) Investigating interaction of quantitative predictors
