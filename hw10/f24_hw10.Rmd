@@ -371,6 +371,7 @@ model <- lm(Y ~ X1 + X2, data = data)
 summary(model)
 
 ```
+> In aditive model 
 
 > The intercept is 948.53, represents the estimated value of the dependent variable Y, when both predictros X1, X2 are equal to zero.
 
@@ -378,9 +379,12 @@ summary(model)
 
 > Coefficient of the second predictor (-35.1420): The coefficient of the second predictor suggests that for each one-unit increase in the second predictor, the predicted value of the dependent variable decreases by 35.14 units, holding the first predictor constant. Like the first predictor, the second predictor also has a negative relationship with the dependent variable, and this effect is statistically significant with a p-value of 3.42e-09.
 
-In aditive model 
+
 estimate for X1 is -12.6318, with Std 0.2439.
 estimate for X2 is -35.1420, with Std 4.8472.
+
+Both coefficients are negative indicated that for one unit increase in the predictors X1 and X2, the predicted value of dependent variable will decrease by 12.6318, 35.1420 respectively, holding the other predictor constant.
+
 Both p values are very small 2e-16 and 3.42e-09 indicating that the effect of X1 and X2  on  Y is highly statistically significant. 
 Multiple R-squared is 0.9831 and almost the same Adjusted R-squared:  0.9824, meaning that model explains  around 98%  of variability
 
