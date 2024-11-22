@@ -208,7 +208,7 @@ legend("topright", legend = c("Male", "Female"), col = c("blue", "pink"), pch = 
 
 ```
 
-Female cats are with lower Body weight (Bwt) range than male cats and smaller estimate. This means that for each unit increase in body weight there will be lower increase of the heart weight (Hwt) comparing with male cats. But also for lower Bwt, fimale cats have bigger Heart Weight.
+Female cats are with lower Body weight range than male cats and they have smaller estimate (slope). This means that for each unit increase in body weight for femalse cats, there will be lower increase of the heart weight (Hwt) comparing with male cats. 
 
 
 ### d) adding `Sex` and an interaction
@@ -223,6 +223,18 @@ In particular, note the coefficients of `Sex` and the interaction between `Bwt` 
 Are both of these coefficients statistically significantly different from zero?
 How do you interpret the interaction term?
 
+```{r}
+# Fit the linear regression model with an interaction term between Bwt and Sex
+lm.cats <- lm(Hwt ~ Bwt * Sex, data = cats)
+
+# View the summary of the model to inspect coefficients
+summary(lm.cats)
+
+```
+
+> Both the coefficient for SexM (male cats) and the interaction term between Bwt and Sex are statistically significant at the 5% level, with p-values of 0.045 and 0.047, respectively. The coefficient for SexM indicates that male cats have a heart weight that is, on average, 4.1654 grams less than female cats, after adjusting for body weight. The interaction term (Bwt:SexM) suggests that the relationship between body weight (Bwt) and heart weight is different for male and female cats. Specifically, for male cats, the effect of body weight on heart weight is 1.6763 grams more per kilogram of body weight than for female cats. This implies that while both male and female cats show a positive relationship between body weight and heart weight, the effect is stronger in male cats.
+
+> All three predictors are now significant.
 
 
 ## Problem 3) Quantitative and Categorical Predictors (8 points)
