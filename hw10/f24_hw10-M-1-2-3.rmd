@@ -84,8 +84,10 @@ data(mtcars)
 lm.mtcars <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 
 # Summary of the model
-summary(lm.mtcars)
+#summary(lm.mtcars)
+plot(lm.mtcars,ask=F,which=1:2)
 ```
+
 ```{r}
 data(mtcars)
 
@@ -93,7 +95,8 @@ data(mtcars)
 lm.mtcars <- lm(mpg ~ wt + hp + drat, data = mtcars)
 
 # Summary of the model
-summary(lm.mtcars)
+#summary(lm.mtcars)
+plot(lm.mtcars,ask=F,which=1:2)
 ```
 
 
