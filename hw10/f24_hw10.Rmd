@@ -231,10 +231,11 @@ lm.cats <- lm(Hwt ~ Bwt * Sex, data = cats)
 summary(lm.cats)
 
 ```
+> R assigns Sex a dummy encoding by treating the female category as the reference group (with a coefficient of zero) and encoding the male category as SexM, which reflects the difference in heart weight for male cats compared to female cats.
 
 > Both the coefficient for SexM (male cats) and the interaction term between Bwt and Sex are statistically significant at the 5% level, with p-values of 0.045 and 0.047, respectively. The coefficient for SexM indicates that male cats have a heart weight that is, on average, 4.1654 grams less than female cats, after adjusting for body weight. The interaction term (Bwt:SexM) suggests that the relationship between body weight (Bwt) and heart weight is different for male and female cats. Specifically, for male cats, the effect of body weight on heart weight is 1.6763 grams more per kilogram of body weight than for female cats. This implies that while both male and female cats show a positive relationship between body weight and heart weight, the effect is stronger in male cats.
 
-> All three predictors are now significant.
+> All three predictors are significant.
 
 
 ## Problem 3) Quantitative and Categorical Predictors (8 points)
