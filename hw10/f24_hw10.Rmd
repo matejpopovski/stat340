@@ -142,6 +142,26 @@ Ignore the `Sex` variable in this plot.
 
 Briefly describe what you see. Is there a clear trend in the data?
 
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Create a scatterplot of Bwt vs Hwt
+plot(cats$Bwt, cats$Hwt,
+     xlab = "Body Weight (kg)",
+     ylab = "Heart Weight (g)",
+     main = "Scatterplot of Body Weight vs Heart Weight",
+     pch = 19, col = "blue")
+
+# Add a trend line
+abline(lm(Hwt ~ Bwt, data = cats), col = "red")
+
+```
+
+> A trend showing the linear relationship between the two attributes.
 
 ### b) fitting a linear model
 
@@ -151,6 +171,16 @@ Examine the coefficients of your fitted model.
 What is the coefficient for the `Bwt` variable?
 Interpret this coefficient-- a unit change in body weight yields how much change in heart weight?
 
+```{r}
+# Fit a linear model predicting Hwt from Bwt
+lm.cats <- lm(Hwt ~ Bwt, data = cats)
+
+# View the summary of the fitted model
+summary(lm.cats)
+
+```
+
+> Estimated Bwt coefficient  is 4.0341. For each unit increase in body weight (Bwt), the heart weight (Hwt) increases by approximately 4.034 grams, on average.
 
 ### c) back to plotting
 
@@ -158,6 +188,28 @@ Create the same plot from Part a above, but this time color the points in the sc
 You may use either `ggplot2` or the built-in R plotting tools, though I would recommend the former, for this.
 
 You should see a clear pattern. Describe it. A sentence or two is fine here.
+
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Create a scatterplot of Bwt vs Hwt with points colored by Sex
+plot(cats$Bwt, cats$Hwt,
+     xlab = "Body Weight (kg)",
+     ylab = "Heart Weight (g)",
+     main = "Scatterplot of Body Weight vs Heart Weight",
+     pch = 19, col = ifelse(cats$Sex == "M", "blue", "pink"))
+
+# Add a legend
+legend("topright", legend = c("Male", "Female"), col = c("blue", "pink"), pch = 19)
+
+```
+
+Female cats are with lower Body weight (Bwt) range than male cats and smaller estimate. This means that for each unit increase in body weight there will be lower increase of the heart weight (Hwt) comparing with male cats. But also for lower Bwt, fimale cats have bigger Heart Weight.
+
 
 ### d) adding `Sex` and an interaction
 
