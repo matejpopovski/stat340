@@ -89,6 +89,8 @@ What is the Residual Standard Error (RSE) for this model? How many degrees of fr
 
 > The model has 28 degrees of freedom, which corresponds to the number of observations (32) minus the number of fitted parameters (3 predictors plus the intercept, making 4 parameters). Degrees of freedom reflect the amount of information available for estimating variability.
 
+Residual standard error (RSE) for this model is 2.561. Degrees of freedom is 28  ( 32-(3+1))=28.  3 predictors + intercept.
+
 What is the value of $R^2$ for this model? (__Hint:__ look at the output of `summary`) Give an interpretation of this value.
 
 ### e) Adjusted $R^2$
