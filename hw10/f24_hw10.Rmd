@@ -122,9 +122,7 @@ What is the adjusted $R^2$ of this model and how does this differ from the usual
 
 > n is number of observations and k is number of predictors.
 
-> In our case adjusted R-squared = 0.8171 suggests that predictors hp and qsec do not contribute to explanation of variance. 
-
-The adjusted R-squared, on the other hand, accounts for the number of predictors in the model. It adjusts for the fact that adding more predictors can artificially inflate the R-squared value, even if those predictors do not add significant explanatory power. The adjusted R-squared penalizes the inclusion of unnecessary variables.
+> In our case adjusted R-squared = 0.8171 suggests that predictors hp and qsec do not contribute to explanation of variance. The adjusted R-squared penalizes the inclusion of unnecessary variables.
 
 Thus, the adjusted R-squared (0.8171) is slightly lower than the regular R-squared (0.8348), suggesting that after adjusting for the number of predictors, the model explains about 81.71% of the variance in mpg. This makes the adjusted R-squared a more reliable measure of the model’s goodness of fit, especially when comparing models with different numbers of predictors.
 
