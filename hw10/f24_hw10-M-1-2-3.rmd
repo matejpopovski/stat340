@@ -1,0 +1,470 @@
+---
+title: "Homework 10"
+author: "your name here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## Problem 1) More regression with `mtcars` (6 points, 1pt each)
+
+In lecture, we worked briefly with the `mtcars` data set.
+Let's get more regression practice by working with it some more.
+
+### a) background
+
+Run `?mtcars` in the console (please __do not__ add it to this `Rmd` file) and briefly read the help page.
+Specifically, take note of the following:
+
+1. What is the source of this data?
+
+Data was extracted from the 1974 Motor Trend US magazine and comprises fuel consumption and 10 aspects of automobile design and performance for 32 cars. 
+
+2. What is this data set measuring (i.e., what was the response variable in the original study, at least based on the brief description in the R documentation)?
+
+The mtcars dataset is measuring various characteristics of automobiles to analyze their performance and design aspects. The response variable in the original study was miles per gallon (mpg).
+
+The primary goal of the dataset is to examine the relationship between the fuel efficiency of cars (measured by mpg) and other explanatory variables such as the number of cylinders, horsepower, weight, and other engine and design characteristics. This allows researchers and analysts to understand how these factors influence fuel consumption and overall vehicle performance.
+
+
+```{r}
+# NOT RUN {
+require(graphics)
+pairs(mtcars, main = "mtcars data", gap = 1/4)
+coplot(mpg ~ disp | as.factor(cyl), data = mtcars,
+       panel = panel.smooth, rows = 1)
+## possibly more meaningful, e.g., for summary() or bivariate plots:
+mtcars2 <- within(mtcars, {
+   vs <- factor(vs, labels = c("V", "S"))
+   am <- factor(am, labels = c("automatic", "manual"))
+   cyl  <- ordered(cyl)
+   gear <- ordered(gear)
+   carb <- ordered(carb)
+})
+summary(mtcars2)
+# }
+```
+
+3. What predictors are available and what do they mean?
+
+You may want to also run `head(mtcars, 10)` or `View(mtcars)` to inspect the data frame briefly before moving on.
+
+```{r}
+head(mtcars, 10)
+```
+
+mpg: Miles/(US) gallon (numeric)– A measure of fuel efficiency.
+cyl: Number of cylinders in the car (e.g., 4, 6, or 8) (numeric).
+disp: Displacement (in cubic inches) – Indicates the engine's size, the total volume of all the car's engine cylinders (numeric).
+hp: Gross horsepower – A measure of the engine's power (numeric).
+drat: Rear axle ratio – Affects the car’s acceleration and fuel economy (numeric).
+wt: Weight (in 1000 lbs - pounds) – The weight of the car (numeric).
+qsec: 1/4 mile time – Time (sec) taken to cover a quarter mile, indicating acceleration (numeric).
+vs: Engine (0 = V-shaped, 1 = straight) – The type of engine configuration (binary 0,1).
+am: Transmission (binary 0 = automatic, 1 = manual) – The type of transmission .
+gear: Number of forward gears – Indicates the number of gears in the car (numeric).
+carb: Number of carburetors – Indicates the number of carburetors in the engine (numeric).
+
+### b) Fitting a model
+
+Use `lm` to run a regression of `mpg` on a few predictors in the data frame (choose two or three that you think would make a good model -- don't use all ten; we'll talk about why in later lectures). Save your fitted model as an object called `lm.mtcars`.
+Make sure to include `data = mtcars` as a keyword argument to `lm` so that R knows what data frame to use.
+
+Briefly inspect the residuals plot by running `plot(lm.mtcars,ask=F,which=1:2)`.
+What do you observe, and what does it mean?
+
+```{r}
+# Load the mtcars dataset
+data(mtcars)
+
+# Fit the linear model with mpg as the response variable and wt, hp, qsec as predictors
+lm.mtcars <- lm(mpg ~ wt + hp + qsec, data = mtcars)
+
+# Summary of the model
+summary(lm.mtcars)
+```
+```{r}
+data(mtcars)
+
+# Fit the linear model with mpg as the response variable and wt, hp, qsec as predictors
+lm.mtcars <- lm(mpg ~ wt + hp + drat, data = mtcars)
+
+# Summary of the model
+summary(lm.mtcars)
+```
+
+
+### c) Interpreting the model
+
+View the summary of your model by uncommenting and running the code below.
+
+```{r}
+summary(lm.mtcars)
+
+```
+
+Pick one of your predictors and
+I pik predictors wt (Weight), hp (Gross horsepower) and drat (Rear axle ratio)
+For wt estimate is -3.227954, Std.Error 0.796398 and p-value 0.000364 
+
+Which Coefficients are statistically significantly different from zero? How do you know?
+Among 3 predictors wt and hp are significantly different from zero according their p-values that are less on the level of alpha=0.05.
+
+### d) Interpreting residuals
+
+What is the Residual Standard Error (RSE) for this model? How many degrees of freedom does it have?
+
+Residual standard error (RSE) for this model is 2.561. Degrees of freedom is 28  ( 32-(3+1))=28.  3 predictors + intercept.
+
+What is the value of $R^2$ for this model? (__Hint:__ look at the output of `summary`) Give an interpretation of this value.
+Multiple R-squared is 0.8369
+
+The multiple R-squared value close to 1 suggest a good fit. Value of 0.8369 indicates that approximately 83.69% of the variability in the response variable mpg (miles per gallon) is explained by the predictors wt, hp and drat. This means the model fits the data quite well.
+It always increases when more predictors are added to the model, regardless of whether those predictors are relevant. So it can be optimistic especially with many predictors
+
+### e) Adjusted $R^2$
+
+Briefly read about the adjusted $R^2$ [here](https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/adjusted-r2/).
+What is the adjusted $R^2$ of this model and how does this differ from the usual $R^2$ value? (__Hint:__ again, look at the output of `summary`).
+The adjusted R^2 value is a modified version of the regular R^2 
+value that accounts for the number of predictors in a model. It includes a penalty for adding additional predictors to the model. It increases only if the new predictor improves the model more than would be expected by chance and decreases when the predictor does not add value, giving more realistic estimate of goodness-of-fit.
+
+R^2 = 1 - ((1-R^2)(N-1)/(n-k-1))
+
+n is number of observations and k is number of predictors.
+
+### f) CIs for coefficients
+
+Read the documentation for the `confint` function, and use it to generate $95\%$ confidence intervals for the coefficients of your model.
+Give an interpretation of these confidence intervals.
+
+```{r}
+confint(lm.mtcars, level = 0.95)
+```
+The confidence intervals provide valuable information about the precision and significance of the model coefficients. Narrower intervals indicate more precise estimates, while intervals that do not include zero indicate statistically significant predictors.
+CI for predictors wt and hp do not include  zero and are negative. This means that both are (also by p-values) significantly associated with mpg, and the relationship is negative. As weight and horse power increases, mpg decreases.
+
+## Problem 2) the `cats` data set (8 points; 2pt each)
+
+The `cats` data set, included in the `MASS` library, contains data recorded from 144 cats.
+Each row of the data set contains the body weight (`Bwt`, in kgs), heart weight (`Hwt`, in grams) and the sex (`Sex`, levels `'F'` and `'M'`) for one of the cats in the data set.
+
+```{r}
+library(MASS)
+head(cats)
+```
+
+### a) plotting the data
+
+Create a scatter plot showing heart weight on the y-axis and body weight on the x-axis.
+Ignore the `Sex` variable in this plot.
+
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Create a scatterplot of Bwt vs Hwt
+plot(cats$Bwt, cats$Hwt,
+     xlab = "Body Weight (kg)",
+     ylab = "Heart Weight (g)",
+     main = "Scatterplot of Body Weight vs Heart Weight",
+     pch = 19, col = "blue")
+
+# Add a trend line
+abline(lm(Hwt ~ Bwt, data = cats), col = "red")
+
+```
+
+
+Briefly describe what you see. Is there a clear trend in the data?
+
+A trend line showing the linear relationship between the two attributes.
+
+### b) fitting a linear model
+
+```{r}
+
+# Fit the linear model
+lm.cats <- lm(Hwt ~ Bwt, data = cats)
+
+# Examine the coefficients of the model
+summary(lm.cats)
+
+```
+
+
+Fit a linear regression model to predict cat heart weight from cat body weight (and using an intercept term, of course).
+
+Examine the coefficients of your fitted model.
+What is the coefficient for the `Bwt` variable?
+Interpret this coefficient-- a unit change in body weight yields how much change in heart weight?
+
+Estimated Bwt coefficient  is 4.0341. For each unit increase in body weight (Bwt), the heart weight (Hwt) increases by approximately 4.034 grams, on average.
+
+### c) back to plotting
+
+Create the same plot from Part a above, but this time color the points in the scatter plot according to the `Sex` variable.
+You may use either `ggplot2` or the built-in R plotting tools, though I would recommend the former, for this.
+
+You should see a clear pattern. Describe it. A sentence or two is fine here.
+
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Create a scatterplot of Bwt vs Hwt with points colored by Sex
+plot(cats$Bwt, cats$Hwt,
+     xlab = "Body Weight (kg)",
+     ylab = "Heart Weight (g)",
+     main = "Scatterplot of Body Weight vs Heart Weight",
+     pch = 19, col = ifelse(cats$Sex == "M", "blue", "pink"))
+
+# Add a legend
+legend("topright", legend = c("Male", "Female"), col = c("blue", "pink"), pch = 19)
+
+```
+Female cats are with lower Body weight (Bwt) range than male cats and smaller estimate. This means that for each unit increase in body weight there will be lower increase of the heart weight (Hwt) comparing with male cats. But also for lower Bwt, fimale cats have bigger Heart Weight.
+
+### d) adding `Sex` and an interaction
+
+From looking at the data, it should be clear that the `Sex` variable has explanatory power in predicting heart weight, but it is also very correlated with body weight.
+
+Fit a new linear regression model, still predicting heart weight, but this time including both body weight and sex as predictors *and* an interaction term between body weight and sex.
+Take note of how R assigns `Sex` a dummy encoding.
+
+Examine the outputs of your model.
+In particular, note the coefficients of `Sex` and the interaction between `Bwt` and `Sex`.
+Are both of these coefficients statistically significantly different from zero?
+How do you interpret the interaction term?
+
+First I will examine separate regression lines for male and female cats, to confirm my conclusion looking at scatter plot
+
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Split the data by sex
+cats_male <- subset(cats, Sex == "M")
+cats_female <- subset(cats, Sex == "F")
+
+# Fit linear models for male and female cats
+lm_male <- lm(Hwt ~ Bwt, data = cats_male)
+lm_female <- lm(Hwt ~ Bwt, data = cats_female)
+
+# Summarize the models
+summary(lm_male)
+summary(lm_female)
+
+```
+Estimates values confirm my conclusion from point c.  Also intercept 2.9813 female cats comparing with -1.1841 for male cats means that female hart weights are higher than male in the lower ranges of BWT.
+
+
+```{r}
+# Create a scatterplot of Bwt vs Hwt with points colored by Sex
+plot(cats$Bwt, cats$Hwt,
+     xlab = "Body Weight (kg)",
+     ylab = "Heart Weight (g)",
+     main = "Scatterplot of Body Weight vs Heart Weight",
+     pch = 19, col = ifelse(cats$Sex == "M", "blue", "pink"))
+
+# Add regression lines
+abline(lm_male, col = "blue")
+abline(lm_female, col = "pink")
+
+# Add a legend
+legend("topright", legend = c("Male", "Female"), col = c("blue", "pink"), pch = 19)
+
+```
+Looking at 2 estimators mail cats have Bwt 4.3127  and fimail cats 2.6364, Both p-values are significant 
+The relationship between body weight and heart weight appears stronger for male cats than for female cats, as indicated by a higher slope coefficient.This suggests that heart weight in male cats increases more significantly with body weight compared to female cats.
+
+
+Following model has 2 predictores  Bwt and Sex. Only Bwt predictor shows significance,
+
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Convert Sex to a factor to treat it as a categorical variable
+cats$Sex <- factor(cats$Sex)
+
+# Fit the linear model with Hwt as the response variable and Bwt and Sex as predictors
+lm.cats <- lm(Hwt ~ Bwt + Sex, data = cats)
+
+# Summary of the model
+summary(lm.cats)
+
+```
+Predictor Sex is categorical variable and R threats it as a dummy 
+variable. It has two levels M (Male) and F (Female). R chose one level as reference level and encode them as binary variable {0,1}
+
+
+Model that includes also mixed predictor  BWT*sex
+```{r}
+# Load the MASS library
+library(MASS)
+
+# Extract the cats dataset
+data(cats)
+
+# Convert Sex to a factor to treat it as a categorical variable
+cats$Sex <- factor(cats$Sex)
+
+# Fit the linear model with Hwt as the response variable, and Bwt, Sex, and their interaction as predictors
+lm.cats.interaction <- lm(Hwt ~ Bwt+Sex+Bwt * Sex, data = cats)
+
+# Summary of the model
+summary(lm.cats.interaction)
+```
+All three predictors are now significant.
+```{r}
+confint(lm.cats, level = 0.95)
+```
+
+
+
+## Problem 3) Quantitative and Categorical Predictors (8 points)
+
+(This problem is based on a plot from [The behavior of different clays subjected to a fast-drying cycle for traditional ceramic manufacturing](https://doi.org/10.1016/j.jksues.2022.05.003), but the data has been simulated)
+
+An experiment was conducted on three types of **material**: Plastic clay, Sandy clay and claystone. The **plastic deformation** (\%) was measured at various **moisture** (\%) levels. Data is found in the `clay_sample.csv` file. Plastic deformation is denoted `pd` in the dataset.
+
+### a) Fit the model (4 points)
+Create a linear model model predicting plastic deformation from moisture. Include material and the interaction between material and moisture. 
+
+a.i. Output the standard model summary using `summary()`. 
+  
+a.ii. Interpret the $R^2$$ statistic value in one sentence.
+
+Multiple R-squared is  0.8776. it represents the proportion of variability in plastic deformation (pd) that is explained by the independent variables (moisture, material, and their interaction) in the model.
+
+a.iii. Which material represents the baseline?
+considering summary results material "claystone" is baseline.
+The coefficients for "sandy clay" and "plastic clay" are compared to the baseline ("claystone"). These coefficients indicate the difference in plastic deformation (pd) when the material is "sandy clay" or "plastic clay" compared to "claystone".
+
+a.iv. Explain how the residual standard error degrees of freedom is related to sample size and the model size.
+   degrees of freedom = 64   calculated by n - (p+1)= 70 - (5+1)
+   n=70 rows, 5 parameters + 1 intercept
+
+```{r}
+# Load necessary library
+library(readr)
+
+# Read the CSV file
+clay_sample <- read_csv("clay_sample.csv", show_col_types = FALSE)
+clay_sample
+
+# Convert material to a factor to treat it as a categorical variable
+clay_sample$material <- factor(clay_sample$material)
+#clay_sample$material
+
+# Check the levels of the material factor levels(clay_sample$material
+levels(clay_sample$material)
+       
+# Fit the linear model with pd as the response variable, and moisture, material, and their interaction as predictors
+lm.clay <- lm(pd ~   moisture * material, data = clay_sample)
+
+# Output the standard model summary
+summary(lm.clay)
+
+```
+
+
+### b) Interpret coefficient 1 (1 pt)
+Provide an interpretation for the value of the coefficient of moisture, and comment on its significance.
+
+Moisture estimate is 7.7928, Stad. error is 0.7454 and p= 1.77e-15. 
+The coefficient for moisture represents the effect of moisture on pd for the baseline category.
+For each unit increase in moisture, the plastic deformation (pd) increase by 7.7928 units, holding all other variables fixed. 
+The p-value (1.07e-12) is very small, indicating that the effect of moisture on plastic deformation is highly statistically significant.
+
+### c) Interpret coefficient 2 (1 pt)
+Provide an interpretation for the value of the coefficient of one of the materials, and comment on its significance.
+
+Material plastic clay estimate is 23.9557 Std. Eror is 13.2986 and p-value 0.076355.
+Plastic Clay has a 23.9557 unit bigger plastic deformation compared to the baseline material (Claystone), holding all other variables fixed.
+The p-value for Material plastic clay estimate 0.076355 is greater than 0.05, indicating that the difference in plastic deformation between Plastic Clay and Claystone is not statistically significant.
+
+### d) Interpret coefficient 3 (1 pt)
+Provide an interpretation for the value of the coefficient of one of the interaction terms, and comment on its significance.
+
+Interactive term moisture:materialplastic clay estimate is -3.5950 Std. error 0.7907  and p-value 2.48e-05. Its negative value means that effect of moister on plastic deformation is -3.5950 units lower for Plastic Clay less than for Claystone.
+The p-value (1.07e-12) is very small, indicating that its interaction effect on plastic deformation is highly statistically significant.
+
+
+### e) Assess assumptions (1 pt)
+Finally display the first two diagnostic plots using `plot(<YOUR MODEL>, which=1:2)` and discuss three of the assumptions of the linear model: normality of error term, linearity and the relationship, and constant variance of the error term. You do not have to do any more modeling after this step, but comment about what you *might* want to do to improve the model.
+
+```{r}
+# Display diagnostic plots 
+#par(mfrow = c(1, 2)) 
+plot(lm.clay, which = 1:2)
+
+```
+
+Diagnostic Plots and Assumptions
+Linearity:
+Our assumption is the relationship between the predictors and the response variable is linear.
+The Residuals vs Fitted plot do not show a random scatter around the horizontal line (zero residuals) especially for the lower values of fited values. 
+
+Normality of Errors:
+Our assumption is that residuals (errors) are normally distributed.
+The Normal Q-Q plot show the residuals falling along the reference line but have deviations for lower and bigger values.
+
+Homoscedasticity: Variance of the error term is not constant.
+
+To achieve some improvement I can consider: transforming the response variable or predictors, add additional or more relevant predictors.
+explore other potential interaction terms.
+
+
+## Problem 4) Using Multiple regression to fit nonlinear data (8 points; 2 pt each)
+
+Open the dataset `multData.csv`. This data set consists of three predictor variables, simply named `X1`, `X2` and `X3`. The response variable is `Y`. In this problem you will explore how to use the multiple regression model to model nonlinear relationships.
+
+### a) the first model
+
+First we will explore the relationship between $Y$ and the first two predictors $X1$ and $X2$. Fit the linear model
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon$$
+Interpret the coefficients of both X1 and X2. 
+
+
+### b) Investigating interaction of quantitative predictors
+
+Next introduce an interaction term to the model
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2 + \epsilon$$
+
+Fit the model and view the summary output. Has this improved the model fit? Did anything surprising happen to the coefficients? Try to explain what happened.
+
+
+
+
+### c) Introducing the last predictor
+
+Next fit a model that introduces the `X3` variable. 
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2  + \beta_4 X_3 \epsilon$$
+Has the model fit improved? In what way (Justify your answer)? 
+
+
+### d) Considering higher order terms
+
+Finally explore higher order terms for the X3 variable: Introduce $X3^2$, $X3^3$ etc and determine if any of these higher order terms are justified in the model. Explain your reasoning and present your final model. Look at the diagnostic plots and discuss whether the assumptions of the multiple regression model seem to be justified.
+
+
+

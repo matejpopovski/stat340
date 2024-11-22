@@ -1,0 +1,181 @@
+---
+title: "Homework 10"
+author: "your name here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,message=F,warning=F,fig.align='center')
+library(tidyverse)
+```
+
+## Problem 1) More regression with `mtcars` (6 points, 1pt each)
+
+In lecture, we worked briefly with the `mtcars` data set.
+Let's get more regression practice by working with it some more.
+
+### a) background
+
+Run `?mtcars` in the console (please __do not__ add it to this `Rmd` file) and briefly read the help page.
+Specifically, take note of the following:
+
+1. What is the source of this data?
+2. What is this data set measuring (i.e., what was the response variable in the original study, at least based on the brief description in the R documentation)?
+3. What predictors are available and what do they mean?
+
+You may want to also run `head(mtcars, 10)` or `View(mtcars)` to inspect the data frame briefly before moving on.
+
+### b) Fitting a model
+
+Use `lm` to run a regression of `mpg` on a few predictors in the data frame (choose two or three that you think would make a good model -- don't use all ten; we'll talk about why in later lectures). Save your fitted model as an object called `lm.mtcars`.
+Make sure to include `data = mtcars` as a keyword argument to `lm` so that R knows what data frame to use.
+
+Briefly inspect the residuals plot by running `plot(lm.mtcars,ask=F,which=1:2)`.
+What do you observe, and what does it mean?
+
+### c) Interpreting the model
+
+View the summary of your model by uncommenting and running the code below.
+```{r}
+# summary(lm.mtcars)
+```
+
+Pick one of your predictors and give an interpretation of the estimate and standard error for its coefficient.
+Be careful in your wording of the interpretation.
+
+Which coefficients are statistically significantly different from zero? How do you know?
+
+### d) Interpreting residuals
+
+What is the Residual Standard Error (RSE) for this model? How many degrees of freedom does it have?
+
+What is the value of $R^2$ for this model? (__Hint:__ look at the output of `summary`) Give an interpretation of this value.
+
+### e) Adjusted $R^2$
+
+Briefly read about the adjusted $R^2$ [here](https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/adjusted-r2/).
+What is the adjusted $R^2$ of this model and how does this differ from the usual $R^2$ value? (__Hint:__ again, look at the output of `summary`).
+
+
+### f) CIs for coefficients
+
+Read the documentation for the `confint` function, and use it to generate $95\%$ confidence intervals for the coefficients of your model.
+Give an interpretation of these confidence intervals.
+
+
+
+## Problem 2) the `cats` data set (8 points; 2pt each)
+
+The `cats` data set, included in the `MASS` library, contains data recorded from 144 cats.
+Each row of the data set contains the body weight (`Bwt`, in kgs), heart weight (`Hwt`, in grams) and the sex (`Sex`, levels `'F'` and `'M'`) for one of the cats in the data set.
+
+```{r}
+library(MASS)
+head(cats)
+```
+
+### a) plotting the data
+
+Create a scatter plot showing heart weight on the y-axis and body weight on the x-axis.
+Ignore the `Sex` variable in this plot.
+
+Briefly describe what you see. Is there a clear trend in the data?
+
+
+### b) fitting a linear model
+
+Fit a linear regression model to predict cat heart weight from cat body weight (and using an intercept term, of course).
+
+Examine the coefficients of your fitted model.
+What is the coefficient for the `Bwt` variable?
+Interpret this coefficient-- a unit change in body weight yields how much change in heart weight?
+
+
+### c) back to plotting
+
+Create the same plot from Part a above, but this time color the points in the scatter plot according to the `Sex` variable.
+You may use either `ggplot2` or the built-in R plotting tools, though I would recommend the former, for this.
+
+You should see a clear pattern. Describe it. A sentence or two is fine here.
+
+### d) adding `Sex` and an interaction
+
+From looking at the data, it should be clear that the `Sex` variable has explanatory power in predicting heart weight, but it is also very correlated with body weight.
+
+Fit a new linear regression model, still predicting heart weight, but this time including both body weight and sex as predictors *and* an interaction term between body weight and sex.
+Take note of how R assigns `Sex` a dummy encoding.
+
+Examine the outputs of your model.
+In particular, note the coefficients of `Sex` and the interaction between `Bwt` and `Sex`.
+Are both of these coefficients statistically significantly different from zero?
+How do you interpret the interaction term?
+
+
+
+## Problem 3) Quantitative and Categorical Predictors (8 points)
+
+(This problem is based on a plot from [The behavior of different clays subjected to a fast-drying cycle for traditional ceramic manufacturing](https://doi.org/10.1016/j.jksues.2022.05.003), but the data has been simulated)
+
+An experiment was conducted on three types of **material**: Plastic clay, Sandy clay and claystone. The **plastic deformation** (\%) was measured at various **moisture** (\%) levels. Data is found in the `clay_sample.csv` file. Plastic deformation is denoted `pd` in the dataset.
+
+### a) Fit the model (4 points)
+Create a linear model model predicting plastic deformation from moisture. Include material and the interaction between material and moisture. 
+
+a.i. Output the standard model summary using `summary()`. 
+  
+a.ii. Interpret the $R^2$$ statistic value in one sentence.
+
+a.iii. Which material represents the baseline?
+
+a.iv. Explain how the residual standard error degrees of freedom is related to sample size and the model size.
+
+### b) Interpret coefficient 1 (1 pt)
+Provide an interpretation for the value of the coefficient of moisture, and comment on its significance.
+
+### c) Interpret coefficient 2 (1 pt)
+Provide an interpretation for the value of the coefficient of one of the materials, and comment on its significance.
+
+### d) Interpret coefficient 3 (1 pt)
+Provide an interpretation for the value of the coefficient of one of the interaction terms, and comment on its significance.
+
+### e) Assess assumptions (1 pt)
+Finally display the first two diagnostic plots using `plot(<YOUR MODEL>, which=1:2)` and discuss three of the assumptions of the linear model: normality of error term, linearity and the relationship, and constant variance of the error term. You do not have to do any more modeling after this step, but comment about what you *might* want to do to improve the model.
+
+
+
+## Problem 4) Using Multiple regression to fit nonlinear data (8 points; 2 pt each)
+
+Open the dataset `multData.csv`. This data set consists of three predictor variables, simply named `X1`, `X2` and `X3`. The response variable is `Y`. In this problem you will explore how to use the multiple regression model to model nonlinear relationships.
+
+### a) the first model
+
+First we will explore the relationship between $Y$ and the first two predictors $X1$ and $X2$. Fit the linear model
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon$$
+Interpret the coefficients of both X1 and X2. 
+
+
+### b) Investigating interaction of quantitative predictors
+
+Next introduce an interaction term to the model
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2 + \epsilon$$
+
+Fit the model and view the summary output. Has this improved the model fit? Did anything surprising happen to the coefficients? Try to explain what happened.
+
+
+
+
+### c) Introducing the last predictor
+
+Next fit a model that introduces the `X3` variable. 
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2  + \beta_4 X_3 \epsilon$$
+Has the model fit improved? In what way (Justify your answer)? 
+
+
+### d) Considering higher order terms
+
+Finally explore higher order terms for the X3 variable: Introduce $X3^2$, $X3^3$ etc and determine if any of these higher order terms are justified in the model. Explain your reasoning and present your final model. Look at the diagnostic plots and discuss whether the assumptions of the multiple regression model seem to be justified.
+
+
+
