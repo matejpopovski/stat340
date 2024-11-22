@@ -51,12 +51,16 @@ plot(lm.mtcars, ask = FALSE, which = 1:2)
 
 ```
 
+> The residuals show randomness in the 'residuals vs fitted' plot and align with the line in the Q-Q plot, the model assumptions are likely valid. In the 'residuals vs fitted' plot for small and big fitted values, I can see that residuals are more positive than negative. Same is shown in the Q-Q plot.
+
+
 ```{r}
 lm.mtcars <- lm(mpg ~ wt + hp + drat, data = mtcars)
 
 plot(lm.mtcars,ask=F,which=1:2)
 ```
 
+> This is another example, where we have slightly worse fitting in the left and right tails.
 
 ### c) Interpreting the model
 
@@ -70,9 +74,9 @@ Be careful in your wording of the interpretation.
 
 Which coefficients are statistically significantly different from zero? How do you know?
 
-> The coefficient for wt (weight) in the regression model has an estimate of -4.35880. This indicates that for every additional 1000 lbs of car weight, the expected miles per gallon (mpg) decreases by approximately 4.36 units, assuming the other predictors (hp and qsec) remain constant. The associated standard error for this coefficient is 0.75270, which measures the variability in the estimate. A smaller standard error, as seen here, suggests greater precision in the estimate and increases confidence in the effect of weight on mpg.
+> The coefficient for wt (weight) in the regression model has an estimate of -4.35880. This indicates that for every additional 1000 lbs of car weight, the expected miles per gallon (mpg) decreases by approximately 4.36 units, assuming the other predictors (hp and qsec) remain constant. The associated standard error for this coefficient is 0.75270, which measures the variability in the estimate. A smaller standard error, suggests greater precision in the estimate and increases confidence in the effect of weight on mpg.
 
-> To evaluate statistical significance, we consider the p-values (Pr(>|t|)) for each predictor. A coefficient is statistically significant if its p-value is less than 0.05, meaning there is strong evidence that the predictor has a meaningful effect on the response variable (mpg). In this model, the p-value for wt is 3.22e-06, which is well below 0.05, making it statistically significant. On the other hand, the p-values for hp (0.24418) and qsec (0.25463) are both above 0.05, indicating that these predictors are not statistically significantly different from zero and may not have a meaningful impact on mpg in this model.
+> In this model, the p-value for wt is 3.22e-06, which is well below 0.05, making it statistically significant. On the other hand, the p-values for hp (0.24418) and qsec (0.25463) are both above 0.05, indicating that these predictors are not statistically significantly different from zero and may not have a meaningful impact on mpg in this model.
 
 > In summary, among the three predictors, only wt shows a statistically significant relationship with mpg, providing strong evidence that car weight is an important factor in determining fuel efficiency. The lack of significance for hp and qsec suggests these predictors may not contribute as effectively to explaining variations in mpg.
 
