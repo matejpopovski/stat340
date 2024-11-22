@@ -247,13 +247,43 @@ An experiment was conducted on three types of **material**: Plastic clay, Sandy 
 ### a) Fit the model (4 points)
 Create a linear model model predicting plastic deformation from moisture. Include material and the interaction between material and moisture. 
 
+```{r}
+# Load necessary library
+library(readr)
+
+# Read the CSV file
+clay_sample <- read_csv("clay_sample.csv", show_col_types = FALSE)
+head(clay_sample)
+```
+
 a.i. Output the standard model summary using `summary()`. 
+  
+```{r}
+lm.clay <- lm(pd ~   moisture * material, data = clay_sample)
+
+summary(lm.clay)
+```
+
   
 a.ii. Interpret the $R^2$$ statistic value in one sentence.
 
+> The R-squared statistic represents the proportion of the variance in plastic deformation (pd) that is explained by the model, including moisture levels and material type, and their interaction, with a higher R-squared (87.76%) indicating a better fit of the model to the data.
+
 a.iii. Which material represents the baseline?
 
+> Considering summary results material "claystone" is baseline. The coefficients for "sandy clay" and "plastic clay" are compared to the baseline ("claystone"). These coefficients indicate the difference in plastic deformation (pd) when the material is "sandy clay" or "plastic clay" compared to "claystone".
+
 a.iv. Explain how the residual standard error degrees of freedom is related to sample size and the model size.
+
+> degrees of freedom = 64   calculated by n - (p+1) = 70 - (5+1)
+   n = 70 rows, 5 parameters + 1 intercept
+
+```{r}
+dim(clay_sample)
+
+
+```
+
 
 ### b) Interpret coefficient 1 (1 pt)
 Provide an interpretation for the value of the coefficient of moisture, and comment on its significance.
