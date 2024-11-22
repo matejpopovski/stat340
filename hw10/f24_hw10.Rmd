@@ -326,6 +326,26 @@ Provide an interpretation for the value of the coefficient of one of the interac
 ### e) Assess assumptions (1 pt)
 Finally display the first two diagnostic plots using `plot(<YOUR MODEL>, which=1:2)` and discuss three of the assumptions of the linear model: normality of error term, linearity and the relationship, and constant variance of the error term. You do not have to do any more modeling after this step, but comment about what you *might* want to do to improve the model.
 
+```{r}
+# Display diagnostic plots 
+#par(mfrow = c(1, 2)) 
+plot(lm.clay, which = 1:2)
+
+```
+
+Diagnostic Plots and Assumptions
+Linearity:
+Our assumption is the relationship between the predictors and the response variable is linear.
+The Residuals vs Fitted plot do not show a random scatter around the horizontal line (zero residuals) especially for the lower values of fited values. 
+
+Normality of Errors:
+Our assumption is that residuals (errors) are normally distributed.
+The Normal Q-Q plot show the residuals falling along the reference line but have deviations for lower and bigger values.
+
+Homoscedasticity: Variance of the error term is not constant.
+
+To achieve some improvement I can consider: transforming the response variable or predictors, add additional or more relevant predictors.
+explore other potential interaction terms.
 
 
 ## Problem 4) Using Multiple regression to fit nonlinear data (8 points; 2 pt each)
