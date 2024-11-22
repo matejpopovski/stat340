@@ -126,7 +126,7 @@ What is the value of $R^2$ for this model? (__Hint:__ look at the output of `sum
 Multiple R-squared is 0.8369
 
 The multiple R-squared value close to 1 suggest a good fit. Value of 0.8369 indicates that approximately 83.69% of the variability in the response variable mpg (miles per gallon) is explained by the predictors wt, hp and drat. This means the model fits the data quite well.
-It always increases when more predictors are added to the model, regardless of whether those predictors are relevant. So it can be optimistic especially with many predictors
+It always increases when more predictors are added to the model, regardless of whether those predictors are relevant. So it can be optimistic especially with many predictors.
 
 ### e) Adjusted $R^2$
 
