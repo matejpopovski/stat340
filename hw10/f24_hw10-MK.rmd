@@ -323,6 +323,7 @@ summary(model_full)
 
 ```
 
+> After including the third predictor in the model, the overall fit improved significantly. The new model shows a much higher adjusted R-squared value of nearly 1 compared to the previous model's adjusted R-squared, which was slightly lower. This means the updated model accounts for almost all of the variability in the dependent variable, reflecting a strong improvement. Additionally, the residual error decreased significantly, indicating that the predictions align much more closely with the actual values. All predictors, including the newly introduced variable and the interaction term, are statistically significant, with very small p-values, confirming their strong relationship with the dependent variable. This improvement highlights the value of adding the third predictor, as it captures additional patterns in the data that were not previously explained.
 
 ### d) Considering higher order terms
 

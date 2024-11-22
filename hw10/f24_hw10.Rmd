@@ -420,10 +420,45 @@ Next fit a model that introduces the `X3` variable.
 $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2  + \beta_4 X_3 \epsilon$$
 Has the model fit improved? In what way (Justify your answer)? 
 
+```{r}
+# Fit the model with interaction and X3
+model_full <- lm(Y ~ X1 * X2 + X3, data = data)
+
+# Display summary of the model
+summary(model_full)
+
+```
 
 ### d) Considering higher order terms
 
 Finally explore higher order terms for the X3 variable: Introduce $X3^2$, $X3^3$ etc and determine if any of these higher order terms are justified in the model. Explain your reasoning and present your final model. Look at the diagnostic plots and discuss whether the assumptions of the multiple regression model seem to be justified.
 
+```{r}
+# Add higher-order terms for X3
+data$X3_squared <- data$X3^2
+data$X3_cubed <- data$X3^3
 
+# Fit the base model
+model_base <- lm(Y ~ X1 * X2 + X3, data = data)
+
+# Add X3^2
+model_X3_squared <- lm(Y ~ X1 * X2 + X3 + X3_squared, data = data)
+
+# Add X3^2 and X3^3
+model_X3_cubed <- lm(Y ~ X1 * X2 + X3 + X3_squared + X3_cubed, data = data)
+
+# Compare models
+summary(model_base)
+summary(model_X3_squared)
+summary(model_X3_cubed)
+
+# Use ANOVA to compare nested models
+anova(model_base, model_X3_squared)
+anova(model_X3_squared, model_X3_cubed)
+
+# Plot diagnostic plots for the best model
+par(mfrow = c(2, 2))
+plot(model_X3_cubed)
+
+```
 
