@@ -375,19 +375,12 @@ summary(model)
 
 > The intercept is 948.53, represents the estimated value of the dependent variable Y, when both predictros X1, X2 are equal to zero.
 
-> Coefficient of the first predictor (-12.6318): The coefficient of the first predictor indicates that for each one-unit increase in the first predictor, the predicted value of the dependent variable decreases by 12.63 units, holding the second predictor constant. The negative sign suggests an inverse relationship between the first predictor and the dependent variable. The p-value (< 2e-16) indicates that this relationship is statistically significant.
-
-> Coefficient of the second predictor (-35.1420): The coefficient of the second predictor suggests that for each one-unit increase in the second predictor, the predicted value of the dependent variable decreases by 35.14 units, holding the first predictor constant. Like the first predictor, the second predictor also has a negative relationship with the dependent variable, and this effect is statistically significant with a p-value of 3.42e-09.
-
-
-estimate for X1 is -12.6318, with Std 0.2439.
+>estimate for X1 is -12.6318, with Std 0.2439.
 estimate for X2 is -35.1420, with Std 4.8472.
 
-Both coefficients are negative indicated that for one unit increase in the predictors X1 and X2, the predicted value of dependent variable will decrease by 12.6318, 35.1420 respectively, holding the other predictor constant.
+> Both coefficients are negative, indicating that a one-unit increase in either predictor (X1 or X2) will result in a decrease of 12.63 or 35.14 units in the predicted value of the dependent variable, respectively, while keeping the other predictor constant.
 
-Both p values are very small 2e-16 and 3.42e-09 indicating that the effect of X1 and X2  on  Y is highly statistically significant. 
-Multiple R-squared is 0.9831 and almost the same Adjusted R-squared:  0.9824, meaning that model explains  around 98%  of variability
-
+> Both p-values are extremely small (2e-16 and 3.42e-09), indicating that the effects of X1 and X2 on Y are highly statistically significant. The Multiple R-squared value of 0.9831, along with the almost identical Adjusted R-squared value of 0.9824, suggests that the model explains approximately 98% of the variability in the dependent variable.
 
 
 ### b) Investigating interaction of quantitative predictors
@@ -397,7 +390,27 @@ $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1\cdot X_2 + \epsilon$$
 
 Fit the model and view the summary output. Has this improved the model fit? Did anything surprising happen to the coefficients? Try to explain what happened.
 
+```{r}
 
+model_interaction <- lm(Y ~ X1 * X2, data = data)  # `X1 * X2` includes both main effects and interaction
+
+summary(model_interaction)
+
+cor(data$X1, data$X2)
+
+```
+> In interaction model 
+
+> estimate for X1 is  19.0469 with Std 11.1545
+estimate for X2 is 6.7768, with Std 15.4337
+and X1:X2 estimate -2.0441 with Std 0.7196
+Only p value for X1:X2 estimate with value 0.00669 (< 0.05) is significant. This suggest that effect of X1 on X2 depends and vice versa. Looking on correlation coefficient between X1 and X2 it is small 0.00988581 
+
+> Multiple R-squared is 0.9857 and almost the same Adjusted R-squared:  0.9847, meaning that model explains  around 98%  of variability
+
+> Comparing both models through their R-squared and Adjusted R-squared that are around 98% we cant'see difference.  
+
+> Comparing both models estimated Residual standard errors are 10.29 on d.f=47 for additive and  9.589 on d.f=46 for interaction model, that seems small preference for interaction model.
 
 
 ### c) Introducing the last predictor
