@@ -91,8 +91,22 @@ What is the Residual Standard Error (RSE) for this model? How many degrees of fr
 
 What is the value of $R^2$ for this model? (__Hint:__ look at the output of `summary`) Give an interpretation of this value.
 
-The multiple R-squared value close to 1 suggest a good fit. Value of 0.8369 indicates that approximately 83.69% of the variability in the response variable mpg (miles per gallon) is explained by the predictors wt, hp and drat. This means the model fits the data quite well.
+The multiple R-squared value close to 1 suggest a good fit. Value of 0.8348 indicates that approximately 83.48% of the variability in the response variable mpg is explained by the predictors wt, hp and qsec. This means the model fits the data quite well.
 It always increases when more predictors are added to the model, regardless of whether those predictors are relevant. So it can be optimistic especially with many predictors.
+
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 27.61053    8.41993   3.279  0.00278 ** 
+wt          -4.35880    0.75270  -5.791 3.22e-06 ***
+hp          -0.01782    0.01498  -1.190  0.24418    
+qsec         0.51083    0.43922   1.163  0.25463    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.578 on 28 degrees of freedom
+Multiple R-squared:  0.8348,	Adjusted R-squared:  0.8171 
+F-statistic: 47.15 on 3 and 28 DF,  p-value: 4.506e-11
 
 
 ### e) Adjusted $R^2$
@@ -100,6 +114,12 @@ It always increases when more predictors are added to the model, regardless of w
 Briefly read about the adjusted $R^2$ [here](https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/adjusted-r2/).
 What is the adjusted $R^2$ of this model and how does this differ from the usual $R^2$ value? (__Hint:__ again, look at the output of `summary`).
 
+The adjusted R^2 value is a modified version of the regular R^2 
+value that accounts for the number of predictors in a model. It includes a penalty for adding additional predictors to the model. It increases only if the new predictor improves the model more than would be expected by chance and decreases when the predictor does not add value, giving more realistic estimate of goodness-of-fit.
+
+R^2 = 1 - ((1-R^2)(N-1)/(n-k-1))
+
+n is number of observations and k is number of predictors.
 
 ### f) CIs for coefficients
 
