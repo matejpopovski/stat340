@@ -314,8 +314,14 @@ Provide an interpretation for the value of the coefficient of moisture, and comm
 ### c) Interpret coefficient 2 (1 pt)
 Provide an interpretation for the value of the coefficient of one of the materials, and comment on its significance.
 
+> Material plastic clay estimate is 23.9557 Std. Eror is 13.2986 and p-value 0.076355.
+Plastic Clay has a 23.9557 unit bigger plastic deformation compared to the baseline material (Claystone), holding all other variables fixed.
+The p-value for Material plastic clay estimate 0.076355 is greater than 0.05, indicating that the difference in plastic deformation between Plastic Clay and Claystone is not statistically significant.
+
 ### d) Interpret coefficient 3 (1 pt)
 Provide an interpretation for the value of the coefficient of one of the interaction terms, and comment on its significance.
+
+> The coefficient for the interaction term "moisture clay" is -3.5950, which means that for "plastic clay," the effect of moisture on plastic deformation is 3.595% less than the effect of moisture on the baseline material (claystone). Specifically, as moisture increases, the plastic deformation for "plastic clay" increases at a slower rate compared to claystone. This interaction term is statistically significant with a p-value of 2.48e-05, indicating that the difference in moisture's effect between "plastic clay" and "claystone" is highly significant.
 
 ### e) Assess assumptions (1 pt)
 Finally display the first two diagnostic plots using `plot(<YOUR MODEL>, which=1:2)` and discuss three of the assumptions of the linear model: normality of error term, linearity and the relationship, and constant variance of the error term. You do not have to do any more modeling after this step, but comment about what you *might* want to do to improve the model.
