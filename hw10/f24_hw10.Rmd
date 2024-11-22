@@ -66,6 +66,7 @@ plot(lm.mtcars,ask=F,which=1:2)
 
 View the summary of your model by uncommenting and running the code below.
 ```{r}
+lm.mtcars <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 summary(lm.mtcars)
 ```
 
@@ -116,11 +117,12 @@ Read the documentation for the `confint` function, and use it to generate $95\%$
 Give an interpretation of these confidence intervals.
 
 ```{r}
+lm.mtcars <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 confint(lm.mtcars, level = 0.95)
 ```
 
 The confidence intervals provide valuable information about the precision and significance of the model coefficients. Narrower intervals indicate more precise estimates, while intervals that do not include zero indicate statistically significant predictors.
-CI for predictors wt and hp do not include  zero and are negative. This means that both are (also by p-values) significantly associated with mpg, and the relationship is negative. As weight and horse power increases, mpg decreases.
+CI for predictor wt do not include zero and are negative. This means that wt is (also seen by p-value) significantly associated with mpg, and the relationship is negative. As weight increases, mpg decreases.
 
 
 ## Problem 2) the `cats` data set (8 points; 2pt each)
