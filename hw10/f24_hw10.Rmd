@@ -341,7 +341,7 @@ Normality of Errors:
 Our assumption is that residuals (errors) are normally distributed.
 The Normal Q-Q plot show the residuals falling along the reference line but have deviations for lower and bigger values.
 
-Homoscedasticity: Variance of the error term is not constant.
+Homoscedasticity: Variance of the error term seems like it is not constant.
 
 To achieve some improvement I can consider: transforming the response variable or predictors, add additional or more relevant predictors.
 explore other potential interaction terms.
