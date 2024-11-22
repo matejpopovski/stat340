@@ -327,8 +327,7 @@ Provide an interpretation for the value of the coefficient of one of the interac
 Finally display the first two diagnostic plots using `plot(<YOUR MODEL>, which=1:2)` and discuss three of the assumptions of the linear model: normality of error term, linearity and the relationship, and constant variance of the error term. You do not have to do any more modeling after this step, but comment about what you *might* want to do to improve the model.
 
 ```{r}
-# Display diagnostic plots 
-#par(mfrow = c(1, 2)) 
+
 plot(lm.clay, which = 1:2)
 
 ```
