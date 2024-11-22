@@ -284,9 +284,32 @@ dim(clay_sample)
 
 ```
 
+Call:
+lm(formula = pd ~ moisture * material, data = clay_sample)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.2343 -2.9072 -0.4121  2.6426  7.8457 
+
+Coefficients:
+                               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -103.1666    11.6696  -8.841 1.07e-12 ***
+moisture                         7.7928     0.7454  10.455 1.77e-15 ***
+materialplastic clay            23.9557    13.2986   1.801 0.076355 .  
+materialsandy clay              29.2029    17.7493   1.645 0.104810    
+moisture:materialplastic clay   -3.5950     0.7907  -4.547 2.48e-05 ***
+moisture:materialsandy clay     -3.5036     0.9388  -3.732 0.000406 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4.122 on 64 degrees of freedom
+Multiple R-squared:  0.8776,	Adjusted R-squared:  0.868 
+F-statistic: 91.77 on 5 and 64 DF,  p-value: < 2.2e-16
 
 ### b) Interpret coefficient 1 (1 pt)
 Provide an interpretation for the value of the coefficient of moisture, and comment on its significance.
+
+> Moisture estimate =  7.7928 and it is highly significant. P-value = 1.77e-15 < 0.05
 
 ### c) Interpret coefficient 2 (1 pt)
 Provide an interpretation for the value of the coefficient of one of the materials, and comment on its significance.
