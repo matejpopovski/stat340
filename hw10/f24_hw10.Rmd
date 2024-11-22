@@ -1,6 +1,6 @@
 ---
 title: "Homework 10"
-author: "your name here"
+author: "Matej Popovski"
 output: html_document
 ---
 
@@ -20,10 +20,19 @@ Run `?mtcars` in the console (please __do not__ add it to this `Rmd` file) and b
 Specifically, take note of the following:
 
 1. What is the source of this data?
+- The dataset was extracted from the 1974 issue of Motor Trend US Magazine. It documents the results of road tests for various automobiles from the 1973–1974 model years.
+
 2. What is this data set measuring (i.e., what was the response variable in the original study, at least based on the brief description in the R documentation)?
+- The primary response variable is miles per gallon (mpg), which represents fuel consumption efficiency.
+
 3. What predictors are available and what do they mean?
+- The dataset contains 10 predictors that describe various aspects of automobile design and performance: cyl (number of cylinders, typically 4, 6, or 8), disp (engine displacement in cubic inches), hp (gross horsepower), drat (rear axle ratio), wt (weight of the car in 1000 lbs), qsec (time to cover a 1/4 mile in seconds), vs (engine type, 0 = V-shaped, 1 = straight), am (transmission type, 0 = automatic, 1 = manual), gear (number of forward gears, usually 3, 4, or 5), and carb (number of carburetors, typically ranging from 1 to 8).
 
 You may want to also run `head(mtcars, 10)` or `View(mtcars)` to inspect the data frame briefly before moving on.
+```{r}
+head(mtcars, 10)
+```
+
 
 ### b) Fitting a model
 
