@@ -114,12 +114,20 @@ F-statistic: 47.15 on 3 and 28 DF,  p-value: 4.506e-11
 Briefly read about the adjusted $R^2$ [here](https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/adjusted-r2/).
 What is the adjusted $R^2$ of this model and how does this differ from the usual $R^2$ value? (__Hint:__ again, look at the output of `summary`).
 
-The adjusted R^2 value is a modified version of the regular R^2 
-value that accounts for the number of predictors in a model. It includes a penalty for adding additional predictors to the model. It increases only if the new predictor improves the model more than would be expected by chance and decreases when the predictor does not add value, giving more realistic estimate of goodness-of-fit.
+> R-squared has a tendency to increase as more predictors are added to the model, even if those predictors are not truly meaningful.
 
-R^2 = 1 - ((1-R^2)(N-1)/(n-k-1))
+> The adjusted R^2 value is a modified version of the regular R^2 value that accounts for the number of predictors in a model. It includes a penalty for adding additional predictors to the model. It increases only if the new predictor improves the model more than would be expected by chance and decreases when the predictor does not add value, giving more realistic estimate of goodness-of-fit.
 
-n is number of observations and k is number of predictors.
+> R^2 = 1 - ((1-R^2)(n-1)/(n-k-1))
+
+> n is number of observations and k is number of predictors.
+
+> In our case adjusted R-squared = 0.8171 suggests that predictors hp and qsec do not contribute to explanation of variance. 
+
+The adjusted R-squared, on the other hand, accounts for the number of predictors in the model. It adjusts for the fact that adding more predictors can artificially inflate the R-squared value, even if those predictors do not add significant explanatory power. The adjusted R-squared penalizes the inclusion of unnecessary variables.
+
+Thus, the adjusted R-squared (0.8171) is slightly lower than the regular R-squared (0.8348), suggesting that after adjusting for the number of predictors, the model explains about 81.71% of the variance in mpg. This makes the adjusted R-squared a more reliable measure of the model’s goodness of fit, especially when comparing models with different numbers of predictors.
+
 
 ### f) CIs for coefficients
 
