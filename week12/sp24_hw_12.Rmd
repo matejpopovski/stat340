@@ -1,0 +1,126 @@
+---
+title: "Homework 12"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Problem \#1: Bootstrap Estimation in Boston <small>(8 pts; 1pt each)</small>
+
+This problem is based on Problem 9 in section 5.4 of *An Introduction to Statistical Learning*. It uses the `Boston` dataset found in the `MASS` library. Run the code below:
+```{r}
+require(MASS)
+data(Boston)
+str(Boston)
+```
+
+a. Based on the data set, provide an estimate for the population mean of `medv`. Call this estimate `mu.hat`.
+
+b. Provide an estimate of the standard error of `mu.hat`. *hint: what is $SD(\bar{X})$?
+
+c. Now use bootstrapping to estimate the standard error of `mu.hat`. How does this compare to the estimate from b.?
+
+d. Based on your bootstrap estimate from c., provide a 95% confidence interval for the mean of `medv`. You can either construct a Z interval or a t interval using the estimated standard error.
+
+e. Using the quantile method compute a 95% confidence interval for the `mu` of `medv`. How does this compare to your answer in part d?
+
+f. Now we want to estimate the standard error of the sample median of `medv`. Use bootstrapping to estimate this standard error.
+
+g. Come up with a point estimate for the population 25th percentile of `medv`.
+
+h. Use bootstrapping to construct a 95% confidence interval for the 25th percentile.
+
+## Problem \#2 Bootstrapping when Linear regression assumptions fail <small>(10 pts)</small>
+
+Run the following code to produce some bivariate data:
+```{r}
+set.seed(2024)
+X <- rnorm(35, 5,1)
+e <- 4*rbeta(35,.25,.25)-1
+Y <- 5 + 2*X + e
+```
+
+a. Come up with a point estimate for the correlation of X and Y. 
+
+b. Use bootstrapping to create a 95% confidence interval for $\rho$.
+
+c. Fit a linear model predicting Y from X. Comment on the diagnostic plots. Are the assumptions of linear regression met?
+
+d. Spoiler alert - the errors are not normally distributed. Why would it be problematic to use the coefficient confidence intervals estimated by R using `confint` in this case?
+
+e. Use bootstrapping to construct a 95% confidence interval for the slope coefficient. 
+
+
+
+## Problem \#3 Bootstrapping A Tricky Estimator <small>(6 pts)</small>
+
+If you have $X_1 \sim \text{Binomial}(n,p)$ we know that $\hat{P}=\frac{X_1}{n}$ is a good point estimate of $p$. What if, however we don't know $n$? The following 20 values were independently sampled from a binomial distribution with unknown parameters $n$ and $p$.
+
+```{r}
+binomialData <- c(25,23,23,23,30,20,27,23,20,15,24,20,19,27,28,20,28,27,17,25)
+```
+
+Our task is to come up with a 95% confidence interval for $p$ without knowing $n$. We can do it!
+
+a. Using the method of moments we can use $1-S^2/\bar{X}$ as a point estimate of $p$. Justify this estimator.
+
+b. Use this estimator to come up with a point estimate of $p$
+
+c. Use bootstrapping to produce a 95% confidence interval for $p$.
+
+
+d. *Extra Practice:* It follows that $\frac{\bar{X}^2}{\bar{X}-S^2}$ is a good estimate of $n$. Produce a point estimate of $n$
+
+e. *Extra Practice:* Use bootstrapping to come up with a 95% confidence interval for $n$.
+
+**Just so you know, These 20 points were generated from Binomial(80, .3)**
+
+
+## Problem \#4 When Bootstrapping Fails  <small>(6 pts; 2pts each)</small>
+
+An estimate problem we've seen before is estimating the maximum of a population. Suppose we have a random variable $X \sim \text{Uniform}(0, \theta)$ for some unknown maximum $\theta$. 
+
+A 95% confidence interval for $\theta$ coming from statistical theory would be $(max, max\cdot(.05)^{-1/n})$
+
+For example, suppose we have the following 15 values drawn from a uniform distribution with a minimum of 0 and an unknown maximum:
+
+```{r}
+uniformData <- c(24.57,  7.94, 32.81, 24.89, 24.53,
+                 23.36,  4.15,  0.64,  0.89,  4.02,
+                  2.67,  3.93,  1.44, 16.11, 15.86)
+```
+
+a. Use the formula to come up with a 95% confidence interval for the maximum.
+
+b. An unbiased point estimate of the population maximum would be $\hat{\theta}=\frac{n+1}{n}max$. Use this formula to come up with a point estimate for the population maximum.
+
+c. Now we'll put bootstrapping to the test. Come up with a 95% bootstrap interval for the population max using the above point estimate on each bootstrapped sample and compute the 95% confidence interval based on the quantile method. How does this compare?
+
+**Spoiler Alert: The population maximum used when generating the data was actually 33**
+
+d. Extra Practice: Estimate the coverage rate of the two methods used above on 20 data points sampled from $\text{Uniform}(0, 33)$. 
+
+```{r}
+NMC <- 1000
+coverage.formula <- 0
+coverage.bootstrap <- 0
+for(i in 1:NMC){
+  uniformData <- runif(20, 0, 33)
+  
+  #Construct the formulaic confidence interval
+  
+  #in coverage.formula[i] store whether or not it contains 33
+  
+  #Resample in order to create a 95% bootstrap interval for theta
+  
+  #in coverage.bootstrap[i] store whether or not it contains 33
+  
+}
+mean(coverage.formula)
+mean(coverage.bootstrap)
+```
+
+

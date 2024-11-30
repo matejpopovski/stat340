@@ -1,0 +1,157 @@
+---
+title: "R11 Model Selection"
+author: "Brian Powers"
+date: "2023-11-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Model Selection in mtcars
+
+In this code we will compare different multiple regression models to predict miles per gallon from the various predictor variables in the mtcars dataset.
+
+We implement a forward stepwise selection algorithm, and a backwards stepwise selection algorithm. We also have a  function that automates K fold validation and gives the formula resulting in the lowest MSE
+
+
+### K fold validation on the models produced
+
+```{r, warning=FALSE}
+kfoldCV <- function(K, formulas, dataset){
+  m <- length(formulas)
+  
+  #idx is a shuffled vector of row numbers
+  idx <- sample(1:nrow(dataset))
+  #folds partitions the row indices
+  folds <- split(idx, as.factor(1:K))
+
+  #an empty data frame to store the results of each validation
+  results <- data.frame(fold = rep(1:K, rep(m,K)),
+                        model = rep(1:m, K),
+                        error = 0)    
+  for(k in 1:K){
+    #split the data into training and testing sets
+    training <- dataset[-folds[[k]],]
+    testing <- dataset[folds[[k]],]
+    #go through each model and estimate MSE
+    for(f in 1:m){
+      #fit the model to the training data
+      fit <- lm(formula = formulas[[f]], data=training)
+      #calculate the average squared error on the testing data
+      results[results$fold == k & results$model == f, "error"] <- mean((predict(fit, newdata=testing)-testing$mpg)^2)
+    }
+  }
+  #aggregate over each model, averaging the error
+  aggregated <- aggregate(error~model, data=results, FUN="mean")
+  #produces a simple line & dot plot
+  plot(error ~ model, type="b", data=aggregated, ylab="MSE")
+#  lines(error ~ model, data=aggregated)
+  print(which(aggregated$error == min(aggregated$error)))
+  print(formulas[[which(aggregated$error == min(aggregated$error))]])
+  return(aggregated)
+}
+```
+
+
+### Model Statistics
+
+```{r}
+createModelStats <- function(formulas, dataset){
+  n <- nrow(dataset)
+  model.stats <- data.frame(model <- as.character(formulas))
+  for(m in 1:length(formulas)){
+    modelsum <- summary(lm(formulas[[m]], data=dataset))
+    #I am using k = p+1, the number of predictors + the intercept
+    model.stats$k[m] <- nrow(modelsum$coefficients)
+    model.stats$Rsq[m] <- modelsum$r.squared
+    model.stats$Rsq.adj[m] <- modelsum$adj.r.squared
+    L <- logLik(lm(formulas[[m]], data=mtcars))[1]
+    model.stats$AIC[m] <- -2*L + 2*model.stats$k[m]
+    model.stats$BIC[m] <- -2*L + model.stats$k[m] * log(n)
+  }
+  return(model.stats)  
+}
+```
+
+
+
+### Forward Stepwise Selection
+
+```{r}
+predictors = c("1",names(mtcars)[2:11])
+used = 1
+M <- list(10)
+
+
+M0 <- lm(reformulate(predictors[used], "mpg"), data=mtcars)
+
+RSS <- anova(M0)["Residuals","Sum Sq"]
+
+formulas <- list()
+
+for(model in 1:10){
+  RSS.best <- RSS
+  for(try in predictors[-used]){
+    M <- lm(reformulate(c(predictors[used],try), "mpg"), data=mtcars)
+    RSS.new <- anova(M)["Residuals","Sum Sq"]
+    if(RSS.new <= RSS.best){
+      new.pred <- try
+      RSS.best <- RSS.new
+    }
+  }
+  formulas[[model]] <- reformulate(c(predictors[used],new.pred), "mpg")
+  M[[model]] <- lm(formulas[[model]], data=mtcars) 
+  RSS <- anova(M[[model]])["Residuals","Sum Sq"]
+  print(paste("adding", new.pred, "; RSS = ", RSS))
+  used <- c(used, which(predictors==new.pred))
+}
+
+kfoldCV(4, formulas, mtcars)
+
+createModelStats(formulas, mtcars)
+```
+
+
+
+
+
+### Backwards Stepwise
+
+```{r}
+M <- list(10)
+
+predictors = c("1",names(mtcars)[2:11])
+used = 2:11
+
+
+M10 <- lm(reformulate(predictors[c(1,used)], "mpg"), data=mtcars)
+RSS <- anova(M10)["Residuals","Sum Sq"]
+formulas <- list()
+formulas[[10]] <- reformulate(predictors[used], "mpg")
+
+print(paste("Full Model RSS: ", RSS))
+for(model in 9:1){
+  RSS.best <- var(mtcars$mpg)*(nrow(mtcars)-1)
+  for(try in used){
+    M <- lm(reformulate(predictors[used[-which(used==try)]], "mpg"), data=mtcars)
+    RSS.new <- anova(M)["Residuals","Sum Sq"]
+    if(RSS.new <= RSS.best){
+      new.pred <- try
+      RSS.best <- RSS.new
+    }
+  }
+  formulas[[model]] <- reformulate(predictors[used[-which(used==try)]], "mpg")
+  M[[model]] <- lm(formulas[[model]], data=mtcars) 
+  RSS <- anova(M[[model]])["Residuals","Sum Sq"]
+  print(paste("removing", predictors[new.pred], "; RSS = ", RSS))
+  used <- used[-which(used==new.pred)]
+}
+
+kfoldCV(8, formulas, mtcars)
+createModelStats(formulas, mtcars)
+
+```
+
+

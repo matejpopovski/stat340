@@ -51,7 +51,9 @@ plot(lm.mtcars, ask = FALSE, which = 1:2)
 
 ```
 
-> The residuals show randomness in the 'residuals vs fitted' plot and align with the line in the Q-Q plot, the model assumptions are likely valid. In the 'residuals vs fitted' plot for small and big fitted values, I can see that residuals are more positive than negative. Same is shown in the Q-Q plot.
+> The Residuals vs Fitted plot indicates that the residuals are not entirely randomly scattered. Notably, there is an accumulation of positive residuals at the tails, while in the fitted value range of 17 to 22, there are predominantly negative residuals. This pattern suggests potential issues with the linearity assumption or model specification.
+
+> The standardized residuals generally follow the theoretical quantile line, indicating that the residuals are approximately normally distributed. However, deviations are observed at the tails, with a few outliers particularly noticeable in the right tail, suggesting potential departures from normality in these extreme values.
 
 
 ```{r}
@@ -60,7 +62,7 @@ lm.mtcars <- lm(mpg ~ wt + hp + drat, data = mtcars)
 plot(lm.mtcars,ask=F,which=1:2)
 ```
 
-> This is another example, where we have slightly worse fitting in the left and right tails.
+> In this example of Q-Q plot, the standardized residuals show even poorer fit to the theoretical quantile line, in the left and right tail.
 
 ### c) Interpreting the model
 
@@ -233,9 +235,12 @@ summary(lm.cats)
 ```
 > R assigns Sex a dummy encoding by treating the female category as the reference group (with a coefficient of zero) and encoding the male category as SexM, which reflects the difference in heart weight for male cats compared to female cats.
 
-> Both the coefficient for SexM (male cats) and the interaction term between Bwt and Sex are statistically significant at the 5% level, with p-values of 0.045 and 0.047, respectively. The coefficient for SexM indicates that male cats have a heart weight that is, on average, 4.1654 grams less than female cats, after adjusting for body weight. The interaction term (Bwt:SexM) suggests that the relationship between body weight (Bwt) and heart weight is different for male and female cats. Specifically, for male cats, the effect of body weight on heart weight is 1.6763 grams more per kilogram of body weight than for female cats. This implies that while both male and female cats show a positive relationship between body weight and heart weight, the effect is stronger in male cats.
+>All tree coefficient for Body Weight (Bwt), SexM (male cats) and the interaction term between Bwt and Sex (Bwt:SexM)
+are statistically significant at the 5% level, with p-values of 
+0.000885, 0.045 and 0.047, respectively. 
 
-> All three predictors are significant.
+>For female cats, each unit increase in body weight is associated with an increase of 2.6364 units in heart weight. The coefficient for SexM indicates that male cats have a heart weight that is, on average, 4.1654 grams less than female cats, after adjusting for body weight. The interaction term (Bwt:SexM) suggests that the relationship between body weight (Bwt) and heart weight is different for male and female cats. Specifically, for male cats, the effect of body weight on heart weight is 1.6763 grams more per kilogram of body weight than for female cats. This implies that while both male and female cats show a positive relationship between body weight and heart weight, the effect is stronger in male cats. 
+>R^2 and Adjusted R^2 indicate that the model explains approximately 65.66% and 64.93% respectively of the variance in heart weight, and the model as a whole is highly significant (p < 2.2e-16).
 
 
 ## Problem 3) Quantitative and Categorical Predictors (8 points)
@@ -458,7 +463,17 @@ anova(model_X3_squared, model_X3_cubed)
 
 # Plot diagnostic plots for the best model
 par(mfrow = c(2, 2))
-plot(model_X3_cubed)
+plot(model_X3_squared)
 
 ```
+
+> The initial model, including the main effects and interaction terms, showed excellent fit statistics, with a high adjusted coefficient of determination and a low residual standard error, suggesting it explained nearly all the variability in the outcome variable.
+
+> Adding the square of the predictor improved the model fit marginally. The residual standard error decreased, and the adjusted coefficient of determination remained high. The additional squared term was statistically significant, indicating that it contributed to explaining variability in the outcome. A formal statistical test (Anova) comparing the base and updated models supported this conclusion, with a significant test result justifying the inclusion of the squared term.
+
+> When the cubic term of the predictor was added, the results indicated diminishing returns. While the residual standard error decreased slightly, the cubic term was not statistically significant, and the comparison (Anova) test between the quadratic and cubic models did not support adding this term. This suggests that the cubic term added complexity without a substantial benefit to the model.
+
+> An analysis of diagnostic plots for the model that included the squared term showed no significant violations of regression assumptions. The residuals were randomly distributed without any noticeable patterns, and the normality plot indicated that the residuals followed an approximately normal distribution. These diagnostics confirmed that the model assumptions were met.
+
+> In summary, incorporating the squared term enhanced the model and was statistically justified, whereas the cubic term did not add meaningful value. The final model, including the main effects, interaction terms, and the squared term, strikes an appropriate balance between complexity and explanatory power while effectively capturing the relationship between the predictors and the outcome.
 

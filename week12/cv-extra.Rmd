@@ -1,0 +1,131 @@
+---
+title: "cv-extra"
+output: html_document
+---
+
+```{r setup,include=F}
+library(tidyverse)
+knitr::opts_chunk$set(echo=T,message=F,warning=F)
+set.seed(1)
+```
+
+Simulate a data set with second order predictor with specified slope1, slope2, and sigma.
+
+```{r}
+sim_data = function(n,slope1,slope2,sigma){
+  data.frame(x=(x<-runif(n)),y=x*slope1+x^2*slope2+rnorm(n,0,sigma))
+}
+```
+
+
+## Train on half, test on half
+
+```{r}
+# set parameters
+formulas = c(y~x, y~x+I(x^2), y~x+I(x^2)+I(x^3),
+             y~x+I(x^2)+I(x^3)+I(x^4))
+M  = 500
+N  = 40
+B1 = 4
+B2 = 3
+S  = 1
+
+run_m1 = function(n,b1,b2,s){
+  function(O){
+    df = sim_data(n,b1,b2,s)
+    
+    train = sample(1:n)[1:floor(n/2)]
+    lm.fit = lm(formulas[[O]],data=df[train,])
+    sqrt(mean((predict(lm.fit,newdata=df[-train,])-df[-train,]$y)^2))
+  }
+}
+
+m1 = sapply(1:M,function(i){sapply(1:4, run_m1(N,B1,B2,S))})
+```
+
+
+## Leave one out CV
+
+Parallelized computation to get more iterations.
+
+```{r}
+library(caret)
+library(parallel)
+
+run_m2 = function(n,b1,b2,s){
+  function(O){
+    df = sim_data(n,b1,b2,s)
+    
+    train = sample(1:n)[1:floor(n/2)]
+    lm.fit = train(formulas[[O]],data=df,method="lm",
+                   trControl=trainControl(method="LOOCV"))
+    
+    lm.fit$results$RMSE
+  }
+}
+
+cl = makeCluster(detectCores()-1)
+invisible(clusterEvalQ(cl,"library(caret)"))
+clusterExport(cl,c("N","B1","B2","S","formulas","sim_data","run_m2","train","trainControl"))
+clusterSetRNGStream(cl,1)
+
+m2 = parSapply(cl,1:M,function(i){sapply(1:4, run_m2(N,B1,B2,S))})
+```
+
+
+## K-fold CV
+
+```{r}
+run_m3 = function(n,b1,b2,s){
+  function(O){
+    df = sim_data(n,b1,b2,s)
+    
+    train = sample(1:n)[1:floor(n/2)]
+    lm.fit = train(formulas[[O]],data=df,method="lm",
+                   trControl=trainControl(method="CV",number=5))
+    
+    lm.fit$results$RMSE
+  }
+}
+
+clusterExport(cl,c("run_m3"))
+m3 = parSapply(cl,1:M,function(i){sapply(1:4, run_m3(N,B1,B2,S))})
+
+stopCluster(cl)
+```
+
+
+## Putting it all together
+
+Combine all runs together
+
+```{r}
+df.rmse = bind_rows(
+  setNames(as.data.frame(t(m1)),1:4) %>% mutate(method="split half"),
+  setNames(as.data.frame(t(m2)),1:4) %>% mutate(method="LOOCV"),
+  setNames(as.data.frame(t(m3)),1:4) %>% mutate(method="5-fold CV")) %>% 
+  pivot_longer(1:4,names_to="order",values_to="rmse") %>% 
+  arrange(desc(method),order)
+```
+
+Plotting the resultant RMSE computations
+
+```{r}
+df.rmse %>% group_by(method,order) %>% summarise(rmse=mean(rmse)) %>% 
+  ggplot(aes(x=order,y=rmse,color=method,group=method))+geom_line() + 
+  ggtitle("RMSE for different orders/methods (order 2 is correct)")
+```
+
+Table showing the final estimations of RMSE
+
+```{r}
+df.rmse %>% group_by(method,order) %>% summarise(mean_rmse = mean(rmse)) %>% pivot_wider(names_from=order,values_from=mean_rmse)
+```
+
+
+## A few key observations:
+
+1. Order 2 correctly found by both CV methods to be best order for fit (though k-fold tends to be more reliable on reruns)
+2. 5-fold CV has closest estimate of true sigma at correct order 2    
+    (error less than 0.5% for 5-fold compared to about 3% and 8% error for LOOCV and splitting in half)
+3. It achieves this closest estimate while being computationally much more efficient than LOOCV (only needs 5 reruns vs n reruns)
