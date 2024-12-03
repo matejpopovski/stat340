@@ -169,6 +169,21 @@ We are going to try to classify penguins as **Adelie** or **not Adelie**. So cre
 
 Perform some analysis looking at each of the 3 islands - create a 2 way table between `island` and the `Adelie` variable. Look at the proportions conditioned on island. What proportion of observations on each island were Adelie?
 
+```{r}
+#head(penguins)
+
+penguins$Adelie <- ifelse(penguins$species == "Adelie", 1, 0)
+
+table_island_adelie <- table(penguins$island, penguins$Adelie)
+
+table_island_adelie
+
+proportions <- prop.table(table_island_adelie, margin = 1)
+
+proportions
+
+```
+
 
 ### b) Adelie Penguins on Dream
 
