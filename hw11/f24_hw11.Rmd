@@ -220,7 +220,26 @@ log_odds_adelie
 Now fit a logistic model predicting whether a penguin is Adelie based on island.
 Interpret the intercept and the coefficient of the `islandDream` variable. Use this model to predict the probability that a penguin from Dream is Adelie.
 
+```{r}
+# Fit the logistic regression model
+logistic_model <- glm(Adelie ~ island, data = penguins, family = binomial)
 
+# View model summary
+summary(logistic_model)
+
+# Extract coefficients
+coeffs <- coef(logistic_model)
+intercept <- coeffs["(Intercept)"]
+coef_dream <- coeffs["islandDream"]
+
+# Predict probability for Dream
+prob_dream <- 1 / (1 + exp(-(intercept + coef_dream)))
+prob_dream
+
+
+```
+
+> 
 
 
 ## Problem 4. Penguins Part II <small>10pts; 2 pts each</small>
