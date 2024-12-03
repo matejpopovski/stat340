@@ -189,6 +189,31 @@ proportions
 
 Find the (i) probability, (ii) odds and (iii) log-odds that a randomly selected penguin from Dream is an Adelie penguin?
 
+i) 0.4516129
+
+ii) 0.4516129 / (1 - 0.4516129) = 0.8235294
+
+iii) log(0.8235294) = -0.194156
+
+```{r}
+# check with code
+dream_data <- penguins[penguins$island == "Dream", ]
+
+adelie_dream_count <- sum(dream_data$Adelie, na.rm = TRUE)
+total_dream_count <- nrow(dream_data)
+
+prob_adelie <- adelie_dream_count / total_dream_count
+
+odds_adelie <- prob_adelie / (1 - prob_adelie)
+
+log_odds_adelie <- log(odds_adelie)
+
+prob_adelie
+odds_adelie
+log_odds_adelie
+```
+
+
 
 ### c) An island-based classifier
 
