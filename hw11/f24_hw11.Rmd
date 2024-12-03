@@ -78,7 +78,7 @@ rr = p(A) / p(B) = 3
 
 oddsR= odds(A) / odds(B) = 9
 
-
+p(A) = 
 
 ***
 
