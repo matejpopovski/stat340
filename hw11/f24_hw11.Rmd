@@ -119,7 +119,7 @@ sigma = exp{-5 + 0.06 40 + 1.1 3.5} / (1 + exp{-5 + 0.06 40 + 1.1 3.5}) = 0.7775
 ### Part b) Interpreting coefficients
 According to our fitted model, an additional hour spent studying is associated with *how much* of an increase in the log odds of receiving an A?
 
-An additional hour in studying is associated with 0.06 increase in the log-odds od receiving an A
+An additional hour in studying is associated with 0.06 increase in the log-odds of receiving an A
 
 ### Part c) "Inverting" logistic regression probabilities
 According to our fitted model, how many hours would the student in Part (a) need to study to have a $50\%$ chance of getting an A in the class?
