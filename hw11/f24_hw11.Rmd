@@ -76,7 +76,7 @@ The odds ratio comparing event A to B is 9 and the risk ratio is 3. What is $Pr(
 
 rr = p(A) / p(B) = 3 
 
-oddsR = 9
+oddsR= odds(A) / odds(B) = 9
 
 
 
