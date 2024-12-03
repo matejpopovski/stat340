@@ -1,0 +1,32 @@
+STAT340 Fall 2023 Final Exam Solutions
+MC1: c; EX=2, so EX^2=4; E(X^2)=0/8+1/4+4/4+9/4+16/8=22/4, VarX=22/4-16/4=1.5. Var(2x)=4VarX=6
+MC2: d; SD=2 or so, n=100, so SD(Xbar)=.2; 95% interval is about 4 standard errors wide
+MC3: e; if n is divided by 4, the standard error will be 2x as big
+MC4: b; odds = P(fail)/P(succeed)=.01/.99
+MC5: d; if at least one is a 3, there are 11 possible pairs. OF those pairs 2 of them add up to 7
+MC6: a RSS, b F, c R^2, d TSS, e RMSE
+MC7: a; intercept, pH, 2 for roast, 2 for country
+MC8: e; all of these could fix the nonlinearity in the residual plot
+MC9: c; the green curve has a TPR of about .5 when FPR is .05
+MC10: b,e; R^2 will always favor the most complex model. Ridge does not select variables, only shrinks coefficients
+SA1a: E(P.hat)=E(X/n)=EX/n= (np)/n=p
+   b: Var(P.hat)=Var(X/n)=VarX/(n^2)=np(1-p)/(n^2)=p(1-p)/n
+SA2a: P(E)=4/8, P(F)=4/8, P(EF)=3/8 not equal to 4/8*4/8, not independent
+   b: P(G)=2/8, P(EG)=1/8 = 4/8*2/8 so yes, independent
+SA3a:   Predict 1 | Predict 0
+   Y=1 |  8       | 3
+   Y=0 |  4       |5
+   b: Power = 8/(8+3)
+   c: Specificity = 5/(4+5)
+   d: Accuracy = (8+5)/(21)
+SA4a: sexM, rear.width and the interaction sexM:rear.width are significant
+      sexM: male crabs on average have a carapace length 6.72 longer than females, holding other variables constant
+	  rear.width: holding other variables constnat, a 1 unit increase in rear.width is associated with an increase of 2.41 crapace length
+	  sexM:rear.width: the average effect of rear width is .994 higher for male crabs than for female crabs
+   b: -6.73 +/- 2*.96, we are 95% confident that this interval captures the true coefficient value
+   c: the model explains 97.05% of the variation in the Y variable 
+   d: -1.178 -6.727 + 2.412*10 + .994*10
+SA5a: This model has settled on a lambda that has zeroed out species0:rear.width, which wasn't included in the previous model anyway.
+   b: Optimal value of lambda is about e^(-5)
+   c: Estimated MSE is about 1.5
+   d: 1/e is e^(-1) which would have a higher penalty, causing more coefficient shrinkage and more under-fitting.

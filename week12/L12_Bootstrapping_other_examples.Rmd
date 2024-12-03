@@ -1,0 +1,59 @@
+---
+title: "Bootstrapping Examples"
+author: "Brian Powers"
+date: "2024-02-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Bootstrapping the parameter p for a Geometric population
+Suppose we have a geometric random variable (i.e population) with some unknown p
+```{r}
+p <- runif(1)
+```
+Modify this code to a non-parametric method.
+
+Please note that this is not a very good way to use bootstrapping - we will learn a better way later this semester. This is only to highlight how we can still estimate a confidence interval even if we do not know what population model to use.
+```{r}
+# Bootstrapping
+NMC2 <- 1000
+correct.count <- 0
+for(j in 1:NMC2){
+  my.sample <- rgeom(n=50, prob=p)
+  NMC <- 1000
+  p.hats <- vector("numeric")
+  for(i in 1:NMC){
+    simulated.sample <- sample(x=my.sample, size=length(my.sample), replace=TRUE)
+    p.hats[i] <- 1 / (mean(simulated.sample) + 1)
+  }
+  #Let's do a 90% confidence interval for the population parameter p
+  bounds <- quantile(p.hats, probs = c(.05, .95))
+  correct.count <- correct.count + as.numeric(bounds[1] <= p & bounds[2] >=p)
+}
+correct.count / NMC2
+```
+
+Bootstrapping a normal population
+```{r}
+NMC2 <- 1000
+correct.count <- 0
+mu <- runif(1, 0,100)
+sigma <- runif(1, 5,10)
+for(j in 1:NMC2){
+  my.sample <- rnorm(n=25, mean=mu, sd=sigma)
+  NMC <- 1000
+  x.bars <- vector("numeric")
+  for(i in 1:NMC){
+    simulated.sample <- sample(x=my.sample, size=length(my.sample), replace=TRUE)
+    x.bars[i] <- mean(simulated.sample)
+  }
+  #Let's do a 90% confidence interval for the population parameter p
+  bounds <- quantile(x.bars, probs = c(.05, .95))
+  correct.count <- correct.count + as.numeric(bounds[1] <= mu & bounds[2] >=mu)
+}
+correct.count / NMC2
+```
+
