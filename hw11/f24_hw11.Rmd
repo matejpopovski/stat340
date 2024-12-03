@@ -112,7 +112,9 @@ Suppose that we fit a logistic regression model to the data, predicting $Y$ from
 ### Part a) Logistic regression and probability
 According to our fitted model, what is the probability that a student receives an A if they study for $40$ hours and have a GPA of $3.5$?
 
+> sigma = exp{beta0 + beta1x1 + beta2x2} / (1 + exp{beta0 + beta1x1 + beta2x2})
 
+sigma = exp{-5 + 0.06 40 + 1.1 3.5} / (1 + exp{-5 + 0.06 40 + 1.1 3.5}) = 0.7775
 
 ### Part b) Interpreting coefficients
 According to our fitted model, an additional hour spent studying is associated with *how much* of an increase in the log odds of receiving an A?
