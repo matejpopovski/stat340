@@ -74,7 +74,7 @@ The odds ratio comparing event A to B is 9 and the risk ratio is 3. What is $Pr(
 
 ***
 
-Answer goes here
+p(A) / p(B)
 
 ***
 
