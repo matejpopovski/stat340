@@ -277,7 +277,7 @@ Are longer bills associated with an increased or decreased likelihood that a pen
 summary(model)
 ```
 
-
+> The coefficient for bill_length_mm is -2.2099 (negative), with a statistically significant p-value (0.00125). This means that longer bills are associated with a decreased likelihood of being an Adelie penguin.
 
 
 ### c) A full classifier
