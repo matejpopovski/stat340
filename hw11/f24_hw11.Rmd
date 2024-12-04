@@ -304,6 +304,32 @@ summary(model_chinstrap)
 Suppose you will predict that a penguin is a Chinstrap if the estimated $\hat{y}=\sigma(\hat{z})>0.5$. When predicting using this threshold, what is the type 1 error rate of your predictor on the dataset? What is power of the predictor on the dataset? 
 *Hint: you will want to compare the predicted $\hat{y}$ values to the actual $y$ values. The `table` command can produce a 2x2 confusion matrix to help you answer this question.*
 
+```{r}
+# Predict probabilities
+predictions <- predict(model_chinstrap, type = "response")
+
+# Convert probabilities to binary predictions (Chinstrap if prob > 0.5)
+predicted_class <- ifelse(predictions > 0.5, "Chinstrap", "Not Chinstrap")
+
+# Actual Chinstrap class
+actual_class <- ifelse(penguins.complete$species == "Chinstrap", "Chinstrap", "Not Chinstrap")
+
+confusion_matrix <- table(Predicted = predicted_class, Actual = actual_class)
+confusion_matrix
+
+FP <- confusion_matrix["Chinstrap", "Not Chinstrap"]
+TP <- confusion_matrix["Chinstrap", "Chinstrap"]
+FN <- confusion_matrix["Not Chinstrap", "Chinstrap"]
+TN <- confusion_matrix["Not Chinstrap", "Not Chinstrap"]
+
+type_1_error_rate <- FP / (FP + TN)
+
+power <- TP / (TP + FN)
+
+type_1_error_rate
+power
+
+```
 
 
 
