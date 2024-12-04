@@ -244,7 +244,6 @@ prob_dream
 > Coefficient for islandDrean variable 0.8419, represents the change in the log-odds of a penguin being an Adelie compared to the reference category (Biscoe Island).
 
 
-
 ## Problem 4. Penguins Part II <small>10pts; 2 pts each</small>
 
 In this problem we will work once again with the Palmer Penguin dataset. We will work with a subset by taking out all missing values. After you have installed the package and loaded the library, uncomment the line below.
