@@ -274,8 +274,10 @@ prob_adelie
 Are longer bills associated with an increased or decreased likelihood that a penguin is an Adelie penguin?
 
 ```{r}
-
+summary(model)
 ```
+
+
 
 
 ### c) A full classifier
