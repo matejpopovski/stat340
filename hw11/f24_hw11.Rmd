@@ -297,6 +297,7 @@ model_chinstrap <- glm((species == "Chinstrap") ~ bill_length_mm + bill_depth_mm
 summary(model_chinstrap)
 ```
 
+> The significant predictors for determining whether a penguin is a Chinstrap penguin are bill_length_mm and body_mass_g, with flipper_length_mm being marginally significant. bill_depth_mm is not a significant predictor.
 
 
 ### d) Assessing the model
