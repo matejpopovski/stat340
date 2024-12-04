@@ -242,6 +242,11 @@ prob_dream
 > The intercept (−1.0361) represents the log-odds of a penguin being an Adelie on the reference island, Biscoe. 
 This means that roughly 26% of the penguins on Biscoe are Adelie. The coefficient for islandDream (0.8419) indicates the change in log-odds of a penguin being an Adelie when moving from Biscoe to Dream. When exponentiated, this coefficient corresponds to an odds ratio of approximately 2.32, suggesting that penguins on Dream are 2.32 times more likely to be Adelie compared to those on Biscoe. Together, these values reflect that the likelihood of a penguin being Adelie is higher on Dream than on Biscoe.
 
+Intercept: The intercept -1.0361, represents the log-odds of a penguin being an Adelie on the reference category of the island variable (the base level). In this case, the reference category is Biscoe Island a.
+
+Coefficient for islamDrean variable 0.8419, represents the change in the log-odds of a penguin being an Adelie compared to the reference category (Biscoe Island)
+
+
 
 ## Problem 4. Penguins Part II <small>10pts; 2 pts each</small>
 
