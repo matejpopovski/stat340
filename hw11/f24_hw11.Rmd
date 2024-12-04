@@ -248,7 +248,8 @@ prob_dream
 
 In this problem we will work once again with the Palmer Penguin dataset. We will work with a subset by taking out all missing values. After you have installed the package and loaded the library, uncomment the line below.
 ```{r}
- penguins.complete <- penguins[complete.cases(penguins),]
+penguins.complete <- penguins[complete.cases(penguins),]
+#penguins.complete
 ```
 
 ### a) Predicting Palmer Penguins with quantitative Predictors
