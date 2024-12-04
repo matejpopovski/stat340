@@ -262,6 +262,7 @@ model <- glm((species == "Adelie") ~ bill_length_mm + bill_depth_mm,
              family = binomial)
 
 new_penguin <- data.frame(bill_length_mm = 54.1, bill_depth_mm = 23.7)
+#new_penguin
 prob_adelie <- predict(model, newdata = new_penguin, type = "response")
 
 prob_adelie
