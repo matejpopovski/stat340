@@ -289,13 +289,11 @@ Fit a logistic model to predict whether a penguin is a **Chinstrap** penguin usi
 Which of the predictors are significant?
 
 ```{r}
-# Fit the logistic regression model
 model_chinstrap <- glm((species == "Chinstrap") ~ bill_length_mm + bill_depth_mm + 
                         flipper_length_mm + body_mass_g, 
                         family = binomial, 
                         data = penguins.complete)
 
-# View the summary of the model
 summary(model_chinstrap)
 ```
 
