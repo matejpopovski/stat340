@@ -279,6 +279,7 @@ summary(model)
 
 > The coefficient for bill_length_mm is -2.2099 (negative), with a statistically significant p-value (0.00125). This means that longer bills are associated with a decreased likelihood of being an Adelie penguin.
 
+> Specifically, for each additional millimeter increase in bill length, the log-odds of a penguin being an Adelie decrease by 2.2103, assuming the bill depth is held constant.
 
 ### c) A full classifier
 
@@ -286,6 +287,7 @@ Fit a logistic model to predict whether a penguin is a **Chinstrap** penguin usi
 
 
 Which of the predictors are significant?
+
 
 
 
