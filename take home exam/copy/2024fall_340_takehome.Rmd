@@ -1,0 +1,282 @@
+---
+title: "FA24 STAT340 Midterm <small>take-home portion</small>"
+output: html_document
+---
+
+<style>h2{margin-top:5rem}h3,h4:not([class]){margin-top:4rem}
+.main-container{padding:2rem}</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=T,eval=T,warning=F,message=F,
+                      fig.width=5,fig.height=4,fig.align="center")
+```
+
+
+## Q1 - Testing
+
+Infinity Cable (fictional) manufactures fiber optic cable for industrial purposes. They have three manufacturing facilities in Alderwood, Brentwick and Coppergrove. A recent quality control audit sampled various 1 kilometer lengths of cable from the three facilities and counted the number of flaws in the cables:
+
+```{r}
+cables = data.frame(
+  site = rep(c("Alderwood","Brentwick","Coppergrove"), times=c(53,48,51)),
+  flaws = c(6,4,4,1,2,1,4,2,4,3,4,8,2,4,6,2,4,1,2,2,0,2,5,2,3,3,3,2,5,4,4,
+            1,4,3,5,4,4,3,3,4,0,3,4,4,3,5,3,2,1,1,2,3,4,2,5,1,2,2,3,1,2,3,
+            0,4,2,4,2,2,2,4,4,2,3,5,2,3,2,2,3,1,3,1,1,1,1,0,3,4,4,4,2,2,4,
+            3,3,2,1,7,3,1,1,3,6,3,7,4,2,3,1,0,4,1,3,4,8,3,3,1,4,3,3,2,2,3,
+            3,1,0,4,6,3,3,3,7,3,4,3,2,2,4,3,1,4,1,5,3,3,2,3,3,1,3,1)
+)
+```
+
+Your job is to perform a comparison using the testing techniques we've covered in this course to see if there is evidence that the facilities actually produce cable of different quality. Do not use techniques we have not covered in this course.
+
+a. (2pts) A colleague suggests that we should focus our attention on a comparison of Alderwood and Brentwick (ignoring Coppergrove), since they seem to have the largest gap in average number of flaws. Why specifically would this not be a good approach?
+
+b. Now you will perform the test. You should
+
+   i. (1pt) State your null and alternative hypotheses, 
+   ii. (1pt) decide on the test statistic to use, 
+   iii. (1pt) state whether this is a one or two-sided test, and explain why, 
+   iv. (2pts) produce a simulated distribution for your test statistic under the null hypothesis 
+   v. (2pts) calculate the $p$-value
+   vi. (1pt) make your conclusion
+
+*Hint: your test statistic should somehow compare all 3 groups. There are many possible statistics you could use. If you are stuck consider a statistic based on the site means or the site variances.*
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+# b) iv) v)
+
+set.seed(123)
+
+calculate_sad <- function(data) {
+  sites <- unique(data$site)
+  combinations <- combn(sites, 2)
+  sad <- sum(apply(combinations, 2, function(pair) {
+    abs(mean(data$flaws[data$site == pair[1]]) - mean(data$flaws[data$site == pair[2]]))
+  }))
+  return(sad)
+}
+
+observed_sad <- calculate_sad(cables)
+
+num_replicates <- 1000
+simulated_sad <- replicate(num_replicates, {
+  shuffled_data <- cables
+  shuffled_data$flaws <- sample(shuffled_data$flaws)
+  calculate_sad(shuffled_data)
+})
+
+p_value <- mean(simulated_sad >= observed_sad)
+
+cat(sprintf("Observed sum of absolute differences: %f\n", observed_sad))
+cat(sprintf("P-value: %f\n", p_value))
+
+if (p_value < 0.05) {
+  cat("Reject H0: There is a significant difference in the number of flaws between the facilities.\n")
+} else {
+  cat("Fail to reject H0: There is no significant difference in the number of flaws between the facilities.\n")
+}
+
+```
+
+*write discussion here*
+
+> a) Focusing only on Alderwood and Brentwick while ignoring Coppergrove is not a good approach because it excludes relevant data, leading to biased analysis and potentially false conclusions. Coppergrove's data might provide critical context or reveal overarching trends across all facilities that could explain the differences. Analyzing only two facilities reduces the validity of the results and contradicts standard statistical principles, which require using all relevant data to ensure robust and accurate comparisons.
+
+> b)
+
+> i) H0: There is no difference in the average number of flaws between the three facilities (Alderwood, Brentwick, and Coppergrove). The sum of the absolute differences in the means of each pair of facilities is equal to zero.
+HA: At least one of the facilities has a different average number of flaws compared to the others. The sum of the absolute differences in the means of the pairs of facilities is not equal to zero.
+
+> ii) The test statistic I will use is the sum of the absolute differences in the mean number of flaws between each pair of facilities: 
+|mean(Alderwood) - mean(Brentwick)| + |mean(Alderwood) - mean(Coppergrove)| + |mean(Brentwick) - mean(Coppergrove)|
+
+> iii) This is a two-sided test because the null hypothesis suggests that there is no difference in the average number of flaws between the three facilities (i.e., the test statistic equals zero). The alternative hypothesis, on the other hand, suggests that there is a difference in the average number of flaws, indicating that at least one facility differs from the others. A two-sided test is appropriate because we are interested in detecting differences in either direction (i.e., whether one facility has more or fewer flaws than another).
+
+> iv) code above
+
+> v) P-value: 0.113000
+
+> vi) Based on the calculated p-value of 0.113, which is greater than the significance level of 0.05, we fail to reject the null hypothesis (H0). This means that there is no significant difference in the number of flaws between the three manufacturing facilities (Alderwood, Brentwick, and Coppergrove). Therefore, we do not have sufficient evidence to suggest that the facilities produce cable with different levels of quality.
+
+> As a check for my work, I will use Anova test, which is a statistical technique used to compare the means of three or more groups.
+
+```{r}
+anova_test <- aov(flaws ~ site, data = cables)
+summary(anova_test)
+```
+
+> Since the p-value (0.0958) is greater than the commonly used significance level of 0.05, we fail to reject the null hypothesis. Anova test agrees with my solution above.
+
+
+## Q2 - Estimation
+
+Let $X_i$ be i.i.d random variables following continuous Uniform($-a,a$) for some unknown positive parameter $a$. Suppose you draw the following sample of $n=15$ observations:
+
+```{r}
+data = c(-1.97, -1.07, 0.61, 3.43, -2.51, 3.35, 3.74, 1.35,
+         1.08, -3.68, -2.47, -2.72, 1.57, -0.97, 2.27)
+```
+
+a. (3pts) Using what you know about estimation, find a reasonable point estimator $\hat a$. Explain why you think this gives a reasonable estimate of the parameter $a$.
+   - Note: you do NOT need to find the BEST estimator to earn full points on this part (or later parts), just one that can be argued to be reasonable.
+b. (2pts) Apply your estimator to the given sample data. What is your point estimate for $a$?
+c. (3pts) Using the MC method shown in class, compute **and interpret** a 95\% confidence interval for $a$. Also, *briefly* (1-2 sentences) explain how well you think this interval would actually perform.
+d. (2pts) Just for this part d, suppose the true value of $a$ is actually 3.9. Use MC to approximately estimate the bias of your estimator.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+# a) and b)
+n <- length(data)
+a_hat_unbiased <- (n + 1) / n * max(abs(data))
+a_hat_unbiased
+
+```
+```{r}
+# c)
+set.seed(123)
+
+num_simulations <- 10000
+
+unbiased_estimators <- numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+  simulated_sample <- runif(n, min = -a_hat_unbiased, max = a_hat_unbiased)
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+# Calculate the 95% confidence interval
+lower_bound <- quantile(unbiased_estimators, 0.025)
+upper_bound <- quantile(unbiased_estimators, 0.975)
+
+cat("The 95% confidence interval for the parameter 'a' is (", round(lower_bound, 2), ", ", round(upper_bound, 2), ")\n")
+
+```
+```{r}
+# d)
+set.seed(123)
+
+true_a <- 3.9
+n <- 15
+
+num_simulations <- 10000
+
+unbiased_estimators <- numeric(num_simulations)
+
+for (i in 1:num_simulations) {
+
+  simulated_sample <- runif(n, min = -true_a, max = true_a)
+  unbiased_estimators[i] <- (n + 1) / n * max(abs(simulated_sample))
+}
+
+bias <- mean(unbiased_estimators) - true_a
+
+cat("The approximate bias of the estimator when the true value of 'a' is", true_a, "is", bias, "\n")
+```
+
+
+
+*write discussion here*
+
+> a) Explanation: In the class example we have learned that a = max{xi} is not the good point estimator. It was shown that its value was not within its  95% CI. 
+I chose unbiased point estimator (n+1)/n abs{Xi} as point estimator because we have Uniform($-a,a$) distribution with equal lower and upper bound.
+
+> c) The 95% confidance interval for my point parameter is (3.31, 4.25). Due to simmetry it is the same for the lower bound with negative signs. I think it perform well because value of point estimator is in the interval.
+
+
+
+## Q3 - Regression
+
+In R, the built-in dataset `USArrests` contains 1975 estimates of rates (per 100,000 people) of various types of crimes in each US state (source: the World Almanac). Consider the `Assault` and `Murder` columns as X and Y variables:
+
+```{r}
+x = USArrests$Assault
+y = USArrests$Murder
+plot(x,y)
+```
+
+a. (2pts) Does this look like a reasonable dataset to fit a linear model to? Explain why or why not.
+b. (2pts) Regardless of your answer to part a, fit a linear model to this data. Show the summary print out with the full table of coefficients.
+c. (2pts) Does this result show a significant relation between x,y? Answer why or why not and give a p-value.
+d. (2pts) Give a 95% confidence interval for the true slope.
+e. (2pts) Make the standard diagnostic plot(s) for the residuals. Does this fit look reasonable? Explain why or why not.
+
+> ***PLEASE WRITE YOUR WORK BELOW:***
+
+
+```{r}
+# insert code here
+
+# b) 
+
+model <- lm(Murder ~ Assault, data = USArrests)
+
+summary(model)
+```
+```{r}
+# d) 
+confint(model, level = 0.95)
+
+# check
+t_critical <- qt(0.975, df = 48)
+
+lower_bound <- 0.041909 - t_critical * 0.004507
+upper_bound <- 0.041909 + t_critical * 0.004507
+c(lower_bound, upper_bound)
+
+```
+```{r}
+# e)
+library(ggplot2)
+#plot the line
+pp <- ggplot( model,
+              aes(x=USArrests$Assault,y=USArrests$Murder));
+pp <- pp +geom_point() + geom_smooth(method="lm",
+                                     formula="y~x",
+                                     se=TRUE);
+pp <- pp + labs( x="Assult",
+                 y="Murder",
+                 title="Murder and Assult" )
+pp
+
+#residuals
+resids <- residuals(model)
+hist(resids)
+
+#Homoscedasticity
+plot(model, which=1)
+
+plot(model, which=2)
+
+#all standard diagnostic
+par(mfrow = c(2, 2))
+plot(model)
+```
+
+
+
+*write discussion here*
+
+> a) Based on the scatterplot of the Assault and Murder variables, it appears that the relationship between these two variables is roughly linear, as the points tend to align along a straight line with minimal deviation. This suggests that a linear model would be reasonable for fitting the data. There are no clear signs of significant non-linear patterns or outliers that would undermine the assumptions of linear regression, making it appropriate to proceed with fitting a linear model to this dataset.
+
+> c) Yes, this result shows a significant relationship between Assault (X) and Murder (Y). The p-value for the Assault coefficient is 2.6e-12, which is much smaller than the common significance level of 0.05. Since the p-value is so small, we can reject the null hypothesis that there is no relationship between Assault and Murder. This indicates that there is a statistically significant positive relationship between the two variables. Specifically, for each unit increase in the Assault rate, the Murder rate is estimated to increase by approximately 0.041909.
+
+> d) 95% Confidance interval for the slope  (0.03284621, 0.05097104). With 95% confidence, the true slope for the relationship between Assault (x) and Murder (y) is between 0.0328 and 0.0510.
+
+> e) 
+1. Residuals vs Fitted: The residuals are approximately randomly scattered around zero without a clear pattern, which suggests that the linearity assumption holds. There is no obvious curve or trend in the residuals, which is a good sign that a linear model is appropriate.
+2. The histogram shows that the residuals are relatively normally distributed, with a little longer right tail.
+3. Homosedacity: The plot of residuals vs fitted values shows no clear funnel-shaped pattern, suggesting that the assumption of homoscedasticity (constant variance of residuals) is mostly met. There is a slight increase in variance as fitted values increase, but it is not very pronounced, so this is not a major concern.
+4. Normal Q-Q: The points in the Q-Q plot generally follow the diagonal line, indicating that the residuals are approximately normally distributed in the center of the distribution. However, there are some deviations in the right tail, suggesting that the residuals may not be perfectly normal in that region. While this indicates a slight departure from normality, it is not a major issue unless the non-normality is severe.
+
+> Conclusion: The diagnostic plots show no major violations of the model assumptions, indicating that the linear model is a good fit for the data. Moreover, our graphs confirm the assumption from a).
+
+
+
