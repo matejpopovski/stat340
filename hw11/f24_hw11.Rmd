@@ -229,12 +229,13 @@ summary(logistic_model)
 
 # Extract coefficients
 coeffs <- coef(logistic_model)
-intercept <- coeffs["(Intercept)"]
-coef_dream <- coeffs["islandDream"]
+intercept <- as.numeric(coeffs["(Intercept)"])
+coef_dream <- as.numeric(coeffs["islandDream"])
 
 # Predict probability for Dream
 prob_dream <- 1 / (1 + exp(-(intercept + coef_dream)))
-prob_dream
+
+cat(sprintf("The predicted probability for Dream is %.4f.\n", prob_dream))
 
 
 ```
@@ -305,13 +306,11 @@ Suppose you will predict that a penguin is a Chinstrap if the estimated $\hat{y}
 *Hint: you will want to compare the predicted $\hat{y}$ values to the actual $y$ values. The `table` command can produce a 2x2 confusion matrix to help you answer this question.*
 
 ```{r}
-# Predict probabilities
+
 predictions <- predict(model_chinstrap, type = "response")
 
-# Convert probabilities to binary predictions (Chinstrap if prob > 0.5)
 predicted_class <- ifelse(predictions > 0.5, "Chinstrap", "Not Chinstrap")
 
-# Actual Chinstrap class
 actual_class <- ifelse(penguins.complete$species == "Chinstrap", "Chinstrap", "Not Chinstrap")
 
 confusion_matrix <- table(Predicted = predicted_class, Actual = actual_class)
@@ -337,4 +336,42 @@ power
 
 Now modify your threshold from 0.5 to some other threshold with the goal of achieving the highest power possible while keeping the type 1 error rate  below 0.05. What threshold would you use? What is the type 1 error rate and power of this new classifier?
 
+```{r}
+predictions <- predict(model_chinstrap, type = "response")
 
+thresholds <- seq(0, 1, by = 0.01)
+results <- data.frame(Threshold = thresholds, Power = NA, Type1ErrorRate = NA)
+
+for (i in 1:length(thresholds)) {
+    threshold <- thresholds[i]
+    predicted_class <- ifelse(predictions > threshold, "Chinstrap", "Not Chinstrap")
+    
+    predicted_class <- factor(predicted_class, levels = c("Chinstrap", "Not Chinstrap"))
+    actual_class <- factor(actual_class, levels = c("Chinstrap", "Not Chinstrap"))
+    
+    confusion_matrix <- table(Predicted = predicted_class, Actual = actual_class)
+    
+    if (ncol(confusion_matrix) < 2) {
+        next
+    }
+    
+    FP <- confusion_matrix["Chinstrap", "Not Chinstrap"]
+    TP <- confusion_matrix["Chinstrap", "Chinstrap"]
+    FN <- confusion_matrix["Not Chinstrap", "Chinstrap"]
+    TN <- confusion_matrix["Not Chinstrap", "Not Chinstrap"]
+    
+    type_1_error_rate <- FP / (FP + TN)
+    power <- TP / (TP + FN)
+    
+    results$Power[i] <- power
+    results$Type1ErrorRate[i] <- type_1_error_rate
+}
+
+valid_thresholds <- results[results$Type1ErrorRate <= 0.05, ]
+
+optimal_threshold <- valid_thresholds[which.max(valid_thresholds$Power), ]
+optimal_threshold
+
+```
+
+> By adjusting the threshold to 0.03, you've achieved the goal of minimizing the Type I error rate to below 0.05 while maximizing the power of your classifier. This means the model performs very well at detecting Chinstrap penguins with a minimal risk of incorrectly classifying a non-Chinstrap penguin as a Chinstrap.
